@@ -1,4 +1,5 @@
-import cv2
+from subprocess import check_output
+from PIL import Image
 import sys
 import pytesseract
 
