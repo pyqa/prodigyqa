@@ -12,5 +12,5 @@ class TestClass(Captcha):
 
     def test_read_captcha(self):
         """Get users from application."""
-        text_retrieved = self.captcharead(imgpath)
+        self.captcharead(imgpath)
         
