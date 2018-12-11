@@ -62,8 +62,6 @@ setup(
         'scikit-image==0.13.1',
         'matplotlib==2.2.2',
         'numpy==1.14.3',
-        'pillow==5.1.0',
-        'ptyprocess==0.5.2',
-        'easyprocess==0.2.3'
+        'pillow==5.1.0'
     ],)
 print("\n*** Imaginea QA Package Installation Complete! ***\n")
