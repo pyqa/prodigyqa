@@ -22,15 +22,10 @@ The framework aims to be a constructive blend of various guidelines, coding stan
 
 ## Prerequisites
 
-The framework requires [python 2.7+ / 3.6+](https://www.python.org/downloads/) and [pytest](https://docs.pytest.org/en/latest/getting-started.html) to be installed in the machine.
-To set up the code on your machine, try any one of the following methods:
- - **Clone over SSH** - git clone git@gitlab.pramati.com:pyqa/imgqa.git
- - **Clone over HTTPS** - git clone https://gitlab.pramati.com/pyqa/imgqa.git
- - **Download code from the repository**: https://gitlab.pramati.com/pyqa/imgqa
-
- ***First 2 methods require [git](https://git-scm.com/downloads) to be pre-installed in the machine.**
-
-
+The framework requires 
+- [python 2.7+ / 3.6+](https://www.python.org/downloads/)
+- [pip](pip )
+- [pytest](https://docs.pytest.org/en/latest/getting-started.html) to be installed in the machine.
 
 ## Installing
 
@@ -47,28 +42,7 @@ The above command will setup the required dependencies, to run the framework.
 
 The sample test cases for all the features are listed under **imgqa --> Examples** folder. To run the sample tests, open command prompt/terminal, go to imgqa --> Examples folder and run the following command:
 
+`pytest {filename}.py`
 
- - To run [sample api test](https://gitlab.pramati.com/pyqa/imgqa/blob/master/Examples/samplerestapitest.py) - pytest samplerestapitest.py
- - To run [sample selenium test](https://gitlab.pramati.com/pyqa/imgqa/blob/master/Examples/sampleseleniumtest.py) - pytest sampleseleniumtest.py 
- - To run [sample web spider test](https://gitlab.pramati.com/pyqa/imgqa/blob/master/Examples/samplewebspidertest.py) - pytest samplewebspidertest.py 
- - To run [sample captcha test](https://gitlab.pramati.com/pyqa/imgqa/blob/master/Examples/sample_captcha.py) - pytest sample_captcha.py 
- - To run [sample image comparison test](https://gitlab.pramati.com/pyqa/imgqa/blob/master/Examples/ImageCompare/image_comparison_example.py) - pytest image_comparison_example.py (from imgqa --> Examples --> ImageCompare folder)
-
-
-## README files for individual modules
-
- - [Image Comparison](https://gitlab.pramati.com/pyqa/imgqa/blob/master/core/README_ImageCompare.md)
- - [REST API](https://gitlab.pramati.com/pyqa/imgqa/blob/master/core/restapi_readme.md)
-
-
-## Contributors
-
-Following are the contributors to this framework:
-
- - [Revanth](https://gitlab.pramati.com/revanthm)
- - [Obanna](https://gitlab.pramati.com/obannak)
- - [Abhimaniu](https://gitlab.pramati.com/abhimanius)
- - [Aniket](https://gitlab.pramati.com/aniketn)
- - [Pooja](https://gitlab.pramati.com/poojap)
 
 
