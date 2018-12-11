@@ -10,7 +10,7 @@ try:
     with open(path.join(this_directory, 'README.md'), 'rb') as f:
         long_description = f.read().decode('utf-8')
 except IOError:
-    long_description = 'Automation Testing Framework'
+    long_description = 'Unified Automation Testing Framework'
 
 setup(
     name='imgqa',
@@ -18,7 +18,7 @@ setup(
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://gitlab.pramati.com/pyqa/imgqa',
+    url='https://github.com/surevs/imgqa',
     platforms=["Windows", "Linux", "Unix", "Mac OS-X"],
     author='Revant',
     author_email='revanth.mvs@imaginea.com',
