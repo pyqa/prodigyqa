@@ -1,11 +1,14 @@
-'''Sample test scrpits for selenium pytest sample'''
+"""Sample test scrpits for selenium pytest sample."""
 
 from imgqa.core.pageactions import PageActions
 
 
 class login_module:
-    '''please enusre not to change this class name ,username,password and loin_button if login mechanism is present'''
-    base_url = "https://corridor.pramati.com/"
+    """
+    please enusre not to change this class name ,username,
+    password and loin_button if login mechanism is present.
+    """
+    base_url = "https://example.com/"
     login_btn = {"locatorvalue": '//*[@id="menu-item-15255"]/a',
                  "by": "By.XPATH"}
     username = {"locatorvalue": 'username',
@@ -31,5 +34,6 @@ class TestClass(PageActions):
         self.open(login_module.base_url)
         self.maximize()
         self.click(login_module.login_btn)
-        self.login(username_dict=login_module.username, password_dict=login_module.password,
+        self.login(username_dict=login_module.username,
+                   password_dict=login_module.password,
                    login_button=login_module.login_button)

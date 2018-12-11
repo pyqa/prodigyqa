@@ -4,7 +4,7 @@ from imgqa.core.captcha import Captcha
 
 # Variables
 
-imgpath = "E:\Projects\imgqa\Images\example_01.png"
+imgpath = "OCR_Example_Image\\example_01.png"
 
 
 class TestClass(Captcha):
@@ -12,4 +12,5 @@ class TestClass(Captcha):
 
     def test_read_captcha(self):
         """Get users from application."""
-        self.captcharead(imgpath)
+        text_retrieved = self.captcharead(imgpath)
+        print(text_retrieved)
