@@ -6,7 +6,7 @@ import pytesseract
 
 class Captcha:
 
-    def captchaRead(self, imagepath=None):
+    def captcharead(self, imagepath=None):
 
         if imagepath is None:
             print('Please give Image path in the function defined in sample_captcha.py file')
