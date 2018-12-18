@@ -1,4 +1,5 @@
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/pyqa/imgqa.svg?columns=all)](https://waffle.io/pyqa/imgqa)
+[![Build Status](https://travis-ci.org/pyqa/imgqa.svg?branch=master)](https://travis-ci.org/pyqa/imgqa)
 
 # QA automation framework - IMGQA
 
