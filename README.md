@@ -1,3 +1,5 @@
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/pyqa/imgqa.svg?columns=all)](https://waffle.io/pyqa/imgqa)
+
 # QA automation framework - IMGQA
 
 IMGQA is a python based test automation framework. This unified testing framework has come up after thoroughly studying existing methodologies used in Imaginea projects for UI/Rest API testing, compiled a list of problem statements and prioritized the most painful problems.
