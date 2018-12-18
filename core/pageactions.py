@@ -1,5 +1,8 @@
-"""Module shall hold all self.driver based actions only."""
-import datetime
+""" Common UI utility functions of all selenium self.driver based actions."""
+
+from datetime import datetime
+
+import Selenium2Library
 
 import sys
 
@@ -16,7 +19,6 @@ import logging
 from imgqa.objectrepo import settings
 
 from time import sleep
-
 
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -39,8 +41,6 @@ except Exception:
     ENI_Exception = selenium_exceptions.ElementNotSelectableException
 
 import unittest
-import pytest
-
 
 
 class PageActions(unittest.TestCase):
@@ -103,14 +103,14 @@ class PageActions(unittest.TestCase):
         else:
             return "Unable to Fetch Page Source"
 
-    def assert_page_title(self, title_to_check):
+    def assert_page_title(self, titletocheck):
         """Evaluate Actual vs Expected Page Title."""
         try:
             title_src = self.driver.title
         except:
             title_src = self.driver.execute_script("return document.title")
 
-        assert title_src == title_to_check
+        assert title_src == titletocheck
 
     def get_current_url(self):
         """Method Returns current url using Selenium/Java Script."""
@@ -125,7 +125,7 @@ class PageActions(unittest.TestCase):
             else:
                 return "Invalid HTTP URL"
 
-    def locatorcheck(self, locator_dict):
+    def locator_check(self, locator_dict):
         """Local Method to classify the type of locator."""
         text_retrived = locator_dict['by'].upper()
         if 'ID' in text_retrived:
@@ -170,7 +170,7 @@ class PageActions(unittest.TestCase):
     def click(self, locator_dict):
         """Click an element."""
         self.wait_for_page_ready_state()
-        self.driver.find_element(self.locatorcheck(
+        self.driver.find_element(self.locator_check(
             locator_dict), value=locator_dict['locatorvalue']).click()
 
     def send_keys(self, locator_dict):
@@ -179,7 +179,7 @@ class PageActions(unittest.TestCase):
         self.wait_for_page_ready_state()
         try:
             self.driver.find_element(
-                self.locatorcheck(locator_dict), value=locator_dict['locatorvalue']).send_keys(text_to_send)
+                self.locator_check(locator_dict), value=locator_dict['locatorvalue']).send_keys(text_to_send)
         except NoSuchElementException:
             pass
 
@@ -188,7 +188,7 @@ class PageActions(unittest.TestCase):
         self.wait_for_page_ready_state()
         try:
             text = self.driver.find_element(
-                self.locatorcheck(locator_dict), value=locator_dict['locatorvalue']).text
+                self.locator_check(locator_dict), value=locator_dict['locatorvalue']).text
         except NoSuchElementException:
             pass
         return text
@@ -199,7 +199,7 @@ class PageActions(unittest.TestCase):
         self.wait_for_page_ready_state()
         try:
             attribute = self.driver.find_element(
-                self.locatorcheck(locator_dict), value=locator_dict['locatorvalue']).get_attribute(attribute_to_get)
+                self.locator_check(locator_dict), value=locator_dict['locatorvalue']).get_attribute(attribute_to_get)
         except NoSuchElementException:
             pass
         return attribute
@@ -248,7 +248,7 @@ class PageActions(unittest.TestCase):
         self.wait_for_page_ready_state()
         try:
             self.driver.find_element(
-                self.locatorcheck(locator), locator['locatorvalue']).clear()
+                self.locator_check(locator), locator['locatorvalue']).clear()
         except NoSuchElementException:
             pass
 
@@ -337,7 +337,7 @@ class PageActions(unittest.TestCase):
         try:
             self.wait_for_page_ready_state()
             ActionChains(self.driver).move_to_element(self.driver.find_element(
-                self.locatorcheck(locator_dict), value=locator_dict['locatorvalue'])).perform()
+                self.locator_check(locator_dict), value=locator_dict['locatorvalue'])).perform()
         except selenium_exceptions.NoSuchElementException:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -360,7 +360,7 @@ class PageActions(unittest.TestCase):
     def element_assert(self, locator_dict):
         """Help to verify the element."""
         try:
-            self.driver.find_element(self.locatorcheck(
+            self.driver.find_element(self.locator_check(
                 locator_dict), value=locator_dict['locatorvalue'])
         except selenium_exceptions.NoSuchElementException:
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -375,7 +375,7 @@ class PageActions(unittest.TestCase):
         """Halt for an element upon page."""
         try:
             WebDriverWait(self.driver, settings.EXTREME_TIMEOUT).until(
-                ec.presence_of_element_located((self.locatorcheck(locator_dict), locator_dict['locatorvalue'])))
+                ec.presence_of_element_located((self.locator_check(locator_dict), locator_dict['locatorvalue'])))
         except selenium_exceptions.TimeoutException:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -445,7 +445,7 @@ class PageActions(unittest.TestCase):
     def pick_select_option_by_index(self, locator_dict, n):
         """Select the value by using index."""
         try:
-            Select(self.driver.find_element(self.locatorcheck(
+            Select(self.driver.find_element(self.locator_check(
                 locator_dict), value=locator_dict['locatorvalue'])).select_by_index(n)
         except selenium_exceptions.NoSuchElementException:
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -457,7 +457,7 @@ class PageActions(unittest.TestCase):
     def pick_select_option_by_value(self, locator_dict, value):
         """Select the value by using value."""
         try:
-            Select(self.driver.find_element(self.locatorcheck(locator_dict),
+            Select(self.driver.find_element(self.locator_check(locator_dict),
                                              value=locator_dict['locatorvalue'])).select_by_value(value)
         except selenium_exceptions.NoSuchElementException:
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -469,7 +469,7 @@ class PageActions(unittest.TestCase):
     def pick_select_option_by_text(self, locator_dict, text):
         """Select the value by using text."""
         try:
-            Select(self.driver.find_element(self.locatorcheck(locator_dict),
+            Select(self.driver.find_element(self.locator_check(locator_dict),
                                              value=locator_dict['locatorvalue'])).select_by_visible_text(text)
         except selenium_exceptions.NoSuchElementException:
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -494,7 +494,7 @@ class PageActions(unittest.TestCase):
         """Scroll to a particular element on the page. Invalid method yet."""
         try:
             self.driver.execute_script("arguments[0].scrollIntoView(true)", self.driver.find_element(
-                self.locatorcheck(locator_dict), value=locator_dict['locatorvalue']))
+                self.locator_check(locator_dict), value=locator_dict['locatorvalue']))
         except selenium_exceptions.NoSuchElementException:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -551,7 +551,7 @@ class PageActions(unittest.TestCase):
         stop_ms = start_ms + (timeout * 1000.0)
         for x in range(int(timeout * 10)):
             try:
-                element = self.driver.find_element(self.locatorcheck(
+                element = self.driver.find_element(self.locator_check(
                     locator_dict), value=locator_dict['locatorvalue'])
                 if element.is_displayed():
                     return element
@@ -566,12 +566,12 @@ class PageActions(unittest.TestCase):
         plural = "s"
         if timeout == 1:
             plural = ""
-        if not element and self.locatorcheck(
+        if not element and self.locator_check(
                 locator_dict) != By.LINK_TEXT:
             raise selenium_exceptions.ElementNotVisibleException(
                 "Element {%s} was not visible after %s second%s!" % (
                     locator_dict['locatorvalue'], timeout, plural))
-        if not element and self.locatorcheck(
+        if not element and self.locator_check(
                 locator_dict) == By.LINK_TEXT:
             raise selenium_exceptions.ElementNotVisibleException(
                 "Link text {%s} was not visible after %s second%s!" % (
@@ -597,7 +597,7 @@ class PageActions(unittest.TestCase):
         stop_ms = start_ms + (timeout * 1000.0)
         for x in range(int(timeout * 10)):
             try:
-                element = self.driver.find_element(self.locatorcheck(
+                element = self.driver.find_element(self.locator_check(
                     locator_dict), value=locator_dict['locatorvalue'])
                 return element
             except Exception:
@@ -612,12 +612,12 @@ class PageActions(unittest.TestCase):
 
     def is_element_visible(self, locator_dict):
         """Check if the element is actually visible."""
-        if self.is_xpath_selector(self.locatorcheck(
+        if self.is_xpath_selector(self.locator_check(
                 locator_dict)):
             by = By.XPATH
-        if self.is_link_text_selector(self.locatorcheck(
+        if self.is_link_text_selector(self.locator_check(
                 locator_dict)):
-            locator_dict['locatorvalue'] = self.get_link_text_from_selector(self.locatorcheck(
+            locator_dict['locatorvalue'] = self.get_link_text_from_selector(self.locator_check(
                 locator_dict))
             locator_dict['by'] = By.LINK_TEXT
         return self.is_element_visible(self.driver, locator_dict)
@@ -625,15 +625,15 @@ class PageActions(unittest.TestCase):
     def highlight(self, locator_dict):
         """Highlight (blinks) a Selenium Webdriver element."""
         driver = self.driver.find_element(
-            self.locatorcheck(locator_dict), value=locator_dict['locatorvalue'])._parent
+            self.locator_check(locator_dict), value=locator_dict['locatorvalue'])._parent
 
         def apply_style(s):
             driver.execute_script("arguments[0].setAttribute('style', arguments[1]);",
                                   self.driver.find_element(
-                                      self.locatorcheck(locator_dict),
+                                      self.locator_check(locator_dict),
                                       value=locator_dict['locatorvalue']), s)
         original_style = self.driver.find_element(
-            self.locatorcheck(locator_dict),
+            self.locator_check(locator_dict),
             value=locator_dict['locatorvalue']).get_attribute('style')
         apply_style("background: green; border: 2px solid red;")
         time.sleep(.4)
@@ -641,4 +641,4 @@ class PageActions(unittest.TestCase):
 
     def find_elements(self, locator_dict):
         """Method to find elements - needed parent locator as input parameter."""
-        return self.driver.find_elements(self.locatorcheck(locator_dict), value=locator_dict['locatorvalue'])
+        return self.driver.find_elements(self.locator_check(locator_dict), value=locator_dict['locatorvalue'])
