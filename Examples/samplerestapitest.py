@@ -1,5 +1,5 @@
 """REST Api Sample Test file."""
-from imgqa.core.restapitester import RestApiTester
+from imgqa.core.apitester import ApiTester
 import json
 import logging
 
@@ -14,7 +14,7 @@ header = {'Accept': 'application/json',
           'Content-Type': 'application/json'}
 
 
-class TestClass(RestApiTester):
+class TestClass(ApiTester):
     """Sample Test Suite."""
 
     def test_get_users(self):

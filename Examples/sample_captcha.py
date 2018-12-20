@@ -1,16 +1,15 @@
 """CAPTCHA reading Sample Test file."""
 
-from imgqa.core.captcha import Captcha
+from imgqa.core.utils import crackcaptcha
 
-# Variables
+# Variable stack
 
 imgpath = "OCR_Example_Image\\example_01.png"
 
 
-class TestClass(Captcha):
+class TestClass(crackcaptcha):
     """Sample Test Suite."""
 
     def test_read_captcha(self):
         """Get users from application."""
-        self.captcharead(imgpath)
-        
+        print(self.captcharead(imgpath))

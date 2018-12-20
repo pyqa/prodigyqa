@@ -5,7 +5,7 @@ import logging
 from requests.exceptions import InvalidURL
 
 
-class RestApiTester(unittest.TestCase):
+class ApiTester(unittest.TestCase):
     """REST Api basic methods."""
 
     def _get_session_token(self, auth_type=None, **kwargs):
