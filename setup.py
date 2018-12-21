@@ -48,20 +48,12 @@ setup(
         'setuptools',
         'selenium',
         'pytest>=3.8.2',
-        'opencv-python',
         'pytest-html>=1.19.0',
         'six>=1.11.0',
         'requests>=2.19.1',
-        'urllib3>=1.23',
-        'boto>=2.49.0',
+        'urllib3==1.23',
         'nose==1.3.7',
         'ipdb==0.11',
         'flake8==3.5.0',
-        'PyVirtualDisplay==0.2.1',
-        'opencv-python==3.4.3.18',
-        'scikit-image==0.13.1',
-        'matplotlib==2.2.2',
-        'numpy==1.14.3',
-        'pillow==5.1.0'
     ],)
-print("\n*** Imaginea QA Package Installation Complete! ***\n")
+print("\n*** Img-QA Package Installation Complete! ***\n")

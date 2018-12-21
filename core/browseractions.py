@@ -11,8 +11,6 @@ from selenium import webdriver
 
 import logging
 
-from imgqa.objectrepo import settings
-
 from selenium.webdriver.support.ui import WebDriverWait
 
 from selenium.common import exceptions as selenium_exceptions
@@ -30,7 +28,7 @@ WAIT_SLEEP_TIME = 0.1
 TIME_OUT = 10
 
 
-class PageActions(unittest.TestCase):
+class BrowserActions(unittest.TestCase):
     """PageActions Class is the gateway for using Framework.
 
     It inherits Python's unittest.TestCase class, and runs with Pytest.
@@ -363,7 +361,6 @@ class PageActions(unittest.TestCase):
     def wait_and_accept_alert(self):
         """Wait and accept alert present on the page."""
         try:
-            wait = WebDriverWait(self, settings.EXTREME_TIMEOUT)
             wait.until(ec.alert_is_present())
             self.driver.switch_to.alert.accept()
             logging.info("alert accepted")
@@ -375,7 +372,6 @@ class PageActions(unittest.TestCase):
     def wait_and_reject_alert(self):
         """Wait for alert and rejects."""
         try:
-            wait = WebDriverWait(self.driver, settings.EXTREME_TIMEOUT)
             wait.until(ec.alert_is_present())
             self.driver.switch_to.alert.dismiss()
             logging.info("alert dismissed")
