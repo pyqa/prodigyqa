@@ -11,9 +11,9 @@ from selenium import webdriver
 
 import logging
 
-from selenium.webdriver.support.ui import WebDriverWait
-
 from selenium.common import exceptions as selenium_exceptions
+
+from selenium.webdriver.support.ui import WebDriverWait as wait
 
 from selenium.webdriver.support import expected_conditions as ec
 
@@ -36,7 +36,7 @@ class BrowserActions(unittest.TestCase):
 
     def __init__(self, browser_name="chrome", *args, **kwargs):
         """Init Method for webdriver declarations."""
-        super(PageActions, self).__init__(*args, **kwargs)
+        super(BrowserActions, self).__init__(*args, **kwargs)
         self.by_value = None
         if browser_name.lower() == "chrome":
             self.driver = webdriver.Chrome()
@@ -53,7 +53,7 @@ class BrowserActions(unittest.TestCase):
                     '''return document.readyState''')
                 if pagestate.lower() == 'complete':
                     logging.info(
-                        "Current page is in excpected state %s" % pagestate)
+                        "Current page is in expected state {}" .format(pagestate))
                     break
                 sleep(0.2)
                 if (datetime.now() - start).total_seconds() > TIME_OUT and pagestate.lower() != 'complete':
