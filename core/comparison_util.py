@@ -8,6 +8,7 @@ import numpy as np
 import traceback
 from json import JSONDecodeError
 import os
+import json
 
 
 class ImageCompare:
