@@ -150,14 +150,14 @@ class JsonCompare:
 
             if path is "":
                 try:
-                    os.remove("/home/abhimanius/Desktop/json/json_diff.txt")
+                    os.remove("../Examples/json_diff.txt")
                 except OSError:
                     pass
             for k in dict1.keys():
                 # Checking whether some key present in one dictionary is not present in other dictionary.
                 if not k in dict2.keys():
                     keydiff = (str(k) + " as key not in d2")
-                    with open('/home/abhimanius/Desktop/json/json_diff.txt', 'a') as the_file:
+                    with open('../Examples/json_diff.txt', 'a') as the_file:
                         the_file.write(str(keydiff))
                 else:
                     if type(dict1[k]) is dict:
@@ -174,7 +174,7 @@ class JsonCompare:
                             second_file_val = " Second file ", k, " : ", dict2[k]
 
                             # Writing the difference to the file.
-                            with open('/home/abhimanius/Desktop/json/json_diff.txt', 'a') as the_file:
+                            with open('../Examples/json_diff.txt', 'a') as the_file:
                                 the_file.write(str(keystr) + '\n')
                                 the_file.write(str(first_file_val) + '\n')
                                 the_file.write(str(second_file_val) + '\n')
