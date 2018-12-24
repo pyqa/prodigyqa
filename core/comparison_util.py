@@ -42,7 +42,7 @@ class ImageCompare:
 
             # Uncomment the following code if you have GUI available and want to see the image difference.
             # cv2.imshow("difference", difference)
-            # cv2.waitKey(0)
+            # cv2.waitKey(0)grayscaling_images_and_comparing
             # cv2.destroyAllWindows()
 
             if images_same_size_channel is True and images_equal is True:
@@ -103,7 +103,7 @@ class ImageCompare:
             # plt.axis("off")
             #
             # # show the images
-            # plt.show()
+            # plt.show()grayscaling_images_and_comparing
             return mse_sssim_vals
         except Exception:
             traceback.print_exc()
@@ -120,7 +120,7 @@ class ImageCompare:
             # # initialize the figure
             # fig = plt.figure("Images")
             # images = ("First", first), ("Second", second)
-            #
+            #grayscaling_images_and_comparing
             # # loop over the images
             # for (i, (name, image)) in enumerate(images):
             #     # show the image
@@ -141,7 +141,7 @@ class ImageCompare:
 class JsonCompare:
 
     def compare_json(self, file1, file2, path=""):
-        try:
+        try:grayscaling_images_and_comparing
             # Reading the jsons and converting them into dictionaries.
             with open(file1) as first_json:
                 dict1 = json.load(first_json)
@@ -162,7 +162,7 @@ class JsonCompare:
                 else:
                     if type(dict1[k]) is dict:
                         if path == "":
-                            path = k
+                            path = kgrayscaling_images_and_comparing
                         else:
                             path = path + "->" + k
                         # Making recursive call by passing the keys which are present as dictionary object.
@@ -255,6 +255,7 @@ class CompareFiles(ImageCompare, JsonCompare, ExcelCompare):
             # resizing image2
             resized_img2 = cv2.resize(img2, dim, interpolation=cv2.INTER_AREA)
             ImageCompare.image_compare_thru_opencv(self, img1, resized_img2)
+            #ImageCompare.grayscaling_images_and_comparing(self, img1, resized_img2)
         elif ''.join(pathlib.Path(file1).suffixes) in ('.json') and \
                         ''.join(pathlib.Path(file2).suffixes) in ('.json'):
             JsonCompare.compare_json(file1, file2)
