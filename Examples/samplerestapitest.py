@@ -1,5 +1,5 @@
 """REST Api Sample Test file."""
-from imgqa.core.apitester import ApiTester
+from imgqa import ApiTester
 import json
 import logging
 
