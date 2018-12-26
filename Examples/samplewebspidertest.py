@@ -1,6 +1,6 @@
 """REST Api Sample Test file."""
 
-from imgqa.core.spider import Webspider
+from imgqa.spider import Webspider
 
 # Variable Stack
 baseUrl = "https://learn.letskodeit.com/"
