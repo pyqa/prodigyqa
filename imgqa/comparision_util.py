@@ -19,7 +19,7 @@ class ImageCompare:
     mse_ssim_equality = True
 
     def image_compare_thru_opencv(self, img1, img2):
-        """Images blue, green and red channel compare through OpenCV Modules."""
+        """Image blue, green and red channel compare through OpenCV Modules."""
         try:
             img1_shape = img1.shape
             img2_shape = img2.shape

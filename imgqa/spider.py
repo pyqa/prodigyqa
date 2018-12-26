@@ -1,8 +1,8 @@
 import csv
-from imgqa.core.pageactions import PageActions
+from imgqa.browseractions import BrowserActions
 
 
-class Webspider(PageActions):
+class Webspider(BrowserActions):
 
     def start_webspider(self, base_url=None, domain=None, csv_file_path=None):
         if base_url is not None and domain is not None and csv_file_path is not None:

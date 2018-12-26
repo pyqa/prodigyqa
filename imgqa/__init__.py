@@ -1,5 +1,5 @@
 """This file could have imports once the core is developed fully."""
-from core.apitester import ApiTester  # NoQa
-from core.browseractions import BrowserActions
-from core.comparison_util import ImageCompare
-from core.comparison_util import CompareFiles
+from apitester import ApiTester  # noqa
+from browseractions import BrowserActions  # noqa
+from comparison_util import ImageCompare  # noqa
+from comparison_util import CompareFiles  # noqa

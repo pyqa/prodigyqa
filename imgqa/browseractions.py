@@ -323,7 +323,8 @@ class BrowserActions(unittest.TestCase):
                 ActionChains(self.driver).move_to_element(
                     self.driver.find_element(self.by_value, value=locator['value'])).perform()
             except selenium_exceptions.NoSuchElementException:
-                AssertionError("Element {} not found".locator['by'] + '=' + locator['value'])
+                AssertionError(
+                    "Element {} not found".locator['by'] + '=' + locator['value'])
         else:
             raise AssertionError("Locator type should be dictionary")
 
