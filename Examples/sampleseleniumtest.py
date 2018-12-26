@@ -2,6 +2,7 @@
 
 from imgqa import BrowserActions
 
+import imgqa.browseractions
 
 class login_module:
     """
@@ -18,13 +19,12 @@ class login_module:
     login_button = {"locatorvalue": 'loginButton', "by": "By.ID"}
 
 
-class TestClass(PageActions):
+class TestClass(BrowserActions):
 
     def login(self, username_dict=None,
               password_dict=None,
               login_button=None):
         """Method for login process."""
-        self.wait_for_page_ready_state()
         self.send_keys(username_dict)
         self.send_keys(password_dict)
         self.click(login_button)
