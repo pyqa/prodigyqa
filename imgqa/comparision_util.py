@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Comparison Module for Images, Files like CSV, Excel, PDF etc."""
 import pathlib
 import pandas as pd

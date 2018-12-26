@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """UI utility functions of all selenium self.driver based actions."""
 from datetime import datetime
 

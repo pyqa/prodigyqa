@@ -47,7 +47,6 @@ setup(
         'selenium',
         'pytest>=3.8.2',
         'pytest-html>=1.19.0',
-        'six>=1.11.0',
         'requests>=2.19.1',
         'urllib3==1.23',
         'nose==1.3.7',
