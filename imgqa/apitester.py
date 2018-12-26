@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Rest API Module."""
 import unittest
 import requests
@@ -7,6 +8,10 @@ from requests.exceptions import InvalidURL
 
 class ApiTester(unittest.TestCase):
     """REST Api basic methods."""
+
+    def __init__(self, *args, **kwargs):
+        """Init Method for webdriver declarations."""
+        super(ApiTester, self).__init__(*args, **kwargs)
 
     def _get_session_token(self, auth_type=None, **kwargs):
         """Input kwargs will change as per application authentication type.
@@ -22,8 +27,8 @@ class ApiTester(unittest.TestCase):
             self.token = kwargs["token"]
             return kwargs["token"]
         elif (auth_type.lower() == "dynamic" and
-                not kwargs["credentials"] and
-                not kwargs["url"]):
+              not kwargs["credentials"] and
+              not kwargs["url"]):
             try:
                 if self._validate_kwargs(**kwargs) and kwargs['url']:
                     resp = self._post_method(**kwargs)
@@ -184,13 +189,13 @@ class ApiTester(unittest.TestCase):
         :parm proxies: (optional) Dictionary mapping protocol
             to the URL of the proxy.
         :parm verify: (optional) Either a boolean,
-            in which case it controls whether we verify the server’s
+            in which case it controls whether we verify the serverï¿½s
             TLS certificate, or a string, in which case it must be a path
             to a CA bundle to use. Defaults to True.
         :parm stream: (optional) if False, the response content will be
             immediately downloaded.
         :parm cert: (optional) if String, path to ssl client cert file (.pem).
-            If Tuple, (‘cert’, ‘key’) pair.
+            If Tuple, (ï¿½certï¿½, ï¿½keyï¿½) pair.
         """
         stand_kw = ["method", "url", "params", "data", "json",
                     "headers", "cookies", "files", "auth", "timeout",
