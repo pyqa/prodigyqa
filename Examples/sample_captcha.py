@@ -1,6 +1,6 @@
 """CAPTCHA reading Sample Test file."""
 
-from imgqa.core.utils import crackcaptcha
+from imgqa.utils import crackcaptcha
 
 # Variable stack
 
