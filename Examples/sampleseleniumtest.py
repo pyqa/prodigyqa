@@ -1,6 +1,6 @@
 """Sample test scrpits for selenium pytest sample."""
 
-from imgqa.core.browseractions import BrowserActions
+from imgqa import BrowserActions
 
 
 class login_module:
