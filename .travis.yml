@@ -5,5 +5,7 @@ python:
 
 before_script:
   - "pip install flake8"
+  - "pip install pycodestyle"
 script:
   - "flake8 imgqa/*.py && flake8 imgqa/*/*.py && flake8 imgqa/*/*/*.py && flake8 imgqa/*/*/*/*.py"
+  - "pycodestyle imgqa/*.py && pycodestyle imgqa/*/*.py && pycodestyle imgqa/*/*/*.py && pycodestyle imgqa/*/*/*/*.py"
