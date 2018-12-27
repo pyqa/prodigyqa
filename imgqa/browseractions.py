@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """UI utility functions of all selenium self.driver based actions."""
 from datetime import datetime
 
@@ -78,7 +77,7 @@ class BrowserActions(unittest.TestCase):
                 break
             sleep(0.2)
             loop_time_now = datetime.now() - start.total_seconds()
-            if (loop_time_now > TIME_OUT and pagestate != 'complete':
+            if loop_time_now > TIME_OUT and pagestate != 'complete':
                 raise AssertionError(
                     "Opened browser is in state of %s" % pagestate)
 
