@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 """Comparison Module for Images, Files like CSV, Excel, PDF etc."""
-import pathlib
 import pandas as pd
 import cv2
 from skimage.measure import compare_ssim as ssim
-# import matplotlib.pyplot as plt
 import numpy as np
 import traceback
 from json import JSONDecodeError
 import os
 import json
+import matplotlib.pyplot as plt
+import logging
+import sys
 
 
 class ImageCompare:
@@ -19,42 +20,64 @@ class ImageCompare:
     images_same_size_channel = False
     mse_ssim_equality = True
 
-    def image_compare_thru_opencv(self, img1, img2):
+    def image_compare_thru_opencv(self, first_image_path, second_image_path):
         """Image blue, green and red channel compare through OpenCV Modules."""
         try:
-            img1_shape = img1.shape
-            img2_shape = img2.shape
+            first_image_extenion = first_image_path.split(".")[1]
+            second_image_extension = second_image_path.split(".")[1]
 
-            if img1_shape == img2_shape:
-                images_same_size_channel = True
-                difference = cv2.subtract(img1, img2)
+            if first_image_extenion not in ('jpg', 'jpeg', 'png') & \
+                    second_image_extension not in ('jpg', 'jpeg', 'png'):
+                logging.warning("Please provide correct file extensions "
+                                "for image comparison.")
+            # Reading the image files
+            else:
+                img1 = cv2.imread(first_image_path)
+                img2 = cv2.imread(second_image_path)
 
-                b, g, r = cv2.split(difference)
-                if cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 \
-                        and cv2.countNonZero(r) == 0:
-                    images_equal = True
+                # keep original height
+                width = 2160
+                height = img2.shape[0]
+                dim = (width, height)
+
+                # resizing image2
+                resized_img2 = cv2.resize(img2,
+                                          dim,
+                                          interpolation=cv2.INTER_AREA)
+
+                img1_shape = img1.shape
+                img2_shape = img2.shape
+
+                if img1_shape == img2_shape:
+                    images_same_size_channel = True
+                    difference = cv2.subtract(img1, resized_img2)
+
+                    b, g, r = cv2.split(difference)
+                    if cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 \
+                            and cv2.countNonZero(r) == 0:
+                        images_equal = True
+                    else:
+                        images_equal = False
+
                 else:
-                    images_equal = False
+                    images_same_size_channel = False
 
-            else:
-                images_same_size_channel = False
+                # Following is to close the open windows for any analysis
+                # presentation. Mostly unsued while running through CLI.
+                # self._visual_difference(difference)
 
-            # This is to close the open windows for any analysis presentation
-            # Mostly unsued while running through CLI
+                if images_same_size_channel is True and images_equal is True:
+                    return True
 
-            # Uncomment the following code if you have GUI available and
-            # want to see the image difference.
-            # cv2.imshow("difference", difference)
-            # cv2.waitKey(0)grayscaling_images_and_comparing
-            # cv2.destroyAllWindows()
-
-            if images_same_size_channel is True and images_equal is True:
-                return True
-
-            else:
-                return False
+                else:
+                    return False
         except Exception:
-            traceback.print_exc()
+            logging.warning("There is some issue in image comparison.")
+
+    def _visual_difference(self, difference):
+        cv2.imshow("difference", difference)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     def __mse(self, img1, img2):
         try:
@@ -91,183 +114,211 @@ class ImageCompare:
                 mse_sssim_vals.append(ssim_val)
 
             # Uncomment the following code if you want to use matplot
-            #  lib to see the image difference.
-            # # setup the figure
-            # fig = plt.figure(title)
-            # plt.suptitle("MSE: %.2f, SSIM: %.2f" % (m, s))
-            #
-            # # show first image
-            # ax = fig.add_subplot(1, 2, 1)
-            # plt.imshow(imagea, cmap=plt.cm.gray)
-            # plt.axis("off")
-            #
-            # # show the second image
-            # ax = fig.add_subplot(1, 2, 2)
-            # plt.imshow(imageb, cmap=plt.cm.gray)
-            # plt.axis("off")
-            #
-            # # show the images
-            # plt.show()grayscaling_images_and_comparing
+            # lib to see the image difference.
+            # self._image_difference_thru_matplotlib\
+            #     (mse_val,ssim_val, img1, img2, "first vd second")
+
             return mse_sssim_vals
         except Exception:
             traceback.print_exc()
 
-    def grayscaling_images_and_comparing(self, img1, img2):
+    def _image_difference_thru_matplotlib(self, mse_val,
+                                          ssim_val,
+                                          img1,
+                                          img2,
+                                          title):
+        # setup the figure
+        fig = plt.figure(title)
+        plt.suptitle("MSE: %.2f, SSIM: %.2f" % (mse_val, ssim_val))
+
+        # show first image
+        fig.add_subplot(1, 2, 1)
+        plt.imshow(img1, cmap=plt.cm.gray)
+        plt.axis("off")
+
+        # show the second image
+        fig.add_subplot(1, 2, 2)
+        plt.imshow(img2, cmap=plt.cm.gray)
+        plt.axis("off")
+
+        # show the images
+        plt.show()
+
+    def grayscaling_and_comparing_images_thru_mse_ssim(self,
+                                                       first_image_path,
+                                                       second_image_path):
         """Grayscale the recieved images and compare using SSIM and MSE."""
         try:
-            # convert the images to grayscale
-            first_img = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
-            second_img = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+            first_image_extenion = first_image_path.split(".")[1]
+            second_image_extension = second_image_path.split(".")[1]
 
-            # Uncomment the following code if you want to use matplot
-            #  lib to see the image difference.
+            if first_image_extenion not in ('jpg', 'jpeg', 'png') & \
+                    second_image_extension not in ('jpg', 'jpeg', 'png'):
+                logging.warning("Please provide correct file extensions "
+                                "for image comparison.")
+            # Reading the image files
+            else:
+                img1 = cv2.imread(first_image_path)
+                img2 = cv2.imread(second_image_path)
 
-            # initialize the figure
-            # fig = plt.figure("Images")
-            # images = ("First", first), ("Second", second)
-            # grayscaling_images_and_comparing
-            # loop over the images
-            # for (i, (name, image)) in enumerate(images):
-            #     # show the image
-            #     ax = fig.add_subplot(1, 3, i + 1)
-            #     ax.set_title(name)
-            #     plt.imshow(image, cmap=plt.cm.gray)
-            #     plt.axis("off")
-            #
-            # # show the figure
-            # plt.show()
+                # keep original height
+                width = 2160
+                height = img2.shape[0]
+                dim = (width, height)
 
-        # compare the images
-            self.__mse_ssim_comparison(first_img, second_img)
+                # resizing image2
+                resized_img2 = cv2.resize(img2,
+                                          dim,
+                                          interpolation=cv2.INTER_AREA)
+
+                # convert the images to grayscale
+                first_img = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+                second_img = cv2.cvtColor(resized_img2, cv2.COLOR_BGR2GRAY)
+
+                # Uncomment the following code if you want to use matplot
+                #  lib to see the image difference.
+                # self._comparing_images_visually_thru_matplotlib(first_img,
+                #                                                 second_img)
+
+                # compare the images
+                self.__mse_ssim_comparison(first_img, second_img)
         except Exception:
-            traceback.print_exc()
+            logging.warning("There is some issue in image comparison.")
+
+    def _comparing_images_visually_thru_matplotlib(self, first, second):
+        fig = plt.figure("Images")
+        images = ("First", first), ("Second", second)
+        for (i, (name, image)) in enumerate(images):
+            # show the image
+            ax = fig.add_subplot(1, 3, i + 1)
+            ax.set_title(name)
+            plt.imshow(image, cmap=plt.cm.gray)
+            plt.axis("off")
+
+        # show the figure
+        plt.show()
 
 
 class JsonCompare:
 
-    def compare_json(self, file1, file2, path=""):
+    def compare_json(self, first_json_path, second_json_path, path=""):
+        are_json_different = True
         try:
-            # Reading the jsons and converting them into dictionaries.
-            with open(file1) as first_json:
-                dict1 = json.load(first_json)
-            with open(file2) as second_json:
-                dict2 = json.load(second_json)
+            first_json_extenion = first_json_path.split(".")[1]
+            second_json_extension = second_json_path.split(".")[1]
+            if first_json_extenion not in ('json') & \
+                    second_json_extension not in ('json'):
+                logging.warning("Please provide correct file extensions "
+                                "for json comparison.")
+            # Reading the json files
+            else:
+                # Reading the jsons and converting them into dictionaries.
+                with open(first_json_path) as first_json:
+                    dict1 = json.load(first_json)
+                with open(second_json_path) as second_json:
+                    dict2 = json.load(second_json)
 
-            if path is "":
-                try:
-                    os.remove("../Examples/json_diff.txt")
-                except OSError:
-                    pass
-            for k in dict1.keys():
-                # Checking whether some key present in one dictionary
-                # is not present in other dictionary.
-                if k not in dict2.keys():
-                    keydiff = (str(k) + " as key not in d2")
-                    with open('../Examples/json_diff.txt', 'a') as the_file:
-                        the_file.write(str(keydiff))
+                if dict1 == dict2:
+                    are_json_different = False
                 else:
-                    if type(dict1[k]) is dict:
-                        if path == "":
-                            path = k
+                    if path is "":
+                        try:
+                            os.remove("json_diff.txt")
+                        except OSError:
+                            pass
+                    for k in dict1.keys():
+                        # Checking whether some key present in one dictionary
+                        # is not present in other dictionary.
+                        if k not in dict2.keys():
+                            keydiff = (str(k) + " as key not in d2")
+                            with open('json_diff.txt', 'a') as the_file:
+                                the_file.write(str(keydiff))
                         else:
-                            path = path + "->" + k
-                        # Making recursive call by passing the keys which
-                        # are present as dictionary object.
-                        self.compare_json(dict1[k], dict2[k], path)
-                    else:
-                        if dict1[k] != dict2[k]:
-                            keystr = (str(path), ":")
-                            first_file_val = " First file ", k, " : ", dict1[k]
-                            second_file_val = " Second file ", k, " : ", \
-                                              dict2[k]
+                            if type(dict1[k]) is dict:
+                                if path == "":
+                                    path = k
+                                else:
+                                    path = path + "->" + k
+                                # Making recursive call by passing
+                                # the keys which are present
+                                # as dictionary object.
+                                self.compare_json(dict1[k], dict2[k], path)
+                            else:
+                                if dict1[k] != dict2[k]:
+                                    keystr = (str(path), ":")
+                                    first_file_val = " First file ", k, " : ",\
+                                                     dict1[k]
+                                    second_file_val = " Second file ", k,\
+                                                      " : ", dict2[k]
 
-                            # Writing the difference to the file.
-                            with open('../Examples/json_diff.txt', 'a') \
-                                    as the_file:
-                                the_file.write(str(keystr) + '\n')
-                                the_file.write(str(first_file_val) + '\n')
-                                the_file.write(str(second_file_val) + '\n')
-                                the_file.write('\n')
+                                    # Writing the difference to the file.
+                                    with open('json_diff.txt', 'a') \
+                                            as the_file:
+                                        the_file.write(str(keystr) + '\n')
+                                        the_file.write(str(first_file_val) +
+                                                       '\n')
+                                        the_file.write(str(second_file_val) +
+                                                       '\n')
+                                        the_file.write('\n')
+            return are_json_different
         except JSONDecodeError:
-            print("Invalid json. Please provide file with proper"
-                  " json structure.")
-            quit()
+            logging.warning("Invalid json. Please provide file with proper"
+                            " json structure.")
         except Exception:
-            traceback.print_exc()
+            logging.warning("There is some issue in json comparison.")
 
 
 class ExcelCompare:
 
-    def compare_excel(self, file1, file2):
+    def compare_excel(self, first_excel_path, second_excel_path):
         try:
+            first_excel_extenion = first_excel_path.split(".")[1]
+            second_excel_extension = second_excel_path.split(".")
+            [1]
+            if first_excel_extenion not in ('.xls', '.xlsx') &\
+                    second_excel_extension not in ('.xls', '.xlsx'):
+                logging.warning("Please provide correct file "
+                                "extensions for excel comparison.")
             # Reading the excel files
-            excel1 = pd.read_excel(file1)
-            excel2 = pd.read_excel(file2)
-
-            # Checking if the excels are empty
-            if excel1.empty is True and excel2.empty is True:
-                print("The excel files are empty")
-                quit()
-
-            # Checking whether the no.of rows is same in both excels.
-            elif len(excel1) != len(excel2):
-                print("The no. of rows in both excel is not same")
-                quit()
-
-            # Checking whether the no.of columns is same in both excels.
-            elif len(excel1.columns) == len(excel2.columns):
-                print("The no. of columns in both excel is not same")
-                quit()
             else:
-                # Setting coulmn order same in both excels.
-                excel1.columns = excel2.columns
+                excel1 = pd.read_excel(first_excel_path,
+                                       encoding=sys.getfilesystemencoding())
+                excel2 = pd.read_excel(second_excel_path,
+                                       encoding=sys.getfilesystemencoding())
 
-                # Sorting excel data on the basis of a column.
-                excel1 = excel1.sort_values(
-                    'id', ascending=False).reset_index(inplace=False)
-                excel2 = excel2.sort_values(
-                    'id', ascending=False).reset_index(inplace=False)
+                # Checking if the excels are empty
+                if excel1.empty is True and excel2.empty is True:
+                    logging.warning("The excel files are empty")
 
-                # Getting the difference in data between both excels.
-                difference = excel1[excel1 != excel2]
+                # Checking whether the no.of rows is same in both excels.
+                elif len(excel1) != len(excel2):
+                    logging.warning("The no. of rows in both "
+                                    "excel are not same")
 
-                # Writing the delta between both excels in a separate
-                # excel file.
-                writer = pd.ExcelWriter(
-                    '../Examples/excel_diff.xlsx', engine='xlsxwriter')
-                difference.to_excel(writer, sheet_name='sheet1', index=False)
+                # Checking whether the no.of columns is same in both excels.
+                elif len(excel1.columns) == len(excel2.columns):
+                    logging.warning("The no. of columns in both "
+                                    "excel are not same")
+                else:
+                    # Setting coulmn order same in both excels.
+                    excel1.columns = excel2.columns
+
+                    # Sorting excel data on the basis of a column.
+                    excel1 = excel1.sort_values(
+                        'id', ascending=False).reset_index(inplace=False)
+                    excel2 = excel2.sort_values(
+                        'id', ascending=False).reset_index(inplace=False)
+
+                    # Getting the difference in data between both excels.
+                    difference = excel1[excel1 != excel2]
+
+                    # Writing the delta between both excels in a separate
+                    # excel file.
+                    writer = pd.ExcelWriter(
+                        'excel_diff.xlsx', engine='xlsxwriter')
+                    difference.to_excel(writer,
+                                        sheet_name='sheet1',
+                                        index=False,
+                                        encoding=sys.getfilesystemencoding())
         except Exception:
-            traceback.print_exc()
-
-
-class CompareFiles(ImageCompare, JsonCompare, ExcelCompare):
-
-    def files_to_compare(self, file1, file2):
-        supported_formats = ('.xls', '.xlsx', '.png', '.jpeg', '.jpg', '.json')
-
-        # Checking whether the 2 input files belong to supported formats.
-        if ''.join(pathlib.Path(file1).suffixes) not in supported_formats and \
-                ''.join(pathlib.Path(file2).suffixes) not in supported_formats:
-            print("Not a supported file format.")
-        elif ''.join(pathlib.Path(file1).suffixes) in ('.xls', '.xlsx') and\
-                ''.join(pathlib.Path(file2).suffixes) \
-                in ('.xls', '.xlsx'):
-            ExcelCompare.compare_excel(file1, file2)
-        elif ''.join(pathlib.Path(file1).suffixes) \
-                in ('.png', '.jpeg', '.jpg')\
-                and ''.join(pathlib.Path(file2).suffixes)\
-                in ('.png', '.jpeg', '.jpg'):
-            img1 = cv2.imread(file1)
-            img2 = cv2.imread(file2)
-
-            # keep original height
-            width = 2160
-            height = img2.shape[0]
-            dim = (width, height)
-
-            # resizing image2
-            resized_img2 = cv2.resize(img2, dim, interpolation=cv2.INTER_AREA)
-            ImageCompare.image_compare_thru_opencv(self, img1, resized_img2)
-        elif ''.join(pathlib.Path(file1).suffixes) in ('.json') and \
-             ''.join(pathlib.Path(file2).suffixes) in ('.json'):
-            JsonCompare.compare_json(file1, file2)
+            logging.warning("There is some issue in excel comparison.")
