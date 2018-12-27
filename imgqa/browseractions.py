@@ -53,8 +53,8 @@ class BrowserActions(unittest.TestCase):
                 pagestate = self.driver.execute_script(
                     '''return document.readyState''')
                 if pagestate.lower() == 'complete':
-                    logging.info(
-                        "Current page is in expected state {}" .format(pagestate))
+                    current_state = "Current page is in expected state {}"
+                    logging.info(current_state.format(pagestate))
                     break
                 sleep(0.2)
                 if (datetime.now() - start).total_seconds() > TIME_OUT and pagestate.lower() != 'complete':
@@ -86,8 +86,7 @@ class BrowserActions(unittest.TestCase):
             except Exception:
                 logging.info("Opened browser with session id %s but failed /"
                              "to open url '%s'." % (self.driver.session_id, url))
-                raise AssertionError(
-                    'Opened browser with session id {}.'.format(self.driver.session_id))
+                raise AssertionError('Opened browser with session id {}.'.format(self.driver.session_id))
         else:
             raise AssertionError("url should not be null")
 
