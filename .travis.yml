@@ -8,4 +8,4 @@ before_script:
   - "pip install pycodestyle"
 script:
   - "flake8 imgqa/*.py && flake8 imgqa/*/*.py"
-  - "pycodestyle imgqa/*.py
+  - "pycodestyle imgqa/*.py"
