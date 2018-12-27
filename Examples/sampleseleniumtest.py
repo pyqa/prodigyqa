@@ -1,4 +1,4 @@
-"""Sample test scrpits for selenium pytest sample."""
+"""Sample test scripts for selenium pytest sample."""
 
 from imgqa import BrowserActions
 
