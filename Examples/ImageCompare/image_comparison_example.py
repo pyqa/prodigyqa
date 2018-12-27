@@ -1,4 +1,4 @@
-from imgqa.core.comparison_util import ImageCompare, JsonCompare, ExcelCompare
+from imgqa import ImageCompare, JsonCompare, SpreadsheetCompare
 
 # Variable Stack / Data
 img1_path = "highway.jpg"
@@ -27,7 +27,7 @@ class TestCompareJsons(JsonCompare):
         self.compare_json(json1_path, json2_path)
 
 
-class TestCompareExcels(ExcelCompare):
+class TestCompareExcels(SpreadsheetCompare):
     """Sample Test Suite."""
 
     def test_compare_excels(self):
