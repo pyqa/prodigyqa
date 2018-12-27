@@ -30,7 +30,8 @@ class ImageCompare:
                 difference = cv2.subtract(img1, img2)
 
                 b, g, r = cv2.split(difference)
-                if cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 and cv2.countNonZero(r) == 0:
+                if cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 \
+                        and cv2.countNonZero(r) == 0:
                     images_equal = True
                 else:
                     images_equal = False
@@ -41,7 +42,8 @@ class ImageCompare:
             # This is to close the open windows for any analysis presentation
             # Mostly unsued while running through CLI
 
-            # Uncomment the following code if you have GUI available and want to see the image difference.
+            # Uncomment the following code if you have GUI available and
+            # want to see the image difference.
             # cv2.imshow("difference", difference)
             # cv2.waitKey(0)grayscaling_images_and_comparing
             # cv2.destroyAllWindows()
@@ -88,7 +90,8 @@ class ImageCompare:
                 mse_sssim_vals.append(mse_val)
                 mse_sssim_vals.append(ssim_val)
 
-            # Uncomment the following code if you want to use matplot lib to see the image difference.
+            # Uncomment the following code if you want to use matplot
+            #  lib to see the image difference.
             # # setup the figure
             # fig = plt.figure(title)
             # plt.suptitle("MSE: %.2f, SSIM: %.2f" % (m, s))
@@ -116,13 +119,14 @@ class ImageCompare:
             first_img = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
             second_img = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
-            # Uncomment the following code if you want to use matplot lib to see the image difference.
+            # Uncomment the following code if you want to use matplot
+            #  lib to see the image difference.
 
-            # # initialize the figure
+            # initialize the figure
             # fig = plt.figure("Images")
             # images = ("First", first), ("Second", second)
-            #grayscaling_images_and_comparing
-            # # loop over the images
+            # grayscaling_images_and_comparing
+            # loop over the images
             # for (i, (name, image)) in enumerate(images):
             #     # show the image
             #     ax = fig.add_subplot(1, 3, i + 1)
@@ -142,7 +146,7 @@ class ImageCompare:
 class JsonCompare:
 
     def compare_json(self, file1, file2, path=""):
-        try:grayscaling_images_and_comparing
+        try:
             # Reading the jsons and converting them into dictionaries.
             with open(file1) as first_json:
                 dict1 = json.load(first_json)
@@ -155,36 +159,42 @@ class JsonCompare:
                 except OSError:
                     pass
             for k in dict1.keys():
-                # Checking whether some key present in one dictionary is not present in other dictionary.
-                if not k in dict2.keys():
+                # Checking whether some key present in one dictionary
+                # is not present in other dictionary.
+                if k not in dict2.keys():
                     keydiff = (str(k) + " as key not in d2")
                     with open('../Examples/json_diff.txt', 'a') as the_file:
                         the_file.write(str(keydiff))
                 else:
                     if type(dict1[k]) is dict:
                         if path == "":
-                            path = kgrayscaling_images_and_comparing
+                            path = k
                         else:
                             path = path + "->" + k
-                        # Making recursive call by passing the keys which are present as dictionary object.
+                        # Making recursive call by passing the keys which
+                        # are present as dictionary object.
                         self.compare_json(dict1[k], dict2[k], path)
                     else:
                         if dict1[k] != dict2[k]:
                             keystr = (str(path), ":")
                             first_file_val = " First file ", k, " : ", dict1[k]
-                            second_file_val = " Second file ", k, " : ", dict2[k]
+                            second_file_val = " Second file ", k, " : ", \
+                                              dict2[k]
 
                             # Writing the difference to the file.
-                            with open('../Examples/json_diff.txt', 'a') as the_file:
+                            with open('../Examples/json_diff.txt', 'a') \
+                                    as the_file:
                                 the_file.write(str(keystr) + '\n')
                                 the_file.write(str(first_file_val) + '\n')
                                 the_file.write(str(second_file_val) + '\n')
                                 the_file.write('\n')
         except JSONDecodeError:
-            print("Invalid json. Please provide file with proper json structure.")
+            print("Invalid json. Please provide file with proper"
+                  " json structure.")
             quit()
         except Exception:
             traceback.print_exc()
+
 
 class ExcelCompare:
 
@@ -195,7 +205,7 @@ class ExcelCompare:
             excel2 = pd.read_excel(file2)
 
             # Checking if the excels are empty
-            if excel1.empty == True and excel2.empty == True:
+            if excel1.empty is True and excel2.empty is True:
                 print("The excel files are empty")
                 quit()
 
@@ -218,10 +228,11 @@ class ExcelCompare:
                 excel2 = excel2.sort_values(
                     'id', ascending=False).reset_index(inplace=False)
 
-                #Getting the difference in data between both excels.
+                # Getting the difference in data between both excels.
                 difference = excel1[excel1 != excel2]
 
-                # Writing the delta between both excels in a seperate excel file.
+                # Writing the delta between both excels in a separate
+                # excel file.
                 writer = pd.ExcelWriter(
                     '../Examples/excel_diff.xlsx', engine='xlsxwriter')
                 difference.to_excel(writer, sheet_name='sheet1', index=False)
@@ -229,22 +240,23 @@ class ExcelCompare:
             traceback.print_exc()
 
 
-
-
 class CompareFiles(ImageCompare, JsonCompare, ExcelCompare):
 
     def files_to_compare(self, file1, file2):
-        supported_formats = ('.xls', '.xlsx', '.png', '.jpeg', '.jpg','.json')
+        supported_formats = ('.xls', '.xlsx', '.png', '.jpeg', '.jpg', '.json')
 
         # Checking whether the 2 input files belong to supported formats.
         if ''.join(pathlib.Path(file1).suffixes) not in supported_formats and \
                 ''.join(pathlib.Path(file2).suffixes) not in supported_formats:
             print("Not a supported file format.")
         elif ''.join(pathlib.Path(file1).suffixes) in ('.xls', '.xlsx') and\
-                ''.join(pathlib.Path(file2).suffixes) in ('.xls', '.xlsx'):
+                ''.join(pathlib.Path(file2).suffixes) \
+                in ('.xls', '.xlsx'):
             ExcelCompare.compare_excel(file1, file2)
-        elif ''.join(pathlib.Path(file1).suffixes) in ('.png', '.jpeg', '.jpg') and\
-                ''.join(pathlib.Path(file2).suffixes) in ('.png', '.jpeg', '.jpg'):
+        elif ''.join(pathlib.Path(file1).suffixes) \
+                in ('.png', '.jpeg', '.jpg')\
+                and ''.join(pathlib.Path(file2).suffixes)\
+                in ('.png', '.jpeg', '.jpg'):
             img1 = cv2.imread(file1)
             img2 = cv2.imread(file2)
 
@@ -256,7 +268,6 @@ class CompareFiles(ImageCompare, JsonCompare, ExcelCompare):
             # resizing image2
             resized_img2 = cv2.resize(img2, dim, interpolation=cv2.INTER_AREA)
             ImageCompare.image_compare_thru_opencv(self, img1, resized_img2)
-            #ImageCompare.grayscaling_images_and_comparing(self, img1, resized_img2)
         elif ''.join(pathlib.Path(file1).suffixes) in ('.json') and \
-                        ''.join(pathlib.Path(file2).suffixes) in ('.json'):
+             ''.join(pathlib.Path(file2).suffixes) in ('.json'):
             JsonCompare.compare_json(file1, file2)
