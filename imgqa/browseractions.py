@@ -113,7 +113,7 @@ class BrowserActions(unittest.TestCase):
         """Method to refresh the page by selenium or java script."""
         try:
             self.driver.refresh()
-        except:
+        except BaseException:
             check_point1 = self.driver.execute_script(
                 '''return performance.navigation.type''')
             self.driver.execute_script('''document.location.reload()''')
@@ -210,14 +210,14 @@ class BrowserActions(unittest.TestCase):
         """Simulate back button on browser using selenium or js."""
         try:
             self.driver.back()
-        except:
+        except BaseException:
             self.driver.execute_script("window.history.go(-1)")
 
     def go_forward(self):
         """Simulate forward button on browser using  selenium or js."""
         try:
             self.driver.forward()
-        except:
+        except BaseException:
             self.driver.execute_script("window.history.go(+1)")
 
     def set_window_size(self, width, height):
@@ -287,7 +287,7 @@ class BrowserActions(unittest.TestCase):
         self.page_readiness_wait()
         try:
             return self.driver.switch_to.active_element
-        except:
+        except BaseException:
             return self.driver.execute_script('''document.activeElement''')
 
     def switch_to_window(self, window):
