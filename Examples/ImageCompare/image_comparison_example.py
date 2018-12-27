@@ -1,24 +1,39 @@
-from imgqa.core.comparison_util import CompareFiles
+from imgqa.core.comparison_util import ImageCompare, JsonCompare, ExcelCompare
 
 # Variable Stack / Data
-img1 = "highway.jpg"
-img2 = "highway_altered.jpg"
-img3 = "sea.jpg"
-excel1 = "first.xlsx"
-excel2 = "second.xlsx"
-json1 = "first.json"
-json2 = "second.json"
+img1_path = "highway.jpg"
+img2_path = "highway_altered.jpg"
+img3_path = "sea.jpg"
+excel1_path = "first.xlsx"
+excel2_path = "second.xlsx"
+json1_path = "first.json"
+json2_path = "second.json"
 
 
-class TestCompareFiles(CompareFiles):
+class TestCompareImages(ImageCompare):
     """Sample Test Suite."""
 
-    def test_compare_files(self):
+    def test_compare_images(self):
         # Comparing images
-        self.files_to_compare(img1, img2)
-        # Comparing excels
-        self.files_to_compare(excel1, excel2)
-        # Comparing jsons
-        self.files_to_compare(json1, json2)
+        self.grayscaling_and_comparing_images_thru_mse_ssim(img1_path,
+                                                            img2_path)
+
+
+class TestCompareJsons(JsonCompare):
+    """Sample Test Suite."""
+
+    def test_compare_jsons(self):
+        # Comparing images
+        self.compare_json(json1_path, json2_path)
+
+
+class TestCompareExcels(ExcelCompare):
+    """Sample Test Suite."""
+
+    def test_compare_excels(self):
+        # Comparing images
+        self.compare_excel(excel1_path, excel2_path)
+
+
 
         
