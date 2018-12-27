@@ -1,4 +1,4 @@
-from imgqa.core.comparison_util import ImageCompare, JsonCompare, ExcelCompare
+from imgqa.comparision_util import ImageCompare, JsonCompare, ExcelCompare
 
 # Variable Stack / Data
 img1_path = "highway.jpg"
