@@ -132,7 +132,7 @@ class BrowserActions(unittest.TestCase):
         self.page_readiness_wait()
         try:
             return self.driver.title
-        except:
+        except BaseException:
             return self.driver.execute_script("return document.title")
 
     def get_location(self):
@@ -140,7 +140,7 @@ class BrowserActions(unittest.TestCase):
         self.page_readiness_wait()
         try:
             url = self.driver.current_url
-        except:
+        except BaseException:
             url = self.driver.execute_script("return window.location['href']")
         finally:
             return url if 'http' in url else None
