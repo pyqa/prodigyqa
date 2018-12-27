@@ -1,5 +1,4 @@
 from imgqa.core.comparison_util import CompareFiles
-import cv2
 
 # Variable Stack / Data
 img1 = "highway.jpg"
@@ -18,7 +17,8 @@ class TestCompareFiles(CompareFiles):
         # Comparing images
         self.files_to_compare(img1, img2)
         # Comparing excels
-        self.files_to_compare(excel1, excel2
+        self.files_to_compare(excel1, excel2)
         # Comparing jsons
         self.files_to_compare(json1, json2)
+
         
