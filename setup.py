@@ -45,6 +45,8 @@ setup(
         'pip',
         'setuptools',
         'selenium',
+        'nose',
+        'flake8',
         'pytest>=3.8.2',
         'pytest-html>=1.19.0',
         'requests>=2.19.1',
@@ -52,5 +54,7 @@ setup(
         'nose==1.3.7',
         'ipdb==0.11',
         'flake8==3.5.0',
+        'pytest>=4.0.2',
+        'pytest-html<=1.19.0',
     ],)
 print("\n*** Img-QA Package Installation Complete! ***\n")
