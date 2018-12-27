@@ -1,47 +1,48 @@
+"""Module Holds all spider mechanisms using beautiful soup & selenium."""
 import csv
-from imgqa.browseractions import BrowserActions
+from imgqa import BrowserActions
 
 
 class Webspider(BrowserActions):
+    """Holds the Web Spider using selenium fo browser based login."""
 
     def start_webspider(self, base_url=None, domain=None, csv_file_path=None):
-        if base_url is not None and domain is not None and csv_file_path is not None:
-            distictUrlSet = self._get_distinct_urls(domain, base_url)
-            TwoPageUrlList = self._getNextPageLayerUrls(domain, distictUrlSet)
-            ThreePageUrlList = self._getNextPageLayerUrls(
-                domain, TwoPageUrlList)
-            self._write_to_csv(csv_file_path, ThreePageUrlList, "w")
+        """Start the webspider using selenium."""
+        if base_url and domain and csv_file_path:
+            distict_url_set = self._get_distinct_urls(domain, base_url)
+            two_page_url_list = self._get_next_layer(domain, distict_url_set)
+            three_pageurllist = self._get_next_layer(
+                domain, two_page_url_list)
+            self._write_to_csv(csv_file_path, three_pageurllist, "w")
             self.driver.quit()
 
-    def _getNextPageLayerUrls(self, domainname, UrlSet):
-        nextPageUrlSet = set()
-        urllist = list(UrlSet)
+    def _get_next_layer(self, domainname, urlset):
+        """Fetch another consecutive layer."""
+        pageurl_set = set()
+        urllist = list(urlset)
         for url in urllist:
-            distictUrlSet = self._get_distinct_urls(domainname, url)
-            nextPageUrlSet = nextPageUrlSet.union(distictUrlSet)
-        return nextPageUrlSet
-
-    '''find all urls in a given page'''
+            distict_url_set = self._get_distinct_urls(domainname, url)
+            pageurl_set = pageurl_set.union(distict_url_set)
+        return pageurl_set
 
     def _get_distinct_urls(self, domain, url):
+        """Remove duplicates and filter for the domain name."""
         self.open(url)
         elementlist = self.driver.find_elements_by_xpath("//*[@href]")
-        urlList = []
+        urllist = []
         for element in elementlist:
             urlval = element.get_attribute("href")
-            urlList.append(urlval)
-        '''Remove duplicates and filter for the domain name'''
-        urlSet = set()
-        for item in urlList:
+            urllist.append(urlval)
+        urlset = set()
+        for item in urllist:
             if domain in item:
-                urlSet.add(item)
-        return urlSet
+                urlset.add(item)
+        return urlset
 
-    '''Writes the distinct urls to CSV file'''
-
-    def _write_to_csv(self, fname, urlSet, status):
-        with open(fname, status, newline='') as urlList_file:
-            url_writer = csv.writer(urlList_file)
-            for val in urlSet:
+    def _write_to_csv(self, fname, urlset, status):
+        """Write distinct urls to CSV file."""
+        with open(fname, status, newline='') as urllist_file:
+            url_writer = csv.writer(urllist_file)
+            for val in urlset:
                 url_writer.writerow([val])
-        urlList_file.close()
+        urllist_file.close()
