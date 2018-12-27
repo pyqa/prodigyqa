@@ -2,13 +2,10 @@
 
 from imgqa import BrowserActions
 
-import imgqa.browseractions
 
-class login_module:
-    """
-    please enusre not to change this class name ,username,
-    password and loin_button if login mechanism is present.
-    """
+class Login:
+    """hold all locators for POM style implementation."""
+
     base_url = "https://example.com/"
     login_btn = {"locatorvalue": '//*[@id="menu-item-15255"]/a',
                  "by": "By.XPATH"}
@@ -20,20 +17,19 @@ class login_module:
 
 
 class TestClass(BrowserActions):
-
+    """Test Class Container for test cases."""
     def login(self, username_dict=None,
               password_dict=None,
               login_button=None):
-        """Method for login process."""
         self.send_keys(username_dict)
         self.send_keys(password_dict)
         self.click(login_button)
 
     def test_googlesearch1(self):
         """Just to Open www.google.com and search a list."""
-        self.open(login_module.base_url)
+        self.open(Login.base_url)
         self.maximize()
-        self.click(login_module.login_btn)
-        self.login(username_dict=login_module.username,
-                   password_dict=login_module.password,
-                   login_button=login_module.login_button)
+        self.click(Login.login_btn)
+        self.login(username_dict=Login.username,
+                   password_dict=Login.password,
+                   login_button=Login.login_button)
