@@ -10,6 +10,7 @@ import json
 import matplotlib.pyplot as plt
 import logging
 import sys
+import collections
 
 
 class ImageCompare:
