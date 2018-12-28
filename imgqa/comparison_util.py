@@ -33,7 +33,7 @@ class ImageCompare:
             first_image_extenion = first_image_path.split(".")[1]
             second_image_extension = second_image_path.split(".")[1]
 
-            if first_image_extenion not in ('jpg', 'jpeg', 'png') & \
+            if first_image_extenion not in ('jpg', 'jpeg', 'png') and \
                     second_image_extension not in ('jpg', 'jpeg', 'png'):
                 logging.warning("Please provide correct file extensions "
                                 "for image comparison.")
@@ -167,7 +167,7 @@ class ImageCompare:
             first_image_extenion = first_image_path.split(".")[1]
             second_image_extension = second_image_path.split(".")[1]
 
-            if first_image_extenion not in ('jpg', 'jpeg', 'png') & \
+            if first_image_extenion not in ('jpg', 'jpeg', 'png') and \
                     second_image_extension not in ('jpg', 'jpeg', 'png'):
                 logging.warning("Please provide correct file extensions "
                                 "for image comparison.")
@@ -228,7 +228,7 @@ class JsonCompare:
         try:
             first_json_extenion = first_json_path.split(".")[1]
             second_json_extension = second_json_path.split(".")[1]
-            if first_json_extenion not in ('json') & \
+            if first_json_extenion not in ('json') and \
                     second_json_extension not in ('json'):
                 logging.warning("Please provide correct file extensions "
                                 "for json comparison.")
@@ -306,8 +306,8 @@ class SpreadsheetCompare:
             first_excel_extenion = first_excel_path.split(".")[1]
             second_excel_extension = second_excel_path.split(".")
             [1]
-            if first_excel_extenion not in ('.xls', '.xlsx') &\
-                    second_excel_extension not in ('.xls', '.xlsx'):
+            if first_excel_extenion not in ('xls', 'xlsx') and\
+                    second_excel_extension not in ('xls', 'xlsx'):
                 logging.warning("Please provide correct file "
                                 "extensions for excel comparison.")
             # Reading the excel files
@@ -327,7 +327,7 @@ class SpreadsheetCompare:
                                     "excel are not same")
 
                 # Checking whether the no.of columns is same in both excels.
-                elif len(excel1.columns) == len(excel2.columns):
+                elif len(excel1.columns) != len(excel2.columns):
                     logging.warning("The no. of columns in both "
                                     "excel are not same")
                 else:
