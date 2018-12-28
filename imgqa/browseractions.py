@@ -21,6 +21,12 @@ from selenium.webdriver.support.select import Select
 
 import unittest
 
+import platform
+
+from selenium.webdriver.common.by import By
+
+from PIL import ImageGrab
+
 WAIT_SLEEP_TIME = 0.1  # Seconds
 
 TIME_OUT = 10  # Seconds
@@ -92,14 +98,25 @@ class BrowserActions(unittest.TestCase):
     #     return consruct_locator
 
     def locator_check(self, locator_dict):
-        """Evaluate and assign the right locator strategy."""
-        attributes = (
-            'ID', 'NAME', 'LINK_TEXT', 'PARTIAL_LINK_TEXT',
-            'CLASS_NAME', 'XPATH', 'CSS_SELECTOR', 'TAG_NAME')
-        if locator_dict['by'].upper() in attributes:
-            self.by_value = "BY." + locator_dict['by'].upper()
-        else:
-            raise AssertionError("unknown %s" % locator_dict['by'])
+        """Local Method to classify the type of locator."""
+        text_retrived = locator_dict['by'].upper()
+        if 'ID' in text_retrived:
+            by = By.ID
+        if 'CLASS_NAME' in text_retrived:
+            by = By.CLASS_NAME
+        if 'CSS_SELECTOR' in text_retrived:
+            by = By.CSS_SELECTOR
+        if 'NAME' in text_retrived:
+            by = By.NAME
+        if 'LINK_TEXT' in text_retrived:
+            by = By.LINK_TEXT
+        if 'PARTIAL_LINK_TEXT' in text_retrived:
+            by = By.PARTIAL_LINK_TEXT
+        if 'XPATH' in text_retrived:
+            by = By.XPATH
+        if 'TAG_NAME' in text_retrived:
+            by = By.TAG_NAME
+        self.by_value = by
 
     def open(self, url):
         """Open the passed 'url'."""
@@ -175,15 +192,15 @@ class BrowserActions(unittest.TestCase):
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
+        # self.locator_check(locator)
         self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            return self.driver.find_element(
-                self.by_value, value=locator['value']).click()
+            self.driver.find_element(self.by_value, value=locator['locatorvalue']).click()
         else:
             raise AssertionError("Locator type should be dictionary.")
 
-    def send_keys(self, locator, string):
+    def send_keys(self, locator):
         """Send text but does not clear the existing text.
 
         :param locator: dictionary of identifier type
@@ -192,9 +209,15 @@ class BrowserActions(unittest.TestCase):
         """
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            return self.driver.find_element(
-                self.by_value,
-                value=locator['value']).send_keys(string)
+            self.locator_check(locator)
+            elm = self.driver.find_element(self.by_value, locator['locatorvalue'])
+            elm.send_keys(locator['value'])
+            print('*********')
+            print(elm)
+            print(self.by_value)
+            print(locator['value'])
+            print('*********')
+
         else:
             raise AssertionError("Locator type should be dictionary.")
 
@@ -243,7 +266,14 @@ class BrowserActions(unittest.TestCase):
 
     def maximize(self):
         """Maximize the current window."""
-        self.driver.maximize_window()
+        # https://bugs.chromium.org/p/chromedriver/issues/detail?id=985
+        # reoccurs again and again
+        if platform.system() == 'Darwin':
+            img = ImageGrab.grab()
+            screen_size = img.size
+            self.set_window_size(screen_size[0], screen_size[1])
+        else:
+            self.driver.maximize_window()
 
     def get_driver_name(self):
         """Return the name of webdriver instance."""
