@@ -4,7 +4,6 @@ import pandas as pd
 import cv2
 from skimage.measure import compare_ssim as ssim
 import numpy as np
-import traceback
 from json import JSONDecodeError
 import os
 import json
@@ -82,11 +81,26 @@ class ImageCompare:
             logging.warning("There is some issue in image comparison.")
 
     def _visual_difference(self, difference):
-        cv2.imshow("difference", difference)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        r"""Shows the difference between 2 images.
+        :param difference: CV2 difference between 2 images
+        :return: NA
+        :rtype: NA
+        """
+        try:
+            cv2.imshow("difference", difference)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+        except Exception:
+            logging.warning("There is some issue in _visual_difference "
+                            "method.")
 
     def __mse(self, img1, img2):
+        r"""Calculate the mse error between the 2 images
+        :param img1: First image to compare.
+        :param img2: Second image to compare.
+        :return: mse error value between 2 images.
+        :rtype: float number
+        """
         try:
             # the 'MSE(Mean Squared Error)' between the two images is the
             # sum of the squared difference between the two images;
@@ -98,7 +112,8 @@ class ImageCompare:
             # the two images are
             return err
         except Exception:
-            traceback.print_exc()
+            logging.warning("There is some issue in mse "
+                            "calculation of 2 images.")
 
     def __mse_ssim_comparison(self, img1, img2):
 
@@ -127,29 +142,44 @@ class ImageCompare:
 
             return mse_sssim_vals
         except Exception:
-            traceback.print_exc()
+            logging.warning("There is some issue in image's mse "
+                            "and ssim comparison.")
 
     def _image_difference_thru_matplotlib(self, mse_val,
                                           ssim_val,
                                           img1,
                                           img2,
                                           title):
-        # setup the figure
-        fig = plt.figure(title)
-        plt.suptitle("MSE: %.2f, SSIM: %.2f" % (mse_val, ssim_val))
+        r"""Provide configuration for displaying images through matplot lib
+        along with their mse and ssim values.
+        :param mse_val: mse index value of the 2 images.
+        :param ssim_val: ssim index value of the 2 images.
+        :param img1: First image to compare.
+        :param img2: Second image to compare.
+        :param title: Title for comparison to be shown through matplot lib.
+        :return: NA
+        :rtype: NA
+        """
+        try:
+            # setup the figure
+            fig = plt.figure(title)
+            plt.suptitle("MSE: %.2f, SSIM: %.2f" % (mse_val, ssim_val))
 
-        # show first image
-        fig.add_subplot(1, 2, 1)
-        plt.imshow(img1, cmap=plt.cm.gray)
-        plt.axis("off")
+            # show first image
+            fig.add_subplot(1, 2, 1)
+            plt.imshow(img1, cmap=plt.cm.gray)
+            plt.axis("off")
 
-        # show the second image
-        fig.add_subplot(1, 2, 2)
-        plt.imshow(img2, cmap=plt.cm.gray)
-        plt.axis("off")
+            # show the second image
+            fig.add_subplot(1, 2, 2)
+            plt.imshow(img2, cmap=plt.cm.gray)
+            plt.axis("off")
 
-        # show the images
-        plt.show()
+            # show the images
+            plt.show()
+        except Exception:
+            logging.warning("There is some issue in "
+                            "_image_difference_thru_matplotlib method.")
 
     def grayscaling_and_comparing_images_thru_mse_ssim(self,
                                                        first_image_path,
@@ -201,18 +231,32 @@ class ImageCompare:
         except Exception:
             logging.warning("There is some issue in image comparison.")
 
-    def _comparing_images_visually_thru_matplotlib(self, first, second):
-        fig = plt.figure("Images")
-        images = ("First", first), ("Second", second)
-        for (i, (name, image)) in enumerate(images):
-            # show the image
-            ax = fig.add_subplot(1, 3, i + 1)
-            ax.set_title(name)
-            plt.imshow(image, cmap=plt.cm.gray)
-            plt.axis("off")
+    def _comparing_images_visually_thru_matplotlib(self,
+                                                   first_img,
+                                                   second_img):
+        r"""Displays the 2 images using matplotlib along with
+         their mse and ssim values.
+        :param first_img: First image to compare.
+        :param second_img: Second image to compare.
+        :return: NA
+        :rtype: NA
+        """
+        try:
+            fig = plt.figure("Images")
+            images = ("First", first_img), ("Second", second_img)
+            for (i, (name, image)) in enumerate(images):
+                # show the image
+                ax = fig.add_subplot(1, 3, i + 1)
+                ax.set_title(name)
+                plt.imshow(image, cmap=plt.cm.gray)
+                plt.axis("off")
 
-        # show the figure
-        plt.show()
+            # show the figure
+            plt.show()
+        except Exception:
+            logging.warning("There is some issue in "
+                            "_comparing_images_visually_thru_matplotlib "
+                            "method.")
 
 
 class JsonCompare:
@@ -225,7 +269,7 @@ class JsonCompare:
         :return: True/False depending upon whether both jsons are same or not.
         :rtype: boolean
         """
-        are_json_different = True
+        are_json_different = False
         try:
             if type(first_json_path) is not dict and \
                             type(second_json_path) is not dict:
@@ -243,48 +287,67 @@ class JsonCompare:
                 with open(second_json_path) as second_json:
                     dict2 = json.load(second_json)
 
-                if dict1 == dict2:
-                    are_json_different = False
-                else:
-                    if path is "":
-                        try:
-                            os.remove("json_diff.txt")
-                        except OSError:
-                            pass
-                    for k in dict1.keys():
-                        # Checking whether some key present in one dictionary
-                        # is not present in other dictionary.
-                        if k not in dict2.keys():
-                            keydiff = (str(k) + " as key not in d2")
-                            with open('json_diff.txt', 'a') as the_file:
-                                the_file.write(str(keydiff))
-                        else:
-                            if type(dict1[k]) is dict:
-                                if path == "":
-                                    path = k
-                                else:
-                                    path = path + "->" + k
-                                # Making recursive call by passing
-                                # the keys which are present
-                                # as dictionary object.
-                                self.compare_json(dict1[k], dict2[k], path)
-                            else:
-                                if dict1[k] != dict2[k]:
-                                    keystr = (str(path), ":")
-                                    first_file_val = " First file ", k, " : ",\
-                                                     dict1[k]
-                                    second_file_val = " Second file ", k,\
-                                                      " : ", dict2[k]
+                if path is "":
+                    try:
+                        os.remove("json_diff.txt")
+                    except OSError:
+                        pass
 
-                                    # Writing the difference to the file.
+                # Sorting the dictionaries.
+                sorted_dict1 = collections.OrderedDict(sorted(dict1.items()))
+                sorted_dict2 = collections.OrderedDict(sorted(dict2.items()))
+
+                # Checking whether both json objects are instances of dict.
+                if isinstance(dict1, dict) and isinstance(dict2, dict):
+                    # Checking whether length of both dictionaries is same.
+                    if len(dict1) == len(dict2):
+                        # Checking if the keys are matching in both
+                        # dictionaries.
+                        if sorted_dict1.keys() == sorted_dict2.keys():
+                            for k in dict1.keys():
+                                # Checking whether some key present in one
+                                # dictionary is not present in
+                                # other dictionary.
+                                if k not in dict2.keys():
+                                    keydiff = (str(k) +
+                                               " as key not in d2")
                                     with open('json_diff.txt', 'a') \
                                             as the_file:
-                                        the_file.write(str(keystr) + '\n')
-                                        the_file.write(str(first_file_val) +
-                                                       '\n')
-                                        the_file.write(str(second_file_val) +
-                                                       '\n')
-                                        the_file.write('\n')
+                                        the_file.write(str(keydiff))
+                                else:
+                                    if type(dict1[k]) is dict:
+                                        if path == "":
+                                            path = k
+                                        else:
+                                            path = path + "->" + k
+                                        # Making recursive call by passing
+                                        # the keys which are present
+                                        # as dictionary object.
+                                        self.compare_json(dict1[k],
+                                                          dict2[k],
+                                                          path)
+                                    else:
+                                        if dict1[k] != dict2[k]:
+                                            are_json_different = True
+                                            keystr = (str(path), ":")
+                                            first_file_val = " First file ", \
+                                                             k, " : ", dict1[k]
+                                            second_file_val = " Second file "\
+                                                , k, " : ", dict2[k]
+
+                                            # Writing the difference to
+                                            # the file.
+                                            with open('json_diff.txt', 'a') \
+                                                    as the_file:
+                                                the_file.write(str(keystr)
+                                                               + '\n')
+                                                the_file.write\
+                                                    (str(first_file_val)
+                                                     + '\n')
+                                                the_file.write\
+                                                    (str(second_file_val)
+                                                     + '\n')
+                                                the_file.write('\n')
             return are_json_different
         except JSONDecodeError:
             logging.warning("Invalid json. Please provide file with proper"
