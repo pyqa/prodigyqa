@@ -167,8 +167,9 @@ class ImageCompare:
             first_image_extenion = first_image_path.split(".")[1]
             second_image_extension = second_image_path.split(".")[1]
 
-            if first_image_extenion not in ('jpg', 'jpeg', 'png') and \
-                    second_image_extension not in ('jpg', 'jpeg', 'png'):
+            if first_image_extenion not in ('jpg', 'jpeg', 'png') \
+                    and second_image_extension not in\
+                    ('jpg', 'jpeg', 'png'):
                 logging.warning("Please provide correct file extensions "
                                 "for image comparison.")
             # Reading the image files
@@ -226,12 +227,14 @@ class JsonCompare:
         """
         are_json_different = True
         try:
-            first_json_extenion = first_json_path.split(".")[1]
-            second_json_extension = second_json_path.split(".")[1]
-            if first_json_extenion not in ('json') and \
-                    second_json_extension not in ('json'):
-                logging.warning("Please provide correct file extensions "
-                                "for json comparison.")
+            if type(first_json_path) is not dict and \
+                            type(second_json_path) is not dict:
+                first_json_extenion = first_json_path.split(".")[1]
+                second_json_extension = second_json_path.split(".")[1]
+                if first_json_extenion not in ('json') and \
+                        second_json_extension not in ('json'):
+                    logging.warning("Please provide correct file extensions "
+                                    "for json comparison.")
             # Reading the json files
             else:
                 # Reading the jsons and converting them into dictionaries.
