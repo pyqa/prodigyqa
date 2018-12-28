@@ -25,7 +25,8 @@ import platform
 
 from selenium.webdriver.common.by import By
 
-from PIL import ImageGrab
+if platform.system() == 'Darwin':
+    from PIL import ImageGrab
 
 WAIT_SLEEP_TIME = 0.1  # Seconds
 
