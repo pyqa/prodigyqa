@@ -1,6 +1,7 @@
 pip
 setuptools
 selenium
+pillow
 pytest-html>=1.19.0
 requests>=2.19.1
 urllib3==1.23
