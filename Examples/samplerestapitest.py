@@ -30,5 +30,5 @@ class TestClass(ApiTester):
         users = self.apirequest(method="post", url=uri, data=payload)
         resp = json.loads(users.text)
         logging.warning(resp)
-        self.assert_in_resp(resp, member='2018-11-20',
-                            container='resp.createdAt')
+        self.assert_not_in_resp(resp, member='2018-11-20',
+                                container='resp.createdAt')
