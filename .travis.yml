@@ -19,7 +19,8 @@ before_script:
   - "flake8 imgqa/*.py && flake8 imgqa/*/*.py"
   - "flake8 Examples/*.py && flake8 Examples/*/*.py"
   - "pycodestyle imgqa/*.py && pycodestyle Examples/*/*.py"
-  - "chrome_driver_install.sh"
+  - ls
+  - bash chrome_driver_install.sh
 
 script:
   - pytest Examples/samplerestapitest.py
