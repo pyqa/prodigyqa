@@ -196,7 +196,9 @@ class BrowserActions(unittest.TestCase):
         self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            self.driver.find_element(self.by_value, value=locator['locatorvalue']).click()
+            self.driver.find_element(
+                self.by_value,
+                value=locator['locatorvalue']).click()
         else:
             raise AssertionError("Locator type should be dictionary.")
 
@@ -210,14 +212,9 @@ class BrowserActions(unittest.TestCase):
         self.page_readiness_wait()
         if isinstance(locator, dict):
             self.locator_check(locator)
-            elm = self.driver.find_element(self.by_value, locator['locatorvalue'])
-            elm.send_keys(locator['value'])
-            print('*********')
-            print(elm)
-            print(self.by_value)
-            print(locator['value'])
-            print('*********')
-
+            self.driver.find_element(
+                self.by_value,
+                locator['locatorvalue']).send_keys(locator['value'])
         else:
             raise AssertionError("Locator type should be dictionary.")
 
