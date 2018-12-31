@@ -1,26 +1,113 @@
 # -*- coding: utf-8 -*-
 """Comparison Module for Images, Files like CSV, Excel, PDF etc."""
-import pandas as pd
-import cv2
-from skimage.measure import compare_ssim as ssim
-import numpy as np
-from json import JSONDecodeError
 import os
-import json
-import matplotlib.pyplot as plt
-import logging
 import sys
 import collections
+try:
+    import pandas as pd
+except ImportError:
+    os.system("pip install pandas")
+    import pandas as pd
+try:
+    import cv2
+except ImportError:
+    os.system("pip install opencv-python")
+    import cv2
+try:
+    from skimage.measure import compare_ssim as ssim
+except ImportError:
+    os.system("pip install scikit-image")
+    from skimage.measure import compare_ssim as ssim
+try:
+    import numpy as np
+except ImportError:
+    os.system("pip install numpy")
+    import numpy as np
+try:
+    import json
+except ImportError:
+    os.system("pip install jsonlib")
+    import json
+from json import JSONDecodeError
+
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    os.system("python -m pip install -U pip setuptools")
+    os.system("python -m pip install matplotlib")
+    import matplotlib.pyplot as plt
+try:
+    import logging
+except ImportError:
+    os.system("pip install logging")
+    import logging
 
 
-class ImageCompare:
-    """Image Comparison method class container."""
+class CompareFiles:
+    """File Comparison method class container."""
 
     images_equal = False
     images_same_size_channel = False
     mse_ssim_equality = True
+    width = 2160
 
-    def image_compare_thru_opencv(self, first_image_path, second_image_path):
+    def compare_images(self,
+                       first_image_path,
+                       second_image_path):
+        """Compare two images on the basis mse and ssim index and returns.
+
+        a list containing True/False depending on whether 2 images are same
+        or not, mse value and ssim value.
+        :param first_image_path: Path for the first image file to compare.
+        :param second_image_path: Path for the second image file to compare.
+        :return: list containing True/False depending on whether 2 images
+        are same or not, mse value and ssim value.
+        :rtype: list
+        """
+        try:
+            first_image_extenion = first_image_path.split(".")[1]
+            second_image_extension = second_image_path.split(".")[1]
+
+            if first_image_extenion not in ('jpg', 'jpeg', 'png') \
+                    and second_image_extension not in \
+                    ('jpg', 'jpeg', 'png'):
+                logging.warning("Please provide correct file extensions "
+                                "for image comparison.")
+            # Reading the image files
+            else:
+                img1 = cv2.imread(first_image_path)
+                img2 = cv2.imread(second_image_path)
+
+                # keep original height
+                height = img2.shape[0]
+                dim = (self.width, height)
+
+                # resizing image2
+                resized_img2 = cv2.resize(img2,
+                                          dim,
+                                          interpolation=cv2.INTER_AREA)
+
+                # convert the images to grayscale
+                first_img = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+                second_img = cv2.cvtColor(resized_img2, cv2.COLOR_BGR2GRAY)
+
+                # Uncomment the following code if you want to use matplot
+                #  lib to see the image difference.
+                # self._comparing_images_visually_thru_matplotlib(first_img,
+                #                                                 second_img)
+
+                # compare the images
+                comparison_dict = self.__mse_ssim_comparison(first_img,
+                                                             second_img)
+                cv_compare_val = self.__image_compare_thru_opencv(
+                                               first_image_path,
+                                               second_image_path)
+                comparison_dict.append(cv_compare_val)
+                return comparison_dict
+        except Exception:
+            logging.warning("There is some issue in image comparison.")
+
+    def __image_compare_thru_opencv(self, first_image_path, second_image_path):
         """Compare two images using OpenCV library, on the basis of their shapes.
 
         and b, g, r channels and return True/False depending on whether the
@@ -28,7 +115,7 @@ class ImageCompare:
         :param first_image_path: Path for the first image file to compare.
         :param second_image_path: Path for the second image file to compare.
         :return: True/False depending upon whether both images are same or not.
-        :rtype: boolean.
+        :rtype: boolean
         """
         try:
             first_image_extenion = first_image_path.split(".")[1]
@@ -44,9 +131,8 @@ class ImageCompare:
                 img2 = cv2.imread(second_image_path)
 
                 # keep original height
-                width = 2160
                 height = img2.shape[0]
-                dim = (width, height)
+                dim = (self.width, height)
 
                 # resizing image2
                 resized_img2 = cv2.resize(img2,
@@ -76,14 +162,13 @@ class ImageCompare:
 
                 if images_same_size_channel is True and images_equal is True:
                     return True
-
                 else:
                     return False
         except Exception:
             logging.warning("There is some issue in image comparison.")
 
     def _visual_difference(self, difference):
-        """Show the difference between 2 images.
+        """Shows the difference between 2 images.
 
         :param difference: CV2 difference between 2 images
         :return: NA
@@ -120,7 +205,14 @@ class ImageCompare:
                             "calculation of 2 images.")
 
     def __mse_ssim_comparison(self, img1, img2):
+        """Calculate mse and ssim values for the images provided.
 
+        :param img1: First image to compare.
+        :param img2: Second image to compare.
+        :return: dictionary containing mse, ssim values and
+        True/False depending on the equlaity of images.
+        :rtype: dictionary
+        """
         mse_sssim_vals = []
 
         """SSIM and Mean Squared Error Comparison."""
@@ -186,63 +278,11 @@ class ImageCompare:
             logging.warning("There is some issue in "
                             "_image_difference_thru_matplotlib method.")
 
-    def grayscaling_and_comparing_images_thru_mse_ssim(self,
-                                                       first_image_path,
-                                                       second_image_path):
-        """Compare two images on the basis mse and ssim index and returns.
-
-        a list containing True/False depending on whether 2 images are same
-        or not, mse value and ssim value.
-        :param first_image_path: Path for the first image file to compare.
-        :param second_image_path: Path for the second image file to compare.
-        :return: list containing True/False depending on whether 2 images
-        are same or not, mse value and ssim value.
-        :rtype: list
-        """
-        try:
-            first_image_extenion = first_image_path.split(".")[1]
-            second_image_extension = second_image_path.split(".")[1]
-
-            if first_image_extenion not in ('jpg', 'jpeg', 'png') \
-                    and second_image_extension not in\
-                    ('jpg', 'jpeg', 'png'):
-                logging.warning("Please provide correct file extensions "
-                                "for image comparison.")
-            # Reading the image files
-            else:
-                img1 = cv2.imread(first_image_path)
-                img2 = cv2.imread(second_image_path)
-
-                # keep original height
-                width = 2160
-                height = img2.shape[0]
-                dim = (width, height)
-
-                # resizing image2
-                resized_img2 = cv2.resize(img2,
-                                          dim,
-                                          interpolation=cv2.INTER_AREA)
-
-                # convert the images to grayscale
-                first_img = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
-                second_img = cv2.cvtColor(resized_img2, cv2.COLOR_BGR2GRAY)
-
-                # Uncomment the following code if you want to use matplot
-                #  lib to see the image difference.
-                # self._comparing_images_visually_thru_matplotlib(first_img,
-                #                                                 second_img)
-
-                # compare the images
-                self.__mse_ssim_comparison(first_img, second_img)
-        except Exception:
-            logging.warning("There is some issue in image comparison.")
-
     def _comparing_images_visually_thru_matplotlib(self,
                                                    first_img,
                                                    second_img):
-        """Display the 2 images using matplotlib along with.
-
-        their mse and ssim values.
+        """Displays the 2 images using matplotlib along with.
+         their mse and ssim values.
         :param first_img: First image to compare.
         :param second_img: Second image to compare.
         :return: NA
@@ -265,28 +305,23 @@ class ImageCompare:
                             "_comparing_images_visually_thru_matplotlib "
                             "method.")
 
+    def compare_json(self, first_json_path, second_json_path):
+        """Compare two jsons and generates a text file containing the.
 
-class JsonCompare:
-    """JSON Compare."""
-
-    def compare_json(self, first_json_path, second_json_path, path=""):
-        """Compare two jsons and generates a text file containing the difference.
-
+            difference.
         :param first_json_path: Path for the first json file to compare.
         :param second_json_path: Path for the second json file to compare.
         :return: True/False depending upon whether both jsons are same or not.
         :rtype: boolean
         """
-        are_json_different = False
+
         try:
-            if type(first_json_path) is not dict and \
-                    type(second_json_path) is not dict:
-                first_json_extenion = first_json_path.split(".")[1]
-                second_json_extension = second_json_path.split(".")[1]
-                if first_json_extenion not in ('json') and \
-                        second_json_extension not in ('json'):
-                    logging.warning("Please provide correct file extensions "
-                                    "for json comparison.")
+            first_json_extenion = first_json_path.split(".")[1]
+            second_json_extension = second_json_path.split(".")[1]
+            if first_json_extenion != 'json' and \
+                    second_json_extension != 'json':
+                logging.warning("Please provide correct file extensions "
+                                "for json comparison.")
             # Reading the json files
             else:
                 # Reading the jsons and converting them into dictionaries.
@@ -295,65 +330,90 @@ class JsonCompare:
                 with open(second_json_path) as second_json:
                     dict2 = json.load(second_json)
 
-                if path is "":
-                    try:
-                        os.remove("json_diff.txt")
-                    except OSError:
-                        pass
+                boolean_json_diff = self.write_json_diff_to_file(dict1, dict2)
+            return boolean_json_diff
 
-                # Sorting the dictionaries.
-                sorted_dict1 = collections.OrderedDict(sorted(dict1.items()))
-                sorted_dict2 = collections.OrderedDict(sorted(dict2.items()))
+        except JSONDecodeError:
+            logging.warning("Invalid json. Please provide file with proper"
+                            " json structure.")
+        except Exception:
+            logging.warning("There is some issue in json comparison.")
 
-                # Checking whether both json objects are instances of dict.
-                if isinstance(dict1, dict) and isinstance(dict2, dict):
-                    # Checking whether length of both dictionaries is same.
-                    if len(dict1) == len(dict2):
-                        # Checking if the keys are matching in both
-                        # dictionaries.
-                        if sorted_dict1.keys() == sorted_dict2.keys():
-                            for k in dict1.keys():
-                                # Checking whether some key present in one
-                                # dictionary is not present in
-                                # other dictionary.
-                                if k not in dict2.keys():
-                                    keydiff = (str(k) +
-                                               " as key not in d2")
-                                    with open('json_diff.txt', 'a') \
-                                            as the_file:
-                                        the_file.write(str(keydiff))
-                                else:
-                                    if type(dict1[k]) is dict:
-                                        if path == "":
-                                            path = k
-                                        else:
-                                            path = path + "->" + k
-                                        # Making recursive call by passing
-                                        # the keys which are present
-                                        # as dictionary object.
-                                        self.compare_json(dict1[k],
-                                                          dict2[k],
-                                                          path)
+    def write_json_diff_to_file(self, dict1, dict2, path=""):
+        """Compare two json and writes the difference to a file.
+
+        :param dict1: first dictionary to compare.
+        :param dict2: second dictionary to compare.
+        :return: True/False depending upon whether both jsons are same or not.
+        :rtype: boolean
+        """
+        are_json_different = False
+        try:
+            # Sorting the dictionaries.
+            sorted_dict1 = collections.OrderedDict(sorted(dict1.items()))
+            sorted_dict2 = collections.OrderedDict(sorted(dict2.items()))
+            if path is "":
+                try:
+                    os.remove("json_diff.txt")
+                except OSError:
+                    pass
+
+            # Checking whether both json objects are instances of dict.
+            if isinstance(dict1, dict) and isinstance(dict2, dict):
+                # Checking whether length of both dictionaries is same.
+                if len(dict1) == len(dict2):
+                    # Checking if the keys are matching in both
+                    # dictionaries.
+                    if sorted_dict1.keys() == sorted_dict2.keys():
+                        for k in dict1.keys():
+                            # Checking whether some key present in one
+                            # dictionary is not present in
+                            # other dictionary.
+                            if k not in dict2.keys():
+                                keydiff = (str(k) +
+                                           " as key not in d2")
+                                with open('json_diff.txt', 'a') \
+                                        as the_file:
+                                    the_file.write(str(keydiff))
+                            else:
+                                if type(dict1[k]) is dict:
+                                    if path == "":
+                                        path = k
                                     else:
-                                        if dict1[k] != dict2[k]:
-                                            are_json_different = True
-                                            keystr = (str(path), ":")
-                                            first_file_val = " First file ", \
-                                                k, " : ", dict1[k]
-                                            second_file_val = "Second file ",\
-                                                k, " : ", dict2[k]
+                                        path = path + "->" + k
+                                    # Making recursive call by passing
+                                    # the keys which are present
+                                    # as dictionary object.
+                                    self.write_json_diff_to_file(dict1[k],
+                                                                 dict2[k],
+                                                                 path)
+                                else:
+                                    if dict1[k] != dict2[k]:
+                                        are_json_different = True
+                                        keystr = (str(path), ":")
+                                        first_file_val = " First file ", \
+                                                         k, " : ", dict1[k]
+                                        second_file_val = " Second file ",\
+                                                          k, " : ", dict2[k]
 
-                                            # Writing the difference to
-                                            # the file.
-                                            with open('json_diff.txt', 'a') \
-                                                    as the_file:
-                                                the_file.write(str(
-                                                    keystr) + '\n')
-                                                the_file.write(str(
-                                                    first_file_val) + '\n')
-                                                the_file.write(str(
-                                                    second_file_val) + '\n')
-                                                the_file.write('\n')
+                                        # Writing the difference to
+                                        # the file.
+                                        with open('json_diff.txt', 'a') \
+                                                as the_file:
+                                            the_file.write(str(keystr)
+                                                           + '\n')
+                                            the_file.write(str(first_file_val)
+                                                           + '\n')
+                                            the_file.write(str(second_file_val)
+                                                           + '\n')
+                                            the_file.write('\n')
+                    else:
+                        logging.warning("Keys are different in "
+                                        "both dictionaries.")
+                else:
+                    logging.warning("Length of both dictionaries"
+                                    " is different.")
+
             return are_json_different
         except JSONDecodeError:
             logging.warning("Invalid json. Please provide file with proper"
@@ -361,12 +421,8 @@ class JsonCompare:
         except Exception:
             logging.warning("There is some issue in json comparison.")
 
-
-class SpreadsheetCompare:
-    """Spreadsheet compare."""
-
     def compare_excel(self, first_excel_path, second_excel_path):
-        """Compare two excels and generates an excel file containing.
+        """Compare two excels and generates an excel file containing the.
 
         difference. If resultant excel file contain empty cell that means
         the value is same in both excels else not.
@@ -377,10 +433,10 @@ class SpreadsheetCompare:
         """
         are_excels_different = True
         try:
-            first_excel_extenion = first_excel_path.split(".")[1]
+            first_excel_extension = first_excel_path.split(".")[1]
             second_excel_extension = second_excel_path.split(".")
             [1]
-            if first_excel_extenion not in ('xls', 'xlsx') and\
+            if first_excel_extension not in ('xls', 'xlsx') and \
                     second_excel_extension not in ('xls', 'xlsx'):
                 logging.warning("Please provide correct file "
                                 "extensions for excel comparison.")
