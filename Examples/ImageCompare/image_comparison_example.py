@@ -26,4 +26,3 @@ class TestCompareFiles(CompareFiles):
     def test_compare_excels(self):
         """Compare excels."""
         self.compare_excel(excel1_path, excel2_path)
-
