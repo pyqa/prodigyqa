@@ -1,0 +1,13 @@
+{  
+   "maps":{  
+      "id":"blablas",
+      "iscategorical":"0"
+   },
+   "masks":{  
+      "id":"valore"
+   },
+   "om_points":"values",
+   "parameters":{  
+      "id":"valore"
+   }
+}
