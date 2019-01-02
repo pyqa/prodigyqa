@@ -18,11 +18,11 @@ class TestCompareFiles(CompareFiles):
         """Compare images."""
         self.compare_images(img1_path,
                             img2_path)
-        
+
     def test_compare_jsons(self):
         """Comparing jsons."""
         self.compare_json(json1_path, json2_path)
-        
+
     def test_compare_excels(self):
         """Compare excels."""
         self.compare_excel(excel1_path, excel2_path)
