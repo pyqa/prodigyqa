@@ -118,8 +118,8 @@ class CompareFiles:
         :rtype: boolean
         """
         try:
-            first_image_extenion = first_image_path.split(".")[1]
-            second_image_extension = second_image_path.split(".")[1]
+            first_image_extenion = first_image.split(".")[1]
+            second_image_extension = second_image.split(".")[1]
 
             if first_image_extenion not in ('jpg', 'jpeg', 'png') and \
                     second_image_extension not in ('jpg', 'jpeg', 'png'):
