@@ -421,31 +421,57 @@ class CompareFiles:
         except Exception:
             logging.warning("There is some issue in json comparison.")
 
-    def compare_excel(self, first_excel, second_excel):
-        """Compare two excels and generates an excel file containing the.
+    def compare_spreadsheet(self, first_sheet, second_sheet):
+        """Compare two spreadsheets and generates an excel file containing the.
 
         difference. If resultant excel file contain empty cell that means
         the value is same in both excels else not.
-        :param first_excel_path: Path for the first excel file to compare.
-        :param second_excel_path: Path for the second excel file to compare.
-        :return: True/False depending upon whether both excels are same or not.
+        :param first_sheet: Path for the first sheet to compare.
+        :param second_sheet: Path for the second sheet to compare.
+        :return: True/False depending upon whether both sheets are same or not.
         :rtype: boolean
         """
-        are_excels_different = True
+        are_sheets_different = True
         try:
-            first_excel_extension = first_excel.split(".")[1]
-            second_excel_extension = second_excel.split(".")
-            [1]
-            if first_excel_extension not in ('xls', 'xlsx') and \
-                    second_excel_extension not in ('xls', 'xlsx'):
+            first_sheet_extension = first_sheet.split(".")[1]
+            second_sheet_extension = second_sheet.split(".")[1]
+            if first_sheet_extension not in ('xls', 'xlsx', 'csv') and \
+                    second_sheet_extension not in ('xls', 'xlsx', 'csv'):
                 logging.warning("Please provide correct file "
-                                "extensions for excel comparison.")
+                                "extensions for spreadsheet comparison.")
             # Reading the excel files
             else:
-                excel1 = pd.read_excel(first_excel,
-                                       encoding=sys.getfilesystemencoding())
-                excel2 = pd.read_excel(second_excel,
-                                       encoding=sys.getfilesystemencoding())
+                if first_sheet_extension in ('csv') and \
+                        second_sheet_extension in ('csv'):
+                    writer = pd.ExcelWriter(
+                        'csv_excel1.xlsx', engine='xlsxwriter')
+                    pd.read_csv(first_sheet).\
+                        to_excel(writer,
+                                 sheet_name='sheet1',
+                                 index=False,
+                                 encoding=sys.getfilesystemencoding()
+                                 )
+                    writer = pd.ExcelWriter(
+                        'csv_excel2.xlsx', engine='xlsxwriter')
+                    pd.read_csv(second_sheet).\
+                        to_excel(writer,
+                                 sheet_name='sheet1',
+                                 index=False,
+                                 encoding=sys.getfilesystemencoding()
+                                 )
+                    excel1 = pd.read_excel('csv_excel1.xlsx',
+                                           encoding=sys.getfilesystemencoding()
+                                           )
+                    excel2 = pd.read_excel('csv_excel2.xlsx',
+                                           encoding=sys.getfilesystemencoding()
+                                           )
+                else:
+                    excel1 = pd.read_excel(first_sheet,
+                                           encoding=sys.getfilesystemencoding()
+                                           )
+                    excel2 = pd.read_excel(second_sheet,
+                                           encoding=sys.getfilesystemencoding()
+                                           )
 
                 # Checking if the excels are empty
                 if excel1.empty is True and excel2.empty is True:
@@ -465,15 +491,18 @@ class CompareFiles:
                     excel1.columns = excel2.columns
 
                     # Sorting excel data on the basis of a column.
-                    excel1 = excel1.sort_values(
-                        'id', ascending=False).reset_index(inplace=False)
-                    excel2 = excel2.sort_values(
-                        'id', ascending=False).reset_index(inplace=False)
+                    try:
+                        excel1 = excel1.sort_values(
+                            'id', ascending=False).reset_index(inplace=False)
+                        excel2 = excel2.sort_values(
+                            'id', ascending=False).reset_index(inplace=False)
+                    except Exception:
+                        pass
 
                     # Getting the difference in data between both excels.
                     difference = excel1[excel1 != excel2]
                     if (difference.isnull().values.all()) is True:
-                        are_excels_different = False
+                        are_sheets_different = False
 
                     # Writing the delta between both excels in a separate
                     # excel file.
@@ -483,6 +512,6 @@ class CompareFiles:
                                         sheet_name='sheet1',
                                         index=False,
                                         encoding=sys.getfilesystemencoding())
-            return are_excels_different
+            return are_sheets_different
         except Exception:
-            logging.warning("There is some issue in excel comparison.")
+            logging.warning("There is some issue in spreadsheet comparison.")
