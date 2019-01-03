@@ -52,8 +52,8 @@ class CompareFiles:
     width = 2160
 
     def compare_images(self,
-                       first_image_path,
-                       second_image_path):
+                       first_image,
+                       second_image):
         """Compare two images on the basis mse and ssim index and returns.
 
         a list containing True/False depending on whether 2 images are same
@@ -65,8 +65,8 @@ class CompareFiles:
         :rtype: list
         """
         try:
-            first_image_extenion = first_image_path.split(".")[1]
-            second_image_extension = second_image_path.split(".")[1]
+            first_image_extenion = first_image.split(".")[1]
+            second_image_extension = second_image.split(".")[1]
 
             if first_image_extenion not in ('jpg', 'jpeg', 'png') \
                     and second_image_extension not in \
@@ -75,8 +75,8 @@ class CompareFiles:
                                 "for image comparison.")
             # Reading the image files
             else:
-                img1 = cv2.imread(first_image_path)
-                img2 = cv2.imread(second_image_path)
+                img1 = cv2.imread(first_image)
+                img2 = cv2.imread(second_image)
 
                 # keep original height
                 height = img2.shape[0]
@@ -100,14 +100,14 @@ class CompareFiles:
                 comparison_dict = self.__mse_ssim_comparison(first_img,
                                                              second_img)
                 cv_compare_val = self.__image_compare_thru_opencv(
-                                               first_image_path,
-                                               second_image_path)
+                                               first_image,
+                                               second_image)
                 comparison_dict.append(cv_compare_val)
                 return comparison_dict
         except Exception:
             logging.warning("There is some issue in image comparison.")
 
-    def __image_compare_thru_opencv(self, first_image_path, second_image_path):
+    def __image_compare_thru_opencv(self, first_image, second_image):
         """Compare two images using OpenCV library, on the basis of their shapes.
 
         and b, g, r channels and return True/False depending on whether the
@@ -127,8 +127,8 @@ class CompareFiles:
                                 "for image comparison.")
             # Reading the image files
             else:
-                img1 = cv2.imread(first_image_path)
-                img2 = cv2.imread(second_image_path)
+                img1 = cv2.imread(first_image)
+                img2 = cv2.imread(second_image)
 
                 # keep original height
                 height = img2.shape[0]
@@ -305,7 +305,7 @@ class CompareFiles:
                             "_comparing_images_visually_thru_matplotlib "
                             "method.")
 
-    def compare_json(self, first_json_path, second_json_path):
+    def compare_json(self, first_json, second_json):
         """Compare two jsons and generates a text file containing the.
 
             difference.
@@ -316,8 +316,8 @@ class CompareFiles:
         """
 
         try:
-            first_json_extenion = first_json_path.split(".")[1]
-            second_json_extension = second_json_path.split(".")[1]
+            first_json_extenion = first_json.split(".")[1]
+            second_json_extension = second_json.split(".")[1]
             if first_json_extenion != 'json' and \
                     second_json_extension != 'json':
                 logging.warning("Please provide correct file extensions "
@@ -325,9 +325,9 @@ class CompareFiles:
             # Reading the json files
             else:
                 # Reading the jsons and converting them into dictionaries.
-                with open(first_json_path) as first_json:
+                with open(first_json) as first_json:
                     dict1 = json.load(first_json)
-                with open(second_json_path) as second_json:
+                with open(second_json) as second_json:
                     dict2 = json.load(second_json)
 
                 boolean_json_diff = self.write_json_diff_to_file(dict1, dict2)
@@ -421,7 +421,7 @@ class CompareFiles:
         except Exception:
             logging.warning("There is some issue in json comparison.")
 
-    def compare_excel(self, first_excel_path, second_excel_path):
+    def compare_excel(self, first_excel, second_excel):
         """Compare two excels and generates an excel file containing the.
 
         difference. If resultant excel file contain empty cell that means
@@ -433,8 +433,8 @@ class CompareFiles:
         """
         are_excels_different = True
         try:
-            first_excel_extension = first_excel_path.split(".")[1]
-            second_excel_extension = second_excel_path.split(".")
+            first_excel_extension = first_excel.split(".")[1]
+            second_excel_extension = second_excel.split(".")
             [1]
             if first_excel_extension not in ('xls', 'xlsx') and \
                     second_excel_extension not in ('xls', 'xlsx'):
@@ -442,9 +442,9 @@ class CompareFiles:
                                 "extensions for excel comparison.")
             # Reading the excel files
             else:
-                excel1 = pd.read_excel(first_excel_path,
+                excel1 = pd.read_excel(first_excel,
                                        encoding=sys.getfilesystemencoding())
-                excel2 = pd.read_excel(second_excel_path,
+                excel2 = pd.read_excel(second_excel,
                                        encoding=sys.getfilesystemencoding())
 
                 # Checking if the excels are empty
