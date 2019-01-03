@@ -9,6 +9,8 @@ excel1_path = "first.xlsx"
 excel2_path = "second.xlsx"
 json1_path = "third.json"
 json2_path = "fourth.json"
+csv1_path = "first.csv"
+csv2_path = "second.csv"
 
 
 class TestCompareFiles(CompareFiles):
