@@ -23,6 +23,6 @@ class TestCompareFiles(CompareFiles):
         """Comparing jsons."""
         self.compare_json(json1_path, json2_path)
 
-    def test_compare_excels(self):
-        """Compare excels."""
-        self.compare_excel(excel1_path, excel2_path)
+    def test_compare_spreadsheet(self):
+        """Compare spreadsheet."""
+        self.compare_spreadsheet(excel1_path, excel2_path)
