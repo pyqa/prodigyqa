@@ -52,13 +52,41 @@ class CompareFiles(unittest.TestCase):
         mse_val /= float(source_image.shape[0] * source_image.shape[1])
 
         if mse_val == 0.00:
+            logging.info("Source and target images MSE Value are same")
             return True
-        elif mse_val > 0:
-            logging.warning("Images MSE value: %s" % mse_val)
+        else:
+            logging.warning("Source and target images MSE Value: {0}" % mse_val)
             return False
 
     def __compare_images_ssim(self, source_image, target_image):
-        pass
+        """Checkpoint to measure on size and shape of image.
+
+        :param source_image:
+        :param target_image:
+        :return: returns boolean value based on images ssim values
+        :rtype: boolean value
+        """
+
+        ssim_val = ssim(source_image, target_image)
+        if ssim_val == 1.00:
+            logging.info("Source and target images SSIM Value sre same:")
+            return True
+        else:
+            logging.warning("Source and target images SSIM Value: {0}" % ssim_val)
+            return ssim_val
+
+    def __image_visual_difference(self, source_image, target_image):
+        """"Shows the two images difference if both are different
+        :param source_image:
+        :param target_image:
+        :return: NA
+        :rtype: NA
+        """
+
+        difference = cv2.subtract(source_image, target_image)
+        cv2.imshow("difference", difference)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     def compare_images(self, source_img, target_img):
         """Compare two images on the basis mse and ssim index.
@@ -71,7 +99,7 @@ class CompareFiles(unittest.TestCase):
         # list of expected image extensions
         extn = ('jpg', 'jpeg', "png")
         if source_img.split(".") not in extn and target_img.split(".") not in extn:
-            logging.error("Invalid image file extention")
+            logging.warning("Invalid image file extension")
             return False
 
         source = cv2.imread(source_img)
@@ -83,4 +111,6 @@ class CompareFiles(unittest.TestCase):
             return True
         else:
             logging.warning("The images are not similar")
+            self.__image_visual_difference(source, target)
+            return False
 
