@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 """Comparison Module for Images, Files like CSV, Excel, PDF etc."""
-import os
-import sys
+# import os
+# import sys
+# import unittest
+# import collections
+# import pandas as pd
 import unittest
-import collections
-import pandas as pd
 import cv2
 from skimage.measure import compare_ssim as ssim
 import numpy as np
 import json
 from simplejson import JSONDecodeError
-from matplotlib import pyplot as plt
 import logging
 
 
@@ -33,7 +33,8 @@ class CompareFiles(unittest.TestCase):
                 logging.info("The images are completely Equal")
                 return True
             else:
-                logging.warning("RGB Attributes are different though images are same size")
+                logging.warning("RGB Attributes are different\
+                though images are same size")
                 return False
         else:
             logging.warning("The images have different size and channels")
@@ -55,7 +56,8 @@ class CompareFiles(unittest.TestCase):
             logging.info("Source and target images MSE Value are same")
             return True
         else:
-            logging.warning("Source and target images MSE Value: {0}" % mse_val)
+            logging.warning("Source and target images\
+            MSE Value: {0}" % mse_val)
             return False
 
     def __compare_images_ssim(self, source_image, target_image):
@@ -66,23 +68,23 @@ class CompareFiles(unittest.TestCase):
         :return: returns boolean value based on images ssim values
         :rtype: boolean value
         """
-
         ssim_val = ssim(source_image, target_image)
         if ssim_val == 1.00:
             logging.info("Source and target images SSIM Value sre same:")
             return True
         else:
-            logging.warning("Source and target images SSIM Value: {0}" % ssim_val)
+            logging.warning("Source and target images\
+            SSIM Value: {0}" % ssim_val)
             return ssim_val
 
     def __image_visual_difference(self, source_image, target_image):
-        """"Shows the two images difference if both are different
+        """"Show the two images difference if both are different.
+
         :param source_image:
         :param target_image:
         :return: NA
         :rtype: NA
         """
-
         difference = cv2.subtract(source_image, target_image)
         cv2.imshow("difference", difference)
         cv2.waitKey(0)
@@ -98,7 +100,8 @@ class CompareFiles(unittest.TestCase):
         """
         # list of expected image extensions
         extn = ('jpg', 'jpeg', "png")
-        if source_img.split(".") not in extn and target_img.split(".") not in extn:
+        if source_img.split(".") not in extn and\
+                target_img.split(".") not in extn:
             logging.warning("Invalid image file extension")
             return False
 
@@ -106,7 +109,7 @@ class CompareFiles(unittest.TestCase):
         target = cv2.imread(target_img)
         if self.__compare_image_structure(source, target) \
             and self.__compare_image_mse(source, target) \
-            and self.__compare_image_ssim(source, target):
+                and self.__compare_image_ssim(source, target):
             logging.info("The images are perfectly similar")
             return True
         else:
@@ -114,3 +117,61 @@ class CompareFiles(unittest.TestCase):
             self.__image_visual_difference(source, target)
             return False
 
+    def compare_json(self, source, target):
+        """Compare json files and returns text file with the difference.
+
+        :param source: source json file Path.
+        :param target: target json path.
+        :return: True/False.
+        :rtype: boolean
+        """
+        try:
+            if source.split(".")[1] != 'json' and\
+                    target.split(".")[1] != 'json':
+                logging.warning("File extensions are not valid.")
+                return False
+            else:
+                with open(source) as json1_dict:
+                    source_dict = json.load(json1_dict)
+                with open(target) as json2_dict:
+                    target_dict = json.load(json2_dict)
+
+                bln_diff = self.__compare_dictionaries(source_dict, target_dict, "json1_dict", "json2_dict")
+            return bln_diff
+
+        except JSONDecodeError:
+            logging.warning("Invalid json.")
+
+    def __compare_dictionaries(self, source, target, source_name, target_name, path=""):
+        """Compare two dictionaries recursively to find non matching elements.
+
+        Args:
+            :param source: source dictionary
+            :param target: target dictionary
+            :param source_name: source dictionary name
+            :param target_name: target dictionary name
+
+        return:
+        """
+        err = ''
+        key_err = ''
+        value_err = ''
+        old_path = path
+        for k in source:
+            path = old_path + "[%s]" % k
+            if k not in target.keys():
+                key_err += "Key %s%s not in %s\n" % (source_name, path, target_name)
+            else:
+                if isinstance(source[k], dict) and isinstance(target[k], dict):
+                    err += self.compare_dictionaries(source[k],target[k], 'd1', 'd2', path)
+                else:
+                    if source[k] != target[k]:
+                        value_err += "Value of %s%s (%s) not same as %s%s (%s)\n"\
+                            % (source_name, path, source[k], target_name, path, target[k])
+
+        for k in target:
+            path = old_path + "[%s]" % k
+            if k not in source.keys():
+                key_err += "Key %s%s not in %s\n" % (target_name, path, source_name)
+
+        return key_err + value_err + err
