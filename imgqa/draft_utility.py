@@ -17,7 +17,7 @@ import logging
 class CompareFiles(unittest.TestCase):
     """File Comparison module which includes image, csv and workbook."""
 
-    def __compare_image_structure(self, source_image, target_image):
+    def __compare_images_structure(self, source_image, target_image):
         """Checkpoint 1 to measure on size and shape of image.
 
         :param source_image: source image
@@ -41,7 +41,7 @@ class CompareFiles(unittest.TestCase):
             return False
 
     def __compare_images_mse(self, source_image, target_image):
-        """Checkpoint to measure on size and shape of image.
+        """Checkpoint to measure Mean Square Error (MSE) difference of images.
 
         :param source_image:
         :param target_image:
@@ -61,7 +61,7 @@ class CompareFiles(unittest.TestCase):
             return False
 
     def __compare_images_ssim(self, source_image, target_image):
-        """Checkpoint to measure on size and shape of image.
+        """Checkpoint to measure Structural Similarity Index (SSIM) difference of images.
 
         :param source_image:
         :param target_image:
@@ -77,8 +77,8 @@ class CompareFiles(unittest.TestCase):
             SSIM Value: {0}" % ssim_val)
             return ssim_val
 
-    def __image_visual_difference(self, source_image, target_image):
-        """"Show the two images difference if both are different.
+    def __images_visual_difference(self, source_image, target_image):
+        """"Show the images visual difference.
 
         :param source_image:
         :param target_image:
@@ -107,14 +107,14 @@ class CompareFiles(unittest.TestCase):
 
         source = cv2.imread(source_img)
         target = cv2.imread(target_img)
-        if self.__compare_image_structure(source, target) \
+        if self.__compare_images_structure(source, target) \
             and self.__compare_image_mse(source, target) \
                 and self.__compare_image_ssim(source, target):
             logging.info("The images are perfectly similar")
             return True
         else:
             logging.warning("The images are not similar")
-            self.__image_visual_difference(source, target)
+            self.__images_visual_difference(source, target)
             return False
 
     def compare_json(self, source, target):
@@ -135,9 +135,7 @@ class CompareFiles(unittest.TestCase):
                     source_dict = json.load(json1_dict)
                 with open(target) as json2_dict:
                     target_dict = json.load(json2_dict)
-
-                bln_diff = self.__compare_dictionaries(source_dict, target_dict, "json1_dict", "json2_dict")
-            return bln_diff
+            self.__compare_dictionaries(source_dict, target_dict, "json1_dict", "json2_dict")
 
         except JSONDecodeError:
             logging.warning("Invalid json.")
@@ -163,7 +161,7 @@ class CompareFiles(unittest.TestCase):
                 key_err += "Key %s%s not in %s\n" % (source_name, path, target_name)
             else:
                 if isinstance(source[k], dict) and isinstance(target[k], dict):
-                    err += self.compare_dictionaries(source[k],target[k], 'd1', 'd2', path)
+                    err += self.__compare_dictionaries(source[k], target[k], 'd1', 'd2', path)
                 else:
                     if source[k] != target[k]:
                         value_err += "Value of %s%s (%s) not same as %s%s (%s)\n"\
