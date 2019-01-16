@@ -12,10 +12,38 @@ import numpy as np
 import json
 from simplejson import JSONDecodeError
 import logging
+import pandas as pd
 
 
 class CompareFiles(unittest.TestCase):
     """File Comparison module which includes image, csv and workbook."""
+
+    def compare_images(self, source_img, target_img):
+        """Compare two images on the basis mse and ssim index.
+
+        :param source_img: source image.
+        :param target_img: target image.
+        :return: list of boolean value of image comparision,
+        mse value and ssim value.
+        """
+        # list of expected image extensions
+        extn = ('jpg', 'jpeg', "png")
+        if source_img.split(".") not in extn and\
+                target_img.split(".") not in extn:
+            logging.warning("Invalid image file extension")
+            return False
+
+        source = cv2.imread(source_img)
+        target = cv2.imread(target_img)
+        if self.__compare_images_structure(source, target) \
+            and self.__compare_image_mse(source, target) \
+                and self.__compare_image_ssim(source, target):
+            logging.info("The images are perfectly similar")
+            return True
+        else:
+            logging.warning("The images are not similar")
+            self.__images_visual_difference(source, target)
+            return False
 
     def __compare_images_structure(self, source_image, target_image):
         """Checkpoint 1 to measure on size and shape of image.
@@ -90,33 +118,6 @@ class CompareFiles(unittest.TestCase):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    def compare_images(self, source_img, target_img):
-        """Compare two images on the basis mse and ssim index.
-
-        :param source_img: source image.
-        :param target_img: target image.
-        :return: list of boolean value of image comparision,
-        mse value and ssim value.
-        """
-        # list of expected image extensions
-        extn = ('jpg', 'jpeg', "png")
-        if source_img.split(".") not in extn and\
-                target_img.split(".") not in extn:
-            logging.warning("Invalid image file extension")
-            return False
-
-        source = cv2.imread(source_img)
-        target = cv2.imread(target_img)
-        if self.__compare_images_structure(source, target) \
-            and self.__compare_image_mse(source, target) \
-                and self.__compare_image_ssim(source, target):
-            logging.info("The images are perfectly similar")
-            return True
-        else:
-            logging.warning("The images are not similar")
-            self.__images_visual_difference(source, target)
-            return False
-
     def compare_json(self, source, target):
         """Compare json files and returns text file with the difference.
 
@@ -173,3 +174,57 @@ class CompareFiles(unittest.TestCase):
                 key_err += "Key %s%s not in %s\n" % (target_name, path, source_name)
 
         return key_err + value_err + err
+
+    def compare_spreadsheet(self, source, target):
+        """Compare two spreadsheets and generates an excel file containing the.
+
+        difference. If resultant excel file contain empty cell that means
+        the value is same in both excels else not.
+        :param source: Source file Path.
+        :param target: Target file path.
+        :return: data that differs in source and target files.
+        :rtype: data frame
+        """
+        file_extn = ('xls', 'xlsx', 'csv', 'tsv', 'hdf', 'html')
+        if (source.split(".")[1] and target.split(".")[1]) in file_extn:
+            source_data = self.__load_into_dataframe(source)
+            target_data = self.__load_into_dataframe(target)
+            if source_data.split('.')[1] and target_data.split('.')[1] in ('xls','xlsx'):
+                # Validate length of work sheets
+                # For every work sheet, iterate through the data
+                # pd.ExcelFile().sheet_names
+                pass
+
+        else:
+            logging.warning("File extensions are not valid.")
+            return False
+
+        return source_data[source_data != target_data]
+
+    def __load_into_dataframe(self, source):
+        if source.split(".")[1] in ('xls', 'xlsx'):
+            return self.__read_speadsheet(source)
+        elif source.split(".")[1] == 'csv':
+            return self.__read_csv(source)
+        elif source.split(".")[1] == 'hdf':
+            return self.__read_hdf(source)
+        elif source.split(".")[1] == 'html':
+            return self.__read_html(source)
+        elif source.split(".")[1] == 'tsv':
+            return self.__read_tsv(source)
+
+    def __read_speadsheet(self, sheet):
+        return pd.read_excel(sheet)
+
+    def __read_csv(self, csv, sep=None):
+        return pd.read_csv(csv)
+
+    def __read_hdf(self, hdf):
+        return pd.read_hdf(hdf)
+
+    def __read_html(self, html):
+        return pd.read_html(html)
+
+    def __read_tsv(self, tsv, sep='\t'):
+        return pd.read_csv(tsv, sep=sep)
+
