@@ -8,13 +8,14 @@ import json
 from simplejson import JSONDecodeError
 import logging
 import pandas as pd
-
+from jsondiff import diff
 
 class Compare(unittest.TestCase):
     """File Comparison module which includes image, csv and workbook."""
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """Variable Stack Declaration."""
+        super(Compare, self).__init__(*args, **kwargs)
         self.source = None
         self.target = None
         self.source_extn = None
@@ -25,7 +26,7 @@ class Compare(unittest.TestCase):
         self.excel_extn = ('xls', 'xlsx')
         self.file_extn = ('xls', 'xlsx', 'csv', 'tsv', 'hdf', 'html')
 
-    def images(self, source, target):
+    def compare_images(self, source, target):
         """Compare images on the basis mse and ssim index.
 
         :param source: source image path.
@@ -40,14 +41,14 @@ class Compare(unittest.TestCase):
         if self.source_extn and self.target_extn not in self.image_extn:
             logging.warning("Invalid image extension")
             return False
-        if self.__compare_images_structure(self.source, self.target) \
-            and self.__compare_images_mse(self.source, self.target) \
-                and self.__compare_images_ssim(self.source, self.target):
+        if self.__compare_images_structure() \
+            and self.__compare_images_mse() \
+                and self.__compare_images_ssim():
             logging.info("Images are Similar")
             return True
         else:
             logging.warning("Images are not Similar")
-            self.__images_visual_difference(self.source, self.target)
+            self.__images_visual_difference()
             return False
 
     def __compare_images_structure(self):
@@ -120,76 +121,17 @@ class Compare(unittest.TestCase):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    def json(self, source, target):
+    def compare_json(self, source, target):
         """Compare json files.
 
         :param source: source json.
         :param target: target json.
-        :return: NA.
-        :rtype: NA.
+        :return: difference of target compared to source
+        :rtype: Dictionary
         """
-        self.source = source
-        self.target = target
-        self.source_extn = source.split('.')[1]
-        self.target_extn = target.split('.')[1]
-        try:
-            if self.source_extn and self.target_extn != 'json':
-                logging.warning("Invalid JSON extension.")
-                return False
-            else:
-                source_dict = json.load(self.source)
-                target_dict = json.load(self.target)
-            self.__compare_dictionaries(source_dict, target_dict)
+        return diff(source, target)
 
-        except JSONDecodeError:
-            logging.warning("Invalid json.")
-
-    def __compare_dictionaries(self, source, target):
-        """Compare two dictionaries recursively to find non matching elements.
-
-        :param source: source dictionary.
-        :param target: target dictionary.
-        :param source_name: source dictionary name.
-        :param target_name: target dictionary name.
-        :return: non matching elements of two dictionaries.
-        :rtype: str.
-        """
-        err = ''
-        key_err = ''
-        value_err = ''
-        source_name = 'json1'
-        target_name = 'json2'
-        path = ""
-        old_path = path
-        for k in source:
-            path = old_path + "[%s]" % k
-            if k not in target.keys():
-                key_err += "Key %s%s not in %s\n" % (
-                    source_name, path, target_name)
-            else:
-                if isinstance(source[k], dict) and isinstance(target[k], dict):
-                    err += self.__compare_dictionaries(
-                        source[k], target[k], 'd1', 'd2', path)
-                else:
-                    if source[k] != target[k]:
-                        value_err += "Value of {0}{1} ({2}) not \
-                         same as {3}{4} ({5})\n".format(
-                            source_name,
-                            path,
-                            source[k],
-                            target_name,
-                            path,
-                            target[k])
-
-        for k in target:
-            path = old_path + "[%s]" % k
-            if k not in source.keys():
-                key_err += "Key %s%s not in %s\n" % (
-                    target_name, path, source_name)
-
-        return key_err + value_err + err
-
-    def files(self, source, target):
+    def compare_files(self, source, target):
         """Compare two files and return difference(if any).
 
         File Types Supported: xls or xlsx or html or hdf or csv or tsv
@@ -219,7 +161,6 @@ class Compare(unittest.TestCase):
             logging.warning('File Extension not supported')
             return False
 
-
     def __compare_workbooks(self):
         """Compare two xls or xlsx files and return difference and boolean.
 
@@ -246,7 +187,7 @@ class Compare(unittest.TestCase):
             if flag == 0:
                 logging.info("Both source '{0}' and target '{1}' work" /
                              "books have same data".format(source_sheet,
-                                self.source_name, self.target_name))
+                                                           self.source_name, self.target_name))
                 return True
             else:
                 logging.info("one or more spread sheets of source '{0}' and target '{1}'" /
