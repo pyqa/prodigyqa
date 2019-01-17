@@ -16,8 +16,8 @@ class Compare(unittest.TestCase):
     def images(self, source, target):
         """Compare images on the basis mse and ssim index.
 
-        :param source: source image.
-        :param target: target image.
+        :param source: source image path.
+        :param target: target image path.
         :return: True/False.
         :rtype: bool.
         """
@@ -41,8 +41,8 @@ class Compare(unittest.TestCase):
     def __compare_images_structure(self, source, target):
         """Checkpoint to measure on size and shape of image.
 
-        :param source: source image.
-        :param target: target image.
+        :param source: source image path.
+        :param target: target image path.
         :return: True/False.
         :rtype: bool.
         """
@@ -64,8 +64,8 @@ class Compare(unittest.TestCase):
     def __compare_images_mse(self, source, target):
         """Checkpoint to measure Mean Square Error (MSE) difference of images.
 
-        :param source: Source image.
-        :param target: Target Image.
+        :param source: Source image path.
+        :param target: Target Image path.
         :return: True/False.
         :rtype: bool.
 
@@ -83,8 +83,8 @@ class Compare(unittest.TestCase):
     def __compare_images_ssim(self, source, target):
         """Checkpoint to measure Structural Similarity Index (SSIM) difference of images.
 
-        :param source: Source Image.
-        :param target: Target Image.
+        :param source: Source Image path.
+        :param target: Target Image path.
         :return: True/False.
         :rtype: bool.
         """
@@ -99,8 +99,8 @@ class Compare(unittest.TestCase):
     def __images_visual_difference(self, source, target):
         """"Show the images visual difference.
 
-        :param source: Source image.
-        :param target: Target image.
+        :param source: Source image path.
+        :param target: Target image path.
         :return: NA
         :rtype: NA
         """
@@ -165,7 +165,7 @@ class Compare(unittest.TestCase):
         return key_err + value_err + err
 
     def files(self, source, target):
-        """Compare two files of xls or xlsx or html or hdf or csv or tsv and return difference.
+        """Compare two files of type xls or xlsx or html or hdf or csv or tsv and return difference and boolean.
 
         :param source: Source file Path.
         :param target: Target file path.
