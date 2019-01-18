@@ -9,8 +9,8 @@ excel1_path = "first.xlsx"
 excel2_path = "second.xlsx"
 csv1_path = "first.csv"
 csv2_path = "second.csv"
-json1 = {'a': 2, 'b': 1, 'c': 0}
-json2 = {'b': 2, 'c': 0}
+json1 = {'a': 2, 'b': 1, 'c': [1, 3], 'd': {'4': 'abc'}}
+json2 = {'b': 2, 'c': [1, 2, 3], 'd': {'4': 'abc', '5': 'hjk', '6': 'pyt'}}
 
 
 class TestCompareFiles(Compare):
@@ -22,10 +22,8 @@ class TestCompareFiles(Compare):
 
     def test_compare_jsons(self):
         """Comparing jsons."""
-        dict_diff = self.compare_json(json1, json2)
-        print(dict_diff)
-        print(type(dict_diff))
-        print(len(dict_diff))
+        json_diff = self.compare_json(json1, json2)
+        print(json_diff)
 
     # def test_compare_spreadsheet(self):
     #     """Compare spreadsheet."""
