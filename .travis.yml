@@ -1,6 +1,6 @@
 language: python
 
-sudo: false
+# sudo: false
 
 matrix:
   include:
@@ -14,7 +14,7 @@ addons:
 
 
 before_script:
-  - "apt-get install python-opencv"
+  - "sudo apt-get install python-opencv"
   - "pip install flake8"
   - "pip install pycodestyle"
   - "flake8 imgqa/*.py && flake8 imgqa/*/*.py"
