@@ -47,6 +47,8 @@ setup(
         'selenium',
         'nose',
         'flake8',
+        'jsondiff',
+        'pandas',
         'pytest>=3.8.2',
         'pytest-html>=1.19.0',
         'requests>=2.19.1',
