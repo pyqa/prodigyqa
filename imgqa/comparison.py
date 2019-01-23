@@ -211,7 +211,7 @@ class Compare(unittest.TestCase):
                 return False
 
     def __compare_non_workbook_files(self):
-        """Compare two html or hdf or csv or tsv and return difference and boolean.
+        """Compare two html/hdf/csv/tsv to return difference/bool.
 
         :return: True/False.
         :rtype: bool.
@@ -231,7 +231,7 @@ class Compare(unittest.TestCase):
             return False
 
     def __compare_spreadsheet_and_non_spreadsheet(self):
-        """Return difference of two files (xls/xlsx/html/hdf/csv/tsv after comparison.
+        """Return diff of files(xls/xlsx/html/hdf/csv/tsv) after comparison.
 
         :param source: Source file Path.
         :param target: Target file path.
