@@ -4,11 +4,10 @@ import unittest
 import cv2
 from skimage.measure import compare_ssim as ssim
 import numpy as np
-import json
-from simplejson import JSONDecodeError
 import logging
 import pandas as pd
 from jsondiff import diff
+
 
 class Compare(unittest.TestCase):
     """File Comparison module which includes image, csv and workbook."""
@@ -22,8 +21,8 @@ class Compare(unittest.TestCase):
         self.target_extn = None
         self.source_name = None
         self.target_name = None
-        self.image_extn = ('jpg', 'jpeg', "png")
-        self.excel_extn = ('xls', 'xlsx')
+        self.img_extn = ('jpg', 'jpeg', "png")
+        self.exl_extn = ('xls', 'xlsx')
         self.file_extn = ('xls', 'xlsx', 'csv', 'tsv', 'hdf', 'html')
 
     def compare_images(self, source, target):
@@ -38,7 +37,7 @@ class Compare(unittest.TestCase):
         self.target = cv2.imread(target)
         self.source_extn = source.split(".")[1]
         self.target_extn = target.split(".")[1]
-        if self.source_extn and self.target_extn not in self.image_extn:
+        if self.source_extn and self.target_extn not in self.img_extn:
             logging.warning("Invalid image extension")
             return False
         if self.__compare_images_structure() \
@@ -146,16 +145,17 @@ class Compare(unittest.TestCase):
         self.target_name = target.split('.')[0]
         self.source = source
         self.target = target
+
         if self.source_extn and self.target_extn in self.file_extn:
-            if self.source_extn and self.target_extn in self.excel_extn:
+            if self.source_extn and self.target_extn in self.exl_extn:
                 return self.__compare_workbooks()
             else:
                 self.source = self.__load_into_dataframe(source)
                 self.target = self.__load_into_dataframe(target)
 
-                if self.source_extn and self.target_extn not in self.excel_extn:
+                if self.source_extn and self.target_extn not in self.exl_extn:
                     return self.__compare_non_workbook_files()
-                if self.self.source_extn or self.target_extn in self.excel_extn:
+                if self.self.source_extn or self.target_extn in self.exl_extn:
                     return self.__compare_spreadsheet_and_non_spreadsheet()
         else:
             logging.warning('File Extension not supported')
@@ -173,25 +173,41 @@ class Compare(unittest.TestCase):
         if source_dataframe.sheet_names == target_dataframe.sheet_names:
             source_sheets = source_dataframe.sheet_names
             for source_sheet in source_sheets:
-                if source_dataframe.parse(source_sheet) == target_dataframe.parse(source_sheet):
-                    logging.info("Spreadsheet '{0}' of " /
-                                 "source '{1}' and target '{2}' have same data".format /
-                                 (source_sheet, self.source_name, self.target_name))
+                if source_dataframe.parse(
+                        source_sheet) == target_dataframe.parse(source_sheet):
+                    logging.info("Spreadsheet '{0}' of "
+                                 "source '{1}' and target '{2}' "
+                                 "have same data".format(
+                                     source_sheet,
+                                     self.source_name,
+                                     self.target_name))
                 else:
-                    difference = source_dataframe.parse(source_sheet)[source_dataframe.parse(
-                        source_sheet) != target_dataframe.parse(source_sheet)]
+                    difference = source_dataframe.parse(
+                        source_sheet)[source_dataframe.parse(
+                            source_sheet) != target_dataframe.parse(
+                            source_sheet)]
                     logging.warning("Spreadsheet '{0}' of " /
-                                    "source '{1}' and target '{2}' have different data\n {3}".format /
-                                    (source_sheet, self.source_name, self.target_name, difference))
+                                    "source '{1}' and target '{2}' have "
+                                    "different data\n {3}".format(
+                                        source_sheet,
+                                        self.source_name,
+                                        self.target_name,
+                                        difference))
                     flag += 1
             if flag == 0:
                 logging.info("Both source '{0}' and target '{1}' work" /
-                             "books have same data".format(source_sheet,
-                                                           self.source_name, self.target_name))
+                             "books have same data".format(
+                                 source_sheet,
+                                 self.source_name,
+                                 self.target_name))
                 return True
             else:
-                logging.info("one or more spread sheets of source '{0}' and target '{1}'" /
-                             "have different data".format(source_sheet, self.source_name, self.target_name))
+                logging.info("one or more spread sheets of source '{0}'" /
+                             "and target '{1}'"
+                             "have different data".format(
+                                 source_sheet,
+                                 self.source_name,
+                                 self.target_name))
                 return False
 
     def __compare_non_workbook_files(self):
@@ -203,35 +219,43 @@ class Compare(unittest.TestCase):
         difference = self.source_data[self.source_data != self.target_data]
         if difference == '':
             logging.info("Both source '{0}' and target '{1}'" /
-                         "have same data".format(self.source_name, self.target_name))
+                         "have same data".format(
+                             self.source_name, self.target_name))
             return True
         else:
             logging.warning("Source '{0}' and target '{1}'" /
-                            "have different data\n {2}".format(self.source_name, self.target_name, difference))
+                            "have different data\n {2}".format(
+                                self.source_name,
+                                self.target_name,
+                                difference))
             return False
 
     def __compare_spreadsheet_and_non_spreadsheet(self):
-        """Compare two files of xls or xlsx and html or hdf or csv or tsv and return difference and boolean.
+        """Return difference of two files (xls/xlsx/html/hdf/csv/tsv after comparison.
 
         :param source: Source file Path.
         :param target: Target file path.
         :return: True/False.
         :rtype: bool.
         """
-        if self.source_extn in self.excel_extn and self.target_extn not in self.excel_extn:
+        condition1 = self.source_extn in self.exl_extn
+        condition2 = self.target_extn in self.exl_extn
+        if condition1 and not condition2:
             df = pd.ExcelFile(self.source)
             data = self.__load_into_dataframe(self.target)
-        elif self.source_extn not in self.excel_extn and self.target_extn in self.excel_extn:
+        elif condition2 and not condition1:
             df = pd.ExcelFile(self.target)
             data = self.__load_into_dataframe(self.source)
         for sheet in df.sheet_names:
             if df.parse(sheet) in data:
                 logging.info("Both source '{0}' and target '{1}'" /
-                             "have same data".format(self.source_name, self.target_name))
+                             "have same data".format(
+                                 self.source_name, self.target_name))
                 break
         else:
             logging.warning("source '{0}' and target '{1}'" /
-                            "have different data".format(self.source_name, self.target_name))
+                            "have different data".format(
+                                self.source_name, self.target_name))
             return False
         return True
 
