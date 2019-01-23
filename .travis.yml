@@ -30,12 +30,12 @@ script:
   # - pytest Examples/sampleseleniumtest.py
 
 
-# deploy:
-#   provider: pypi
-#   user: Revant
-#   password: 
-#   distributions: "sdist bdist_wheel"
-#   skip_existing: true
-#   skip_cleanup: true
-#   on:
-#       branch: master
+deploy:
+  provider: pypi
+  user: Revant
+  password: Revantpypi
+  distributions: "sdist bdist_wheel"
+  skip_existing: true
+  skip_cleanup: true
+  on:
+      branch: master
