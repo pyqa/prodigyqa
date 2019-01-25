@@ -304,7 +304,8 @@ class BrowserActions(unittest.TestCase):
         """
         self.page_readiness_wait()
         if not self.driver.current:
-            logging.info('Cannot capture screenshot because no browser is open.')
+            logging.info('Cannot capture ScreenShot'
+                         ' because no browser is open.')
             return
         path = filepath.replace('/', os.sep)
 
