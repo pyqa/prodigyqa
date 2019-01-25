@@ -26,6 +26,6 @@ REST API kwarg section
 | timeout (float or tuple)  | optional  | How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. |
 | allow_redirects (bool)  | optional  | Boolean. Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to True. |
 | proxies  | optional  | Dictionary mapping protocol to the URL of the proxy. |
-| verify  | optional  | Either a boolean, in which case it controls whether we verify the server’s TLS certificate, or a string, in which case it must be a path to a CA bundle to use. Defaults to True. |
+| verify  | optional  | Either a boolean, in which case it controls whether we verify the servers TLS certificate, or a string, in which case it must be a path to a CA bundle to use. Defaults to True. |
 | stream  | optional  | if False, the response content will be immediately downloaded. |
-| cert  | optional  | if String, path to ssl client cert file (.pem). If Tuple, (‘cert’, ‘key’) pair. |
+| cert  | optional  | if String, path to ssl client cert file (.pem). If Tuple, (cert, key) pair. |
