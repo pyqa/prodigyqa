@@ -15,14 +15,9 @@ addons:
 
 before_script:
   - "sudo apt-get install python-opencv"
-  - "pip install flake8"
-  - "pip install pycodestyle"
-  - "pip install opencv-python"
-  - "pip install scikit-image"
   - "flake8 imgqa/*.py && flake8 imgqa/*/*.py"
   - "flake8 Examples/*.py && flake8 Examples/*/*.py"
   - "pycodestyle imgqa/*.py && pycodestyle Examples/*/*.py"
-  - ls
   - bash chrome_driver_install.sh
 
 script:
