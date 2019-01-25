@@ -302,8 +302,9 @@ class BrowserActions(unittest.TestCase):
         :param filepath: file name with directory path(C:/images/image.png).
         """
         self.page_readiness_wait()
-        if not self.driver.service.process:
-            logging.info('Cannot capture screenshot because no browser is open.')
+        if not self.driver.current:
+            logging.info('Cannot capture screenshot '
+                          'because no browser is open.')
             return
         path = filepath.replace('/', os.sep)
 
@@ -407,7 +408,9 @@ class BrowserActions(unittest.TestCase):
         self.locator_check(locator)
         self.page_readiness_wait()
         try:
-            if self.driver.find_element(self.by_value, value=locator['locatorvalue']):
+            if self.driver.find_element(
+                    self.by_value,
+                    value=locator['locatorvalue']):
                 return True
         except selenium_exceptions.NoSuchElementException:
             AssertionError("Failed to wait for element {}".format(
@@ -416,7 +419,7 @@ class BrowserActions(unittest.TestCase):
     def wait_and_accept_alert(self):
         """Wait and accept alert present on the page."""
         try:
-            Wait(self.driver,10).until(ec.alert_is_present())
+            Wait(self.driver, 10).until(ec.alert_is_present())
             self.driver.switch_to.alert.accept()
             logging.info("alert accepted")
         except selenium_exceptions.TimeoutException:
@@ -426,7 +429,7 @@ class BrowserActions(unittest.TestCase):
     def wait_and_reject_alert(self):
         """Wait for alert and rejects."""
         try:
-            Wait(self.driver,10).until(ec.alert_is_present())
+            Wait(self.driver, 10).until(ec.alert_is_present())
             self.driver.switch_to.alert.dismiss()
             logging.info("alert dismissed")
         except selenium_exceptions.TimeoutException:
@@ -440,7 +443,7 @@ class BrowserActions(unittest.TestCase):
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param index: integer value for index.
         """
-        self.by_value=locator['by']
+        self.by_value = locator['by']
         if isinstance(locator, dict) and isinstance(index, int):
             self.locator_check(locator)
             try:
@@ -462,12 +465,10 @@ class BrowserActions(unittest.TestCase):
         :param value: string value to select option.
         """
         self.page_readiness_wait()
-
         if isinstance(locator, dict) and isinstance(value, int):
             try:
-
-               Select(self.driver.find_element(
-                   self.by_value,
+               Select(self.driver.find_element
+                   (self.by_value,
                    value=locator['locatorvalue'])).select_by_value(value)
 
             except selenium_exceptions.NoSuchElementException:
@@ -542,20 +543,6 @@ class BrowserActions(unittest.TestCase):
         else:
             AssertionError("Invalid locator type")
 
-    def is_button_clicked(self,locator):
-        """ Verifies if the button is clicked or not
-        :param
-        locator: dictionary of identifier type
-        and value({'by': 'id', 'value': 'start-of-content.'}).
-        """
-        self.seclectedFlag=False
-        self.locator_check(locator)
-        if isinstance(locator, dict):
-          webelement=self.driver.find_element(self.by_value,value=locator['locatorvalue'])
-          self.seclectedFlag=webelement.is_selected()
-        else:
-            AssertionError("Invalid locator type")
-
     def scroll_to_element_using_actions(self, locator):
         """Scroll to a particular element on the page.
 
@@ -565,7 +552,7 @@ class BrowserActions(unittest.TestCase):
         self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            element=self.driver.find_element(
+            element = self.driver.find_element(
                 self.by_value,
                 value=locator['locatorvalue'])
 
