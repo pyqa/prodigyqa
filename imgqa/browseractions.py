@@ -292,8 +292,8 @@ class BrowserActions(unittest.TestCase):
         self.page_readiness_wait()
         if isinstance(locator, dict):
             return self.driver.find_element(
-                        self.by_value,
-                        value=locator['value']).clear()
+                self.by_value,
+                value=locator['locatorvalue']).clear()
         else:
             raise AssertionError("Locator type should be dictionary")
 
@@ -303,7 +303,8 @@ class BrowserActions(unittest.TestCase):
         :param filepath: file name with directory path(C:/images/image.png).
         """
         self.page_readiness_wait()
-        if not self.driver.current:
+
+        if not self.driver.service.process:
             logging.info('Cannot capture ScreenShot'
                          ' because no browser is open.')
             return
@@ -377,7 +378,7 @@ class BrowserActions(unittest.TestCase):
                 ActionChains(self.driver).move_to_element(
                     self.driver.find_element(
                         self.by_value,
-                        value=locator['value'])).perform()
+                        value=locator['locatorvalue'])).perform()
             except selenium_exceptions.NoSuchElementException:
                 AssertionError(
                     "Element{} not found".locator['by'] +
@@ -420,7 +421,7 @@ class BrowserActions(unittest.TestCase):
     def wait_and_accept_alert(self):
         """Wait and accept alert present on the page."""
         try:
-            Wait(self.driver, 10).until(ec.alert_is_present())
+            Wait(self.driver, TIME_OUT).until(ec.alert_is_present())
             self.driver.switch_to.alert.accept()
             logging.info("alert accepted")
         except selenium_exceptions.TimeoutException:
@@ -430,7 +431,7 @@ class BrowserActions(unittest.TestCase):
     def wait_and_reject_alert(self):
         """Wait for alert and rejects."""
         try:
-            Wait(self.driver, 10).until(ec.alert_is_present())
+            Wait(self.driver, TIME_OUT).until(ec.alert_is_present())
             self.driver.switch_to.alert.dismiss()
             logging.info("alert dismissed")
         except selenium_exceptions.TimeoutException:
@@ -469,8 +470,8 @@ class BrowserActions(unittest.TestCase):
         if isinstance(locator, dict) and isinstance(value, int):
             try:
                 Select(self.driver.find_element(
-                   self.by_value,
-                   value=locator['locatorvalue'])).select_by_value(value)
+                    self.by_value,
+                    value=locator['locatorvalue'])).select_by_value(value)
 
             except selenium_exceptions.NoSuchElementException:
                 logging.error("Exception : Element '{}' Not Found".format(
@@ -508,26 +509,6 @@ class BrowserActions(unittest.TestCase):
         except selenium_exceptions.JavascriptException:
             logging.error('Exception : Not Able to Scroll To Footer')
 
-    def scroll_to_element(self, locator):
-        """Scroll to a particular element on the page.
-
-        :param locator: dictionary of identifier type
-            and value ({'by':'id', 'value':'start-of-content.'}).
-        """
-        self.page_readiness_wait()
-        self.locator_check(locator)
-        if isinstance(locator, dict):
-            try:
-                self.driver.execute_script(
-                    "arguments[0].scrollIntoView(true)",
-                    self.driver.find_element(
-                        self.by_value,
-                        value=locator['locatorvalue']))
-            except selenium_exceptions.NoSuchElementException:
-                logging.error('Exception : Not Able To Scroll to Element')
-        else:
-            AssertionError("Invalid locator type")
-
     def find_elements(self, locator):
         """Return elements matched with locator.
 
@@ -544,20 +525,28 @@ class BrowserActions(unittest.TestCase):
         else:
             AssertionError("Invalid locator type")
 
-    def scroll_to_element_using_actions(self, locator):
+    def scroll_to_element(self, locator):
         """Scroll to a particular element on the page.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
-        self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            element = self.driver.find_element(
-                self.by_value,
-                value=locator['locatorvalue'])
-
-            actions = ActionChains(self.driver)
-            actions.move_to_element(element).perform()
+            try:
+                self.locator_check(locator)
+                element = self.driver.find_element(
+                    self.by_value,
+                    value=locator['locatorvalue'])
+                actions = ActionChains(self.driver)
+                actions.move_to_element(element).perform()
+            except selenium_exceptions.NoSuchElementException:
+                logging.error('Exception : Not Able To Scroll to Element')
+            except BaseException:
+                self.driver.execute_script(
+                    "arguments[0].scrollIntoView(true)",
+                    self.driver.find_element(
+                        self.by_value,
+                        value=locator['locatorvalue']))
         else:
             AssertionError("Invalid locator type")
