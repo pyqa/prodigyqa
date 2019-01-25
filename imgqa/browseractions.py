@@ -291,8 +291,9 @@ class BrowserActions(unittest.TestCase):
         self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            return self.driver.find_element(self.by_value,
-                                            value=locator['locatorvalue']).clear()
+            return self.driver.find_element(
+                        self.by_value,
+                        value=locator['value']).clear()
         else:
             raise AssertionError("Locator type should be dictionary")
 
@@ -303,8 +304,7 @@ class BrowserActions(unittest.TestCase):
         """
         self.page_readiness_wait()
         if not self.driver.current:
-            logging.info('Cannot capture screenshot '
-                          'because no browser is open.')
+            logging.info('Cannot capture screenshot because no browser is open.')
             return
         path = filepath.replace('/', os.sep)
 
@@ -467,8 +467,8 @@ class BrowserActions(unittest.TestCase):
         self.page_readiness_wait()
         if isinstance(locator, dict) and isinstance(value, int):
             try:
-               Select(self.driver.find_element
-                   (self.by_value,
+                Select(self.driver.find_element(
+                   self.by_value,
                    value=locator['locatorvalue'])).select_by_value(value)
 
             except selenium_exceptions.NoSuchElementException:
