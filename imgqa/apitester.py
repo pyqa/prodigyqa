@@ -34,7 +34,7 @@ class ApiTester(unittest.TestCase):
                     resp = self._post_method(**kwargs)
                     return resp['token']
             except InvalidURL:
-                logging.warn("The URL provided was somehow invalid")
+                logging.warn("The URL provided is invalid, please recheck")
 
     def apirequest(self,
                    method='GET',
@@ -62,12 +62,12 @@ class ApiTester(unittest.TestCase):
             return self._delete_method(**kwargs)
 
     def _get_method(self, **kwargs):
-        r"""Send a GET request.
+        """Send a GET request.
 
         :param url: URL for the new :class:'Request' object.
         :param params: (optional) Dictionary, list of tuples or bytes to send
             in the body of the :class:'Request'.
-        :param \*\*kwargs: Optional arguments that ''request'' takes.
+        :param **kwargs: Optional arguments that ''request'' takes.
         :return: :class:'Response <Response>' object
         :rtype: requests.Response
         """
@@ -75,17 +75,17 @@ class ApiTester(unittest.TestCase):
             if self._validate_kwargs(**kwargs) and kwargs['url']:
                 return requests.get(**kwargs)
         except InvalidURL:
-            logging.warn("The URL provided was somehow invalid")
+            logging.warn("The URL provided is invalid, please recheck")
 
     def _post_method(self, **kwargs):
-        r"""Send a POST request.
+        """Send a POST request.
 
         :param url: URL for the new :class:'Request' object.
         :param data: (optional) Dictionary, list of tuples, bytes, or file-like
             object to send in the body of the :class:'Request'.
         :param json: (optional) json data
             to send in the body of the :class:'Request'.
-        :param \*\*kwargs: Optional arguments that ''request'' takes.
+        :param **kwargs: Optional arguments that ''request'' takes.
         :return: :class:'Response <Response>' object
         :rtype: requests.Response
         """
@@ -96,17 +96,17 @@ class ApiTester(unittest.TestCase):
                             ('data' in kwargs and kwargs['data'])):
                         return requests.post(**kwargs)
         except InvalidURL:
-            logging.warn("The URL provided was somehow invalid")
+            logging.warn("The URL provided is invalid, please recheck")
 
     def _put_method(self, **kwargs):
-        r"""Send a PUT request.
+        """Send a PUT request.
 
         :param url: URL for the new :class:'Request' object.
         :param data: (optional) Dictionary, list of tuples, bytes, or file-like
             object to send in the body of the :class:'Request'.
         :param json: (optional) json data
             to send in the body of the :class:'Request'.
-        :param \*\*kwargs: Optional arguments that ''request'' takes.
+        :param **kwargs: Optional arguments that ''request'' takes.
         :return: :class:'Response <Response>' object
         :rtype: requests.Response
         """
@@ -116,17 +116,17 @@ class ApiTester(unittest.TestCase):
                         ('data' in kwargs and kwargs['data'])):
                     return requests.put(**kwargs)
         except InvalidURL:
-            logging.warn("The URL provided was somehow invalid")
+            logging.warn("The URL provided is invalid, please recheck")
 
     def _patch_method(self, **kwargs):
-        r"""Send a PATCH request.
+        """Send a PATCH request.
 
         :param url: URL for the new :class:'Request' object.
         :param data: (optional) Dictionary, list of tuples, bytes, or file-like
             object to send in the body of the :class:'Request'.
         :param json: (optional) json data
             to send in the body of the :class:'Request'.
-        :param \*\*kwargs: Optional arguments that ''request'' takes.
+        :param **kwargs: Optional arguments that ''request'' takes.
         :return: :class:'Response <Response>' object
         :rtype: requests.Response
         """
@@ -136,13 +136,13 @@ class ApiTester(unittest.TestCase):
                         ('data' in kwargs and kwargs['data'])):
                     return requests.patch(**kwargs)
         except InvalidURL:
-            logging.warn("The URL provided was somehow invalid")
+            logging.warn("The URL provided is invalid, please recheck")
 
     def _delete_method(self, **kwargs):
-        r"""Send a DELETE request.
+        """Send a DELETE request.
 
         :param url: URL for the new :class:'Request' object.
-        :param \*\*kwargs: Optional arguments that ''request'' takes.
+        :param **kwargs: Optional arguments that ''request'' takes.
         :return: :class:'Response <Response>' object
         :rtype: requests.Response
         """
@@ -150,7 +150,7 @@ class ApiTester(unittest.TestCase):
             if self._validate_kwargs(**kwargs) and kwargs['url']:
                 return requests.delete(**kwargs)
         except InvalidURL:
-            logging.warn("The URL provided was somehow invalid")
+            logging.warn("The URL provided is invalid,please recheck")
 
     def _validate_kwargs(self, **kwargs):
         """
@@ -189,13 +189,13 @@ class ApiTester(unittest.TestCase):
         :parm proxies: (optional) Dictionary mapping protocol
             to the URL of the proxy.
         :parm verify: (optional) Either a boolean,
-            in which case it controls whether we verify the server�s
+            in which case it controls whether we verify the servers
             TLS certificate, or a string, in which case it must be a path
             to a CA bundle to use. Defaults to True.
         :parm stream: (optional) if False, the response content will be
             immediately downloaded.
         :parm cert: (optional) if String, path to ssl client cert file (.pem).
-            If Tuple, (�cert�, �key�) pair.
+            If Tuple, (cert, key) pair.
         """
         stand_kw = ["method", "url", "params", "data", "json",
                     "headers", "cookies", "files", "auth", "timeout",
@@ -259,7 +259,7 @@ class ApiTester(unittest.TestCase):
 
         :parm resp: response
         :parm path: key path in dot format which should starts with 'resp.'.
-            example: resp.data.0.name
+        example: resp.data.0.name
         """
         val = ''
         items = path.split('.')

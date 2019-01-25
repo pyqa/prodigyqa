@@ -43,7 +43,9 @@ setup(
     ],
     install_requires=[
         'pip',
+        'pycodestyle',
         'setuptools',
+        'scikit-image',
         'selenium',
         'nose',
         'flake8',
