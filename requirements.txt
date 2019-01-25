@@ -1,5 +1,4 @@
 pip
-flake8
 pycodestyle
 setuptools
 scikit-image

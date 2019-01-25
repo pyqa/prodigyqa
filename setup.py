@@ -43,7 +43,6 @@ setup(
     ],
     install_requires=[
         'pip',
-        'flake8',
         'pycodestyle',
         'setuptools',
         'scikit-image',
