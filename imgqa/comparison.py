@@ -26,8 +26,10 @@ class Compare(unittest.TestCase):
         self.file_extn = ('xls', 'xlsx', 'csv', 'tsv', 'hdf', 'html')
 
     def compare_images(self, source, target):
-        """Compare images on the basis Structural Similarity Index (SSIM) index.
+        """Compare images and returns structural similarity over the image.
 
+        Measure of SSIM is returned between 0-1.0 where 1.0 is the most identical
+        and 0 being completely different
         :param source: source image path.
         :param target: target image path.
         :return: SSIM difference of images which ranges between 0 and 1
@@ -39,15 +41,9 @@ class Compare(unittest.TestCase):
         self.target_extn = target.split(".")[1]
         if self.source_extn and self.target_extn not in self.image_extn:
             logging.error("Invalid image extension")
-        return self.__compare_images_ssim()
-
-    def __compare_images_ssim(self):
-        """Measure Structural Similarity Index (SSIM) difference of images.
-
-        :return: SSIM difference of images
-        :rtype: str
-        """
-        return ssim(self.source, self.target)
+        self.target = cv2.resize(
+            self.target, (int(self.source.shape[1]), int(self.source.shape[0])))
+        return ssim(self.source, self.target, multichannel=True)
 
     def compare_json(self, source, target):
         """Compare json files.
@@ -68,26 +64,21 @@ class Compare(unittest.TestCase):
         :return: file difference
         :rtype: data frame of file difference.
         """
+        self.source = source
+        self.target = target
         self.source_extn = source.split('.')[1]
         self.target_extn = target.split('.')[1]
         self.source_name = source.split('.')[0]
         self.target_name = target.split('.')[0]
-        self.source = source
-        self.target = target
         if self.source_extn and self.target_extn in self.file_extn:
             if self.source_extn and self.target_extn in self.excel_extn:
                 return self.__compare_workbooks()
             else:
-                self.source = self.__load_into_dataframe(source)
-                self.target = self.__load_into_dataframe(target)
-
-                if self.source_extn and self.target_extn not in self.excel_extn:
-                    return self.__compare_non_workbook_files()
-                if self.self.source_extn or self.target_extn in self.excel_extn:
-                    return self.__compare_spreadsheet_and_non_spreadsheet()
+                self.source_data = self.__load_into_dataframe(source)
+                self.target_data = self.__load_into_dataframe(target)
+                return self.__compare_non_workbook_files()
         else:
-            logging.warning('File Extension not supported')
-            return False
+            logging.error('File Extension not supported')
 
     def __compare_workbooks(self):
         """Compare two xls or xlsx files and return difference and boolean.
@@ -134,20 +125,27 @@ class Compare(unittest.TestCase):
         dupe_records = changes.set_index(unique_col).index.unique()
 
         changes['duplicate'] = changes[unique_col].isin(dupe_records)
-        removed_parts = changes[(changes["duplicate"] == False) & (changes["version"] == "source")]
-        new_part_set = full_set.drop_duplicates(subset=column_list, keep='last')
+        removed_parts = changes[(changes["duplicate"] == False) & (
+            changes["version"] == "source")]
+        new_part_set = full_set.drop_duplicates(
+            subset=column_list, keep='last')
         new_part_set['duplicate'] = new_part_set[unique_col].isin(dupe_records)
-        added_parts = new_part_set[(new_part_set["duplicate"] == False) & (new_part_set["version"] == "target")]
+        added_parts = new_part_set[(new_part_set["duplicate"] == False) & (
+            new_part_set["version"] == "target")]
 
         # Save the changes to excel but only include the columns we care about
-        writer = pd.ExcelWriter(file_path + "xl_diff.xlsx")
+        diff_file = file_path + "file_diff.xlsx"
+        if os.path.exists(diff_file):
+            os.remove(diff_file)
+        writer = pd.ExcelWriter(file_path + "file_diff.xlsx")
         diff_output.to_excel(writer, "changed")
-        removed_parts.to_excel(writer, "removed", index=False, columns=column_list)
+        removed_parts.to_excel(
+            writer, "removed", index=False, columns=column_list)
         added_parts.to_excel(writer, "added", index=False, columns=column_list)
         writer.save()
 
     def __report_diff(self, x):
-        """ reports data difference
+        """Report data difference.
 
         :param x:
         :return: difference
@@ -155,7 +153,7 @@ class Compare(unittest.TestCase):
         return x[0] if x[0] == x[1] else '{} ---> {}'.format(*x)
 
     def __has_change(self, row):
-        """ return Yes if cell has different data else No
+        """Return Yes if cell has different data else No.
 
         :param row: row data
         :return: Yes/No
@@ -171,40 +169,20 @@ class Compare(unittest.TestCase):
         :return: True/False.
         :rtype: bool.
         """
-        difference = self.source_data[self.source_data != self.target_data]
-        if difference == '':
-            logging.info("Both source '{0}' and target '{1}'" /
-                         "have same data".format(self.source_name, self.target_name))
-            return True
-        else:
-            logging.warning("Source '{0}' and target '{1}'" /
-                            "have different data\n {2}".format(self.source_name, self.target_name, difference))
-            return False
+        df = pd.concat([self.source_data, self.target_data])
+        df = df.reset_index(drop=True)
+        df_groupby = df.groupby(list(df.columns))
+        index = [x[0] for x in df_groupby.groups.values() if len(x) == 1]
+        diff = df.reindex(index)
 
-    def __compare_spreadsheet_and_non_spreadsheet(self):
-        """Compare two files of xls or xlsx and html or hdf or csv or tsv and return difference and boolean.
-
-        :param source: Source file Path.
-        :param target: Target file path.
-        :return: True/False.
-        :rtype: bool.
-        """
-        if self.source_extn in self.excel_extn and self.target_extn not in self.excel_extn:
-            df = pd.ExcelFile(self.source)
-            data = self.__load_into_dataframe(self.target)
-        elif self.source_extn not in self.excel_extn and self.target_extn in self.excel_extn:
-            df = pd.ExcelFile(self.target)
-            data = self.__load_into_dataframe(self.source)
-        for sheet in df.sheet_names:
-            if df.parse(sheet) in data:
-                logging.info("Both source '{0}' and target '{1}'" /
-                             "have same data".format(self.source_name, self.target_name))
-                break
-        else:
-            logging.warning("source '{0}' and target '{1}'" /
-                            "have different data".format(self.source_name, self.target_name))
-            return False
-        return True
+        # Save the changes to excel
+        file_path = os.path.dirname(self.source)
+        diff_file = file_path + "file_diff.xlsx"
+        if os.path.exists(diff_file):
+            os.remove(diff_file)
+        writer = pd.ExcelWriter(file_path + "file_diff.xlsx")
+        diff.to_excel(writer, "difference")
+        writer.save()
 
     def __load_into_dataframe(self, data):
         """Load hdf or csv or tsv file and return data.
@@ -257,13 +235,3 @@ class Compare(unittest.TestCase):
         :rtype: data frame.
         """
         return pd.read_csv(data, sep=sep)
-
-    def __pdf(self, source, target):
-        """
-
-        :param source: source pdf
-        :param target: target pdf
-        :return:
-        """
-        os.system('pdf-diff %s %s > comparison_output.png'%(self.source, self.target))
-
