@@ -14,7 +14,7 @@ except IOError:
 
 setup(
     name='imgqa',
-    version='0.3.0',
+    version='0.3.2',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -53,7 +53,6 @@ setup(
         'flake8',
         'jsondiff',
         'pandas',
-        'pdf-diff',
         'pytest>=3.8.2',
         'pytest-html>=1.19.0',
         'requests>=2.19.1',
