@@ -381,7 +381,7 @@ class BrowserActions(unittest.TestCase):
                         value=locator['locatorvalue'])).perform()
             except selenium_exceptions.NoSuchElementException:
                 AssertionError(
-                    "Element{} not found".locator['by'] +
+                    "Element{} not found".format(locator['by']) +
                     '=' + locator['value'])
         else:
             raise AssertionError("Locator type should be dictionary")
@@ -399,7 +399,7 @@ class BrowserActions(unittest.TestCase):
             self.click(locator)
         except selenium_exceptions.NoSuchElementException:
             AssertionError(
-                "Element {} not found".locator['by'] + '=' + locator['value'])
+                "Element {} not found".format(locator['by']) + '=' + locator['value'])
 
     def wait_for_element(self, locator):
         """Wait for an element to exist in UI.
