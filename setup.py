@@ -58,7 +58,7 @@ setup(
         'urllib3==1.24.1',
         'nose==1.3.7',
         'ipdb==0.11',
-        'flake8==3.6.0',
+        'flake8==3.7.0',
         'pytest>=4.0.2',
         'pytest-html<1.21.0',
     ],)
