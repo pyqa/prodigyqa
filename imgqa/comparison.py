@@ -167,7 +167,7 @@ class Compare(unittest.TestCase):
             return "No"
 
     def __compare_non_workbook_files(self):
-        """Compare two html or hdf or csv or tsv and return difference and boolean.
+        """Return xl of spreadsheet difference.
 
         :return: True/False.
         :rtype: bool.
