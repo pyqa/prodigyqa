@@ -23,11 +23,11 @@ class TestClass(ApiTester):
         resp = json.loads(users.text)
         logging.info(resp)
         self.assert_in_resp(resp=resp, member='orge',
-                                container='resp.data.0.first_name')
+                            container='resp.data.0.first_name')
         self.assert_equal_resp(resp=resp, member='George',
-                                container='resp.data.0.first_name')
+                               container='resp.data.0.first_name')
         self.assert_not_equal_resp(resp=resp, member='George1',
-                                container='resp.data.0.first_name')
+                                   container='resp.data.0.first_name')
         self.assert_not_in_resp(resp=resp, member='John',
                                 container='resp.data.0.first_name')
 
