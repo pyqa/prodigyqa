@@ -41,8 +41,7 @@ class Compare(unittest.TestCase):
         self.target_extn = target.split(".")[1]
         if self.source_extn and self.target_extn not in self.image_extn:
             logging.error("Invalid image extension")
-        self.target = cv2.resize(
-            self.target, (int(self.source.shape[1]), int(self.source.shape[0])))
+        self.target = cv2.resize(self.target, (int(self.source.shape[1]), int(self.source.shape[0])))
         return ssim(self.source, self.target, multichannel=True)
 
     def compare_json(self, source, target):
@@ -125,13 +124,10 @@ class Compare(unittest.TestCase):
         dupe_records = changes.set_index(unique_col).index.unique()
 
         changes['duplicate'] = changes[unique_col].isin(dupe_records)
-        removed_parts = changes[(changes["duplicate"] == False) & (
-            changes["version"] == "source")]
-        new_part_set = full_set.drop_duplicates(
-            subset=column_list, keep='last')
+        removed_parts = changes[(~changes["duplicate"]) & (changes["version"] == "source")]
+        new_part_set = full_set.drop_duplicates(subset=column_list, keep='last')
         new_part_set['duplicate'] = new_part_set[unique_col].isin(dupe_records)
-        added_parts = new_part_set[(new_part_set["duplicate"] == False) & (
-            new_part_set["version"] == "target")]
+        added_parts = new_part_set[(~new_part_set["duplicate"]) & (new_part_set["version"] == "target")]
 
         # Save the changes to excel but only include the columns we care about
         diff_file = file_path + "file_diff.xlsx"
@@ -139,8 +135,7 @@ class Compare(unittest.TestCase):
             os.remove(diff_file)
         writer = pd.ExcelWriter(file_path + "file_diff.xlsx")
         diff_output.to_excel(writer, "changed")
-        removed_parts.to_excel(
-            writer, "removed", index=False, columns=column_list)
+        removed_parts.to_excel(writer, "removed", index=False, columns=column_list)
         added_parts.to_excel(writer, "added", index=False, columns=column_list)
         writer.save()
 
