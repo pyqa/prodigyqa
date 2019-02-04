@@ -20,7 +20,9 @@ class Webspider(BrowserActions):
 
         self.open(self.url)
         if login:
-            if isinstance(username, dict) and isinstance(password, dict) and isinstance(login_button, dict):
+            if isinstance(username, dict) and \
+                    isinstance(password, dict) and \
+                    isinstance(login_button, dict):
                 self.send_keys(username)
                 self.send_keys(password)
                 self.click(login_button)

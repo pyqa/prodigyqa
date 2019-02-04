@@ -399,7 +399,8 @@ class BrowserActions(unittest.TestCase):
             self.click(locator)
         except selenium_exceptions.NoSuchElementException:
             AssertionError(
-                "Element {} not found".format(locator['by']) + '=' + locator['value'])
+                "Element {} not found".format(
+                    locator['by']) + '=' + locator['value'])
 
     def wait_for_element(self, locator):
         """Wait for an element to exist in UI.
