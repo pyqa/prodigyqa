@@ -5,6 +5,7 @@ from scrapy.item import Item, Field
 import csv
 import urlparse
 import scrapy
+import os
 
 class Spider(scrapy.Spider):
     name = "URLScraper"
@@ -12,9 +13,8 @@ class Spider(scrapy.Spider):
     url = "{0}"
     start_urls = []
     start_urls.append(url)
-    allowed_domains=[]
-    domain_url="{1}"
-    allowed_domains.append(domain_url)
+    allowed_domains = []
+    allowed_domains.append(urlparse(self.url).netloc)
     rules = (Rule(SgmlLinkExtractor(), callback='parse', follow=False),)
     list2 = []
     list3=[]
@@ -30,10 +30,12 @@ class Spider(scrapy.Spider):
             if(next_link_to_hit not in set(QuotesSpider.list3)):
                 yield scrapy.Request(url=next_link_to_hit,callback=self.parse)
             QuotesSpider.list3.append(next_link_to_hit)
-        with open("Result.csv", "wb") as f:
+
+        path = os.getcwd()
+        with open(path + "\\crawler.csv", "wb") as f:
             writer = csv.writer(f)
             writer.writerows(set(QuotesSpider.list2))
-        outF = open("Result.txt", "w")
+        outF = open(path + "\\crawler.txt", "w")
         for line in set(QuotesSpider.list2):
             # write line to output file
             outF.write(line)

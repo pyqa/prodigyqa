@@ -1,17 +1,27 @@
 """REST Api Sample Test file."""
 
 from imgqa.spider import Webspider
+from selenium.webdriver.common.keys import Keys
 
-# Variable Stack
-baseUrl = "https://learn.letskodeit.com/"
-urldomain = "letskodeit.com/"
-CSV_file_loc = "Examples\\urlListgen_file_retry.csv"
+username = {"locatorvalue": "id-search-field",
+            "by": "By.ID",
+            "value": "username" + Keys.ENTER}
+password = {"locatorvalue": 'id-search-field',
+            "by": "By.ID",
+            "value": "password" + Keys.ENTER}
+login_button = {"locatorvalue": "login-button",
+                "by": "By.ID"}
+
+baseurl = "http://the-internet.herokuapp.com/"
 
 
 class TestClass(Webspider):
     """Sample Test Suite."""
 
-    def test_get_users(self):
-        """Get users from application."""
-        self.start_webspider(
-            base_url=baseUrl, domain=urldomain, csv_file_path=CSV_file_loc)
+    # def test_get_web_urls1(self):
+    #     """Get web urls using selenium from application."""
+    #     self.spider(baseurl, login=True)
+
+    def test_get_web_urls2(self):
+        """Get web urls using scrapy from application."""
+        self.spider(baseurl, login=False)
