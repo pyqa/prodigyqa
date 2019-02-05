@@ -1,6 +1,6 @@
-"""Module Holds all spider mechanisms using beautiful soup & selenium."""
+"""Module for all spider mechanisms to extract URL from given page."""
 from imgqa import BrowserActions
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from urlparse import urlparse
 import pandas as pd
 import os
