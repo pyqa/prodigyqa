@@ -48,7 +48,7 @@ setup(
         'scikit-image',
         'selenium',
         'nose',
-        'pandas==0.23.4',
+        'pandas==0.24.1',
         'jsondiff',
         'flake8',
         'jsondiff',
