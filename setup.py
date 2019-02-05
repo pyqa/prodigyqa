@@ -58,5 +58,6 @@ setup(
         'ipdb==0.11',
         'pytest>=4.0.2',
         'pytest-html<1.21.0',
+        'xlrd>=0.9.0',
     ],)
 print("\n*** Img-QA Package Installation Complete! ***\n")
