@@ -4,12 +4,12 @@ setuptools
 scikit-image
 pillow
 opencv-python
+beautifulsoup4
 selenium==3.141.0
 pytest-html>=1.19.0
 requests>=2.19.1
 urllib3==1.24.1
 nose==1.3.7
-BeautifulSoup
 pandas
 ipdb==0.11
 flake8==3.6.0
