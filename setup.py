@@ -51,10 +51,10 @@ setup(
         'flake8',
         'jsondiff',
         'pandas',
+        'beautifulsoup4',
         'pytest>=3.8.2',
         'pytest-html>=1.19.0',
         'requests>=2.19.1',
-        'BeautifulSoup==3.2.1',
         'pandas==0.23.4'
         'urllib3==1.24.1',
         'nose==1.3.7',
