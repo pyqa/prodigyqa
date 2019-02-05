@@ -14,7 +14,7 @@ except IOError:
 
 setup(
     name='imgqa',
-    version='0.5.0',
+    version='0.6.0',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -48,21 +48,14 @@ setup(
         'scikit-image',
         'selenium',
         'nose',
-        'pandas==0.23.4',
         'jsondiff',
         'flake8',
-        'jsondiff',
-        'pandas',
         'beautifulsoup4',
         'opencv-python',
-        'pytest>=3.8.2',
-        'pytest-html>=1.19.0',
         'requests>=2.19.1',
         'pandas==0.23.4'
         'urllib3==1.24.1',
-        'nose==1.3.7',
         'ipdb==0.11',
-        'flake8==3.7.4',
         'pytest>=4.0.2',
         'pytest-html<1.21.0',
     ],)
