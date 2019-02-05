@@ -1,9 +1,12 @@
 """Module for all spider mechanisms to extract URL from given page."""
 from imgqa import BrowserActions
 from bs4 import BeautifulSoup
-from urlparse import urlparse
 import pandas as pd
 import os
+try:
+    import urlparse 
+except ImportError: 
+    import urllib.parse as urlparse
 
 
 class Webspider(BrowserActions):
