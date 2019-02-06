@@ -50,6 +50,7 @@ setup(
         'nose',
         'jsondiff',
         'flake8',
+        'openpyxl',
         'beautifulsoup4',
         'opencv-python',
         'requests>=2.19.1',
