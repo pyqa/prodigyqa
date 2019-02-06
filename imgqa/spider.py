@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import os
 try:
-    import urlparse 
-except ImportError: 
+    import urlparse
+except ImportError:
     import urllib.parse as urlparse
 
 
