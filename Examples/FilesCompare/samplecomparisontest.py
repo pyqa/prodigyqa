@@ -2,12 +2,12 @@
 from imgqa import Compare
 
 # Variable Stack / Data
-image1 = "Examples/Files/Comparehighway.jpg"
-image2 = "Examples/Files/highway_altered.jpg"
-source_xl = "Examples/Files/source.xlsx"
-target_xl = "Examples/Files/target.xlsx"
-source_csv = "Examples/Files/source_csv.csv"
-target_csv = "Examples/Files/target_csv.csv"
+image1 = "Examples/FilesCompare/Comparehighway.jpg"
+image2 = "Examples/FilesCompare/highway_altered.jpg"
+source_xl = "Examples/FilesCompare/source.xlsx"
+target_xl = "Examples/FilesCompare/target.xlsx"
+source_csv = "Examples/FilesCompare/source_csv.csv"
+target_csv = "Examples/FilesCompare/target_csv.csv"
 source_json = "{'as': 1," \
               "'a': {'b': {'cs':10, 'qqq': {'qwe':1}}," \
               "'d': {'csd':30}}}"
