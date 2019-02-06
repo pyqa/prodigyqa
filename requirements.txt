@@ -6,6 +6,7 @@ pillow
 opencv-python
 beautifulsoup4
 nose
+openpyxl
 selenium==3.141.0
 pytest-html>=1.19.0
 requests>=2.19.1
