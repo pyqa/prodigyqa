@@ -2,7 +2,7 @@
 from imgqa import Compare
 
 # Variable Stack / Data
-image1 = "Examples/FilesCompare/Comparehighway.jpg"
+image1 = "Examples/FilesCompare/highway.jpg"
 image2 = "Examples/FilesCompare/highway_altered.jpg"
 source_xl = "Examples/FilesCompare/source.xlsx"
 target_xl = "Examples/FilesCompare/target.xlsx"
