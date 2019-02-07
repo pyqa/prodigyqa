@@ -22,7 +22,7 @@ before_script:
 
 script:
   - pytest Examples/samplerestapitest.py
-  # - pytest Examples/sampleseleniumtest.py
+  - pytest Examples/FilesCompare/samplecomparisontest.py
 
 
 deploy:
