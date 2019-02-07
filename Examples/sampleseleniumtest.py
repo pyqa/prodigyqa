@@ -1,17 +1,15 @@
 """Sample test scripts for selenium pytest sample."""
 
 from imgqa import BrowserActions
-import time
 import os
 from selenium.webdriver.chrome.options import Options
+from time import sleep
+
 chrome_options = Options()
 
 
 class PageObjects:
     """hold all locators for POM style implementation."""
-
-    def __init__(self):
-        print("This class contains all pageobjects")
 
     base_url = "http://the-internet.herokuapp.com/"
     RadioButtons_all = \
@@ -31,7 +29,7 @@ class PageObjects:
             {"locatorvalue": 'input[type="checkbox"]:nth-child(1)',
              "by": "By.CSS_SELECTOR",
              "value": '#checkboxes > input[type="checkbox"]:nth-child(1)'}
-         }
+    }
     buttons_all = {
         "dropdown": {"locatorvalue": 'dropdown',
                      "by": "By.ID", "value": 'openwindow'},
@@ -58,7 +56,7 @@ class PageObjects:
         'enable_btn': {
             'locatorvalue': '#input-example > button',
             'by': 'By.CSS_SELECTOR', 'value': 'test'}
-                   }
+    }
     labels_all = {
         "header": {
             "locatorvalue": '.large-12.columns.atom.text-center>h1',
@@ -106,25 +104,18 @@ class PageObjects:
 class TestClass(BrowserActions):
     """Test Class Container for test cases."""
 
-    def test_Browser_Actions(self):
-
+    def test_browser_actions(self):
         """Sample case for navigating to python site and search selenium."""
         self.open(PageObjects.base_url)
         self.page_readiness_wait()
         self.set_window_size(1200, 800)
         self.maximize()
-
-        self.title = self.get_title()
-        self.driver_name = self.get_driver_name()
-        self.domain_url = self.get_domain_url()
         self.assertTrue(str(self.driver_name), 'chrome')
         self.assertTrue(str(self.domain_url), PageObjects.base_url)
         self.assertTrue(str(self.title), "The Internet")
-        self.page_source = self.get_page_source()
-        self.assertTrue(self.page_source.startswith("<!DOCTYPE html"))
+        self.assertTrue(self.get_page_source().startswith("<!DOCTYPE html"))
         self.locator_check(
             PageObjects.links_all.get("page_footer"))
-
         self.assertTrue(self.by_value, 'css selector')
         self.scroll_to_footer()
         self.hover_on_element(
@@ -149,30 +140,28 @@ class TestClass(BrowserActions):
             PageObjects.links_all.get("checkboxes"))
         self.wait_for_element(
             PageObjects.checkBox_all.get("checkbox1"))
-        self.click(PageObjects.
-                   checkBox_all.get("checkbox1"))
+        self.click(PageObjects.checkBox_all.get("checkbox1"))
         web_elements = self.find_elements(
             PageObjects.checkBox_all.get("checkbox1"))
         self.assertTrue(web_elements[0].is_selected())
         self.go_back()
         self.page_readiness_wait()
         self.scroll_to_element(PageObjects.links_all.get('alerts'))
-        self.click(
-            PageObjects.links_all.get('alerts'))
+        self.click(PageObjects.links_all.get('alerts'))
         self.reload_page()
         self.click(PageObjects.buttons_all.get('js_alert'))
         self.switch_to_alert()
-        time.sleep(5)
+        sleep(5)
         self.wait_and_accept_alert()
         self.go_back()
         self.go_forward()
         self.click(PageObjects.buttons_all.get('js_confirm_alert'))
         self.switch_to_alert()
-        time.sleep(5)
+        sleep(5)
         self.wait_and_reject_alert()
         self.click(PageObjects.buttons_all.get('js_prompt_alert'))
         self.switch_to_alert()
-        time.sleep(5)
+        sleep(5)
         self.wait_and_reject_alert()
         self.go_back()
         self.click(PageObjects.links_all.get('frames'))
@@ -184,12 +173,11 @@ class TestClass(BrowserActions):
         self.go_back()
         self.go_back()
         self.page_readiness_wait()
-        time.sleep(5)
+        sleep(5)
         self.click(PageObjects.links_all.get('dynamic_controls'))
         self.click(PageObjects.buttons_all.get('enable_btn'))
-        time.sleep(5)
+        sleep(5)
         self.send_keys(PageObjects.text_boxes.get('text_box'))
-        time.sleep(5)
+        sleep(5)
         self.switch_to_default_content()
-        path = os.getcwd()
-        self.capture_screenshot(path+"\\example_Screenshot1.png")
+        self.capture_screenshot(os.getcwd() + "\\example_Screenshot1.png")
