@@ -67,6 +67,7 @@ class TestClass(BrowserActions):
         self.page_readiness_wait()
         self.set_window_size(1200, 800)
         self.maximize()
+
         self.title = self.get_title()
         self.driver_name = self.get_driver_name()
         self.domain_url = self.get_domain_url()
@@ -77,6 +78,7 @@ class TestClass(BrowserActions):
         self.assertTrue(self.page_source.startswith("<!DOCTYPE html"))
         self.locator_check(
             PageObjects.links_all.get("page_footer"))
+
         self.assertTrue(self.by_value, 'css selector')
         self.scroll_to_footer()
         self.hover_on_element(
@@ -104,6 +106,7 @@ class TestClass(BrowserActions):
         self.click(
             PageObjects.checkBox_all.get("checkbox1"))
         web_elements = self.find_elements(PageObjects.checkBox_all.get("checkbox1"))
+        print web_elements
         self.assertTrue(web_elements[0].is_selected())
         self.go_back()
         self.page_readiness_wait()
