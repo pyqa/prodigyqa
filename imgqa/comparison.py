@@ -95,7 +95,7 @@ class Compare(unittest.TestCase):
             for sheet in source_df.sheet_names:
                 self.__compare_sheets(sheet)
 
-    def __compare_sheets(self, sheet, unique_col):
+    def __compare_sheets(self, sheet, unique_col="account number"):
         """Compare sreadsheets and return difference to xl file.
 
         :param sheet: sheet name
