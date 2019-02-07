@@ -48,6 +48,7 @@ setup(
         'scikit-image',
         'selenium',
         'nose',
+        'pandas==0.24.1',
         'jsondiff',
         'flake8',
         'openpyxl',
