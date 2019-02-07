@@ -3,7 +3,11 @@ from imgqa import BrowserActions
 from bs4 import BeautifulSoup
 import pandas as pd
 import os
-from urlparse import urlparse
+import sys
+if sys.version_info[0] is 2:
+    from urlparse import urlparse
+if sys.version_info[0] is 3:
+    from urllib.parse import urlparse
 
 
 class Webspider(BrowserActions):
