@@ -4,9 +4,9 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import os
 try:
-    import urlparse
+    from urlparse import urlparse
 except ImportError:
-    import urllib.parse as urlparse
+    from urllib.parse import urlparse
 
 
 class Webspider(BrowserActions):
