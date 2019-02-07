@@ -14,47 +14,93 @@ class PageObjects:
         print("This class contains all pageobjects")
 
     base_url = "http://the-internet.herokuapp.com/"
-    RadioButtons_all = {"bmwButton": {"locatorvalue": 'bmwradio', "by": "By.ID", "value": 'ch_signup_icon'},
-                        "benzButton": {"locatorvalue": 'benzradio', "by": "By.ID", "value": 'ch_signup_icon'}}
-    SelectButton1 = {"locatorvalue": 'carselect', "by": "By.ID", "value": 'benz'}
-    SelectButton2 = {"locatorvalue": 'carselect', "by": "By.ID", "value": 'bmw'}
-    checkBox_all = {"checkbox1": {"locatorvalue": '#checkboxes > input[type="checkbox"]:nth-child(1)',
-                                  "by": "By.CSS_SELECTOR",
-                                  "value": '#checkboxes > input[type="checkbox"]:nth-child(1)'},
-                    }
-    buttons_all = {"dropdown": {"locatorvalue": 'dropdown', "by": "By.ID", "value": 'openwindow'},
-                   "option1": {"locatorvalue": '#dropdown > option:nth-child(2)', "by": "By.CSS_SELECTOR",
-                               "value": '1'}, "option2": {"locatorvalue": '#dropdown > option:nth-child(3)',
-                                                          "by": "By.CSS_SELECTOR", "value": '2'},
-                   "mousehover": {"locatorvalue": 'mousehover', "by": "By.ID", "value": 'mousehover'}, 'js_alert':
-                    {"locatorvalue": '#content > div > ul > li:nth-child(1) > button', "by": "By.CSS_SELECTOR",
-                     "value": '#content > div > ul > li:nth-child(1) > button'},
-                   'js_confirm_alert': {"locatorvalue": '#content > div > ul > li:nth-child(2) > button',
-                                        "by": "By.CSS_SELECTOR",
-                                        "value": '#content > div > ul > li:nth-child(2) > button'},
-                   'js_prompt_alert': {"locatorvalue": '#content > div > ul > li:nth-child(3) > button',
-                                       "by": "By.CSS_SELECTOR",
-                                       "value": '#content > div > ul > li:nth-child(3) > button'},
-                   'enable_btn': {'locatorvalue': '#input-example > button', 'by': 'By.CSS_SELECTOR', 'value': 'test'}
-                 }
-    labels_all = {"header": {"locatorvalue": '.large-12.columns.atom.text-center>h1', "by": "By.CSS_SELECTOR",
-                             "value": '.large-12.columns.atom.text-center>h1'},
-                  "practice": {"locatorvalue": "/pages/practice", "by": "By.LINK_TEXT", "value": '/pages/practice'}}
-    links_all = {'checkboxes':{"locatorvalue": "#content > ul > li:nth-child(5) > a", "by": "By.CSS_SELECTOR",
-                               "value": '#content > ul > li:nth-child(5) > a'},
-                 'page_footer': {"locatorvalue": "#page-footer > div > div > a", "by": "By.CSS_SELECTOR",
-                                 "value": '#page-footer > div > div > a'},
-                 'dropdown': {"locatorvalue": "/dropdown", "by": "By.LINK_TEXT", "value": '/dropdown'},
-                 'alerts': {"locatorvalue": "#content > ul > li:nth-child(25) > a", "by": "By.CSS_SELECTOR",
-                            "value": '#content > ul > li:nth-child(25) > a'},
-                 'frames': {"locatorvalue": "#content > ul > li:nth-child(19) > a", "by": "By.CSS_SELECTOR",
-                            "value": '#content > ul > li:nth-child(19) > a'},
-                 'iframe': {"locatorvalue": "#content > div > ul > li:nth-child(2) > a", "by": "By.CSS_SELECTOR",
-                            "value": '#content > div > ul > li:nth-child(2) > a'},
-                 'dynamic_controls': {"locatorvalue": "#content > ul > li:nth-child(11) > a", "by": "By.CSS_SELECTOR",
-                                      "value": '#content > ul > li:nth-child(11) > a'}}
-    text_boxes = {'text_in_frame': {"locatorvalue": "#tinymce > p", "by": "By.CSS_SELECTOR", "value": 'test message'},
-                  'text_box': {'locatorvalue': '#input-example > input', 'by': 'By.CSS_SELECTOR', 'value': 'test'}}
+    RadioButtons_all = \
+        {"bmwButton": {"locatorvalue": 'bmwradio',
+                       "by": "By.ID",
+                       "value": 'ch_signup_icon'},
+         "benzButton":
+             {"locatorvalue": 'benzradio',
+              "by": "By.ID",
+              "value": 'ch_signup_icon'}}
+    SelectButton1 = {"locatorvalue": 'carselect',
+                     "by": "By.ID", "value": 'benz'}
+    SelectButton2 = {"locatorvalue": 'carselect',
+                     "by": "By.ID", "value": 'bmw'}
+    checkBox_all = {
+        "checkbox1":
+            {"locatorvalue": 'input[type="checkbox"]:nth-child(1)',
+             "by": "By.CSS_SELECTOR",
+             "value": '#checkboxes > input[type="checkbox"]:nth-child(1)'}
+         }
+    buttons_all = {
+        "dropdown": {"locatorvalue": 'dropdown',
+                     "by": "By.ID", "value": 'openwindow'},
+        "option1": {
+            "locatorvalue": '#dropdown > option:nth-child(2)',
+            "by": "By.CSS_SELECTOR", "value": '1'},
+        "option2": {
+            "locatorvalue": '#dropdown > option:nth-child(3)',
+            "by": "By.CSS_SELECTOR", "value": '2'},
+        "mousehover": {"locatorvalue": 'mousehover', "by": "By.ID",
+                       "value": 'mousehover'},
+        'js_alert': {
+            "locatorvalue": '#content > div > ul > li:nth-child(1) > button',
+            "by": "By.CSS_SELECTOR",
+            "value": '#content > div > ul > li:nth-child(1) > button'},
+        'js_confirm_alert': {
+            "locatorvalue": '#content > div > ul > li:nth-child(2) > button',
+            "by": "By.CSS_SELECTOR",
+            "value": '#content > div > ul > li:nth-child(2) > button'},
+        'js_prompt_alert': {
+            "locatorvalue": '#content > div > ul > li:nth-child(3) > button',
+            "by": "By.CSS_SELECTOR",
+            "value": '#content > div > ul > li:nth-child(3) > button'},
+        'enable_btn': {
+            'locatorvalue': '#input-example > button',
+            'by': 'By.CSS_SELECTOR', 'value': 'test'}
+                   }
+    labels_all = {
+        "header": {
+            "locatorvalue": '.large-12.columns.atom.text-center>h1',
+            "by": "By.CSS_SELECTOR",
+            "value": '.large-12.columns.atom.text-center>h1'},
+        "practice": {
+            "locatorvalue": "/pages/practice",
+            "by": "By.LINK_TEXT", "value": '/pages/practice'}}
+    links_all = {
+        'checkboxes': {
+            "locatorvalue": "#content > ul > li:nth-child(5) > a",
+            "by": "By.CSS_SELECTOR",
+            "value": '#content > ul > li:nth-child(5) > a'},
+        'page_footer': {"locatorvalue": "#page-footer > div > div > a",
+                        "by": "By.CSS_SELECTOR",
+                        "value": '#page-footer > div > div > a'},
+        'dropdown': {
+            "locatorvalue": "/dropdown",
+            "by": "By.LINK_TEXT", "value": '/dropdown'},
+        'alerts': {
+            "locatorvalue": "#content > ul > li:nth-child(25) > a",
+            "by": "By.CSS_SELECTOR",
+            "value": '#content > ul > li:nth-child(25) > a'},
+        'frames': {
+            "locatorvalue": "#content > ul > li:nth-child(19) > a",
+            "by": "By.CSS_SELECTOR",
+            "value": '#content > ul > li:nth-child(19) > a'},
+        'iframe': {
+            "locatorvalue": "#content > div > ul > li:nth-child(2) > a",
+            "by": "By.CSS_SELECTOR",
+            "value": '#content > div > ul > li:nth-child(2) > a'},
+        'dynamic_controls': {
+            "locatorvalue": "#content > ul > li:nth-child(11) > a",
+            "by": "By.CSS_SELECTOR",
+            "value": '#content > ul > li:nth-child(11) > a'}}
+    text_boxes = {
+        'text_in_frame': {
+            "locatorvalue": "#tinymce > p", "by": "By.CSS_SELECTOR",
+            "value": 'test message'},
+        'text_box': {
+            'locatorvalue': '#input-example > input',
+            'by': 'By.CSS_SELECTOR', 'value': 'test'}}
 
 
 class TestClass(BrowserActions):
@@ -103,9 +149,10 @@ class TestClass(BrowserActions):
             PageObjects.links_all.get("checkboxes"))
         self.wait_for_element(
             PageObjects.checkBox_all.get("checkbox1"))
-        self.click(
+        self.click(PageObjects.
+                   checkBox_all.get("checkbox1"))
+        web_elements = self.find_elements(
             PageObjects.checkBox_all.get("checkbox1"))
-        web_elements = self.find_elements(PageObjects.checkBox_all.get("checkbox1"))
         print web_elements
         self.assertTrue(web_elements[0].is_selected())
         self.go_back()
