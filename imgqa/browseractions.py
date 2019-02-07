@@ -520,9 +520,8 @@ class BrowserActions(unittest.TestCase):
         self.page_readiness_wait()
         if isinstance(locator, dict):
             return self.driver.find_elements(
-                self.driver.find_element(
                     self.by_value,
-                    value=locator['value']))
+                    value=locator['value'])
         else:
             AssertionError("Invalid locator type")
 

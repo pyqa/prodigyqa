@@ -3,9 +3,8 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.item import Item, Field
 import csv
-import urlparse
+from urlparse import urlparse
 import scrapy
-import os
 
 class Spider(scrapy.Spider):
     name = "URLScraper"
@@ -14,7 +13,7 @@ class Spider(scrapy.Spider):
     start_urls = []
     start_urls.append(url)
     allowed_domains = []
-    allowed_domains.append(urlparse(self.url).netloc)
+    allowed_domains.append(urlparse(url).netloc)
     rules = (Rule(SgmlLinkExtractor(), callback='parse', follow=False),)
     list2 = []
     list3=[]
@@ -22,21 +21,19 @@ class Spider(scrapy.Spider):
         list1=[str(res.extract()) for res in response.xpath('//a/@href')
                 if str(res.extract()).startswith('http:')]
         for url in response.xpath('//a/@href'):
-            QuotesSpider.list2.append(
+            Spider.list2.append(
                           str(url.extract()))
             yield url.extract()
-        for URLtoHit in set(QuotesSpider.list2):
+        for URLtoHit in set(Spider.list2):
             next_link_to_hit=response.urljoin(URLtoHit)
-            if(next_link_to_hit not in set(QuotesSpider.list3)):
+            if(next_link_to_hit not in set(Spider.list3)):
                 yield scrapy.Request(url=next_link_to_hit,callback=self.parse)
-            QuotesSpider.list3.append(next_link_to_hit)
-
-        path = os.getcwd()
-        with open(path + "\\crawler.csv", "wb") as f:
+            Spider.list3.append(next_link_to_hit)
+        with open("Result.csv", "wb") as f:
             writer = csv.writer(f)
-            writer.writerows(set(QuotesSpider.list2))
-        outF = open(path + "\\crawler.txt", "w")
-        for line in set(QuotesSpider.list2):
+            writer.writerows(set(Spider.list2))
+        outF = open("Result.txt", "w")
+        for line in set(Spider.list2):
             # write line to output file
             outF.write(line)
             outF.write("\n")

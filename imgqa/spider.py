@@ -3,10 +3,7 @@ from imgqa import BrowserActions
 from bs4 import BeautifulSoup
 import pandas as pd
 import os
-try:
-    import urlparse
-except ImportError:
-    import urllib.parse as urlparse
+from urlparse import urlparse
 
 
 class Webspider(BrowserActions):
