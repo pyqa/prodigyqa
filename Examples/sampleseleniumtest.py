@@ -153,7 +153,6 @@ class TestClass(BrowserActions):
                    checkBox_all.get("checkbox1"))
         web_elements = self.find_elements(
             PageObjects.checkBox_all.get("checkbox1"))
-        print web_elements
         self.assertTrue(web_elements[0].is_selected())
         self.go_back()
         self.page_readiness_wait()
