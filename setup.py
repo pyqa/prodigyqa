@@ -14,14 +14,14 @@ except IOError:
 
 setup(
     name='imgqa',
-    version='0.6.1',
+    version='1.0.0',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/pyqa/imgqa',
+    url='https://pyqa.github.io/imgqa/',
     platforms=["Windows", "Linux", "Unix", "Mac OS-X"],
     author='Revant',
-    author_email='revanth.mvs@imaginea.com',
+    author_email='revanth.mvs@hotmail.com',
     maintainer='Revant',
     classifiers=[
         "Development Status :: 5 - Production/Stable",
