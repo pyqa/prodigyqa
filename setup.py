@@ -14,7 +14,7 @@ except IOError:
 
 setup(
     name='imgqa',
-    version='0.6.1',
+    version='0.6.2',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -48,6 +48,7 @@ setup(
         'scikit-image',
         'selenium',
         'nose',
+        'pandas==0.24.1',
         'jsondiff',
         'flake8',
         'openpyxl',
