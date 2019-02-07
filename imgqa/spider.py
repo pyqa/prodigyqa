@@ -3,10 +3,9 @@ from imgqa import BrowserActions
 from bs4 import BeautifulSoup
 import pandas as pd
 import os
-import sys
-if sys.version_info[0] is 2:
+try:
     from urlparse import urlparse
-if sys.version_info[0] is 3:
+except ImportError:
     from urllib.parse import urlparse
 
 
