@@ -130,8 +130,8 @@ class TestClass(BrowserActions):
         self.reload_page()
         url = self.get_location()
         self.assertTrue(url.startswith("http://elementalselenium.com/"))
-        self.text = self.get_text(PageObjects.labels_all.get('header'))
-        self.assertTrue(str(self.text), 'Elemental Selenium')
+        text = self.get_text(PageObjects.labels_all.get('header'))
+        self.assertTrue(str(text), 'Elemental Selenium')
         self.driver.close()
         self.switch_to_window(window_before)
         self.wait_for_element(
