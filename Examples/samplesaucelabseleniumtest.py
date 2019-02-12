@@ -1,4 +1,4 @@
-"""Sample test scripts for saucelab pytest sample."""
+"""Sample test scripts for saucelab-python integration."""
 
 import pytest
 from selenium.webdriver.common.keys import Keys
@@ -7,7 +7,6 @@ from imgqa import BrowserActions
 
 
 class Page:
-    """hold all locators for POM style implementation."""
 
     base_url = "http://www.python.org"
     fb_base_url = "http://www.facebook.com"
