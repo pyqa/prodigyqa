@@ -14,14 +14,14 @@ except IOError:
 
 setup(
     name='imgqa',
-    version='0.2.0',
+    version='1.0.0',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/pyqa/imgqa',
+    url='https://pyqa.github.io/imgqa/',
     platforms=["Windows", "Linux", "Unix", "Mac OS-X"],
     author='Revant',
-    author_email='revanth.mvs@imaginea.com',
+    author_email='revanth.mvs@hotmail.com',
     maintainer='Revant',
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -43,18 +43,23 @@ setup(
     ],
     install_requires=[
         'pip',
+        'pycodestyle',
         'setuptools',
+        'scikit-image',
         'selenium',
         'nose',
+        'pandas==0.24.1',
+        'jsondiff',
         'flake8',
-        'pytest>=3.8.2',
-        'pytest-html>=1.19.0',
+        'openpyxl',
+        'beautifulsoup4',
+        'opencv-python',
         'requests>=2.19.1',
-        'urllib3==1.23',
-        'nose==1.3.7',
+        'pandas==0.23.4'
+        'urllib3==1.24.1',
         'ipdb==0.11',
-        'flake8==3.5.0',
         'pytest>=4.0.2',
-        'pytest-html<=1.19.0',
+        'pytest-html<1.21.0',
+        'xlrd>=0.9.0',
     ],)
 print("\n*** Img-QA Package Installation Complete! ***\n")

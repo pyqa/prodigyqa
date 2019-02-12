@@ -1,12 +1,15 @@
 language: python
 
-sudo: false
+# sudo: false
 
 matrix:
   include:
     - python: 2.7
     - python: 3.5
     - python: 3.6
+    - python: 3.7
+      dist: xenial
+      sudo: true
 
 addons:
   firefox: "62.0.3"
@@ -14,25 +17,23 @@ addons:
 
 
 before_script:
-  - "pip install flake8"
-  - "pip install pycodestyle"
+  - "sudo apt-get install python-opencv"
   - "flake8 imgqa/*.py && flake8 imgqa/*/*.py"
   - "flake8 Examples/*.py && flake8 Examples/*/*.py"
   - "pycodestyle imgqa/*.py && pycodestyle Examples/*/*.py"
-  - ls
   - bash chrome_driver_install.sh
 
 script:
   - pytest Examples/samplerestapitest.py
-  # - pytest Examples/sampleseleniumtest.py
+  - pytest Examples/FilesCompare/samplecomparisontest.py
 
 
-# deploy:
-#   provider: pypi
-#   user: Revant
-#   password: 
-#   distributions: "sdist bdist_wheel"
-#   skip_existing: true
-#   skip_cleanup: true
-#   on:
-#       branch: master
+deploy:
+  provider: pypi
+  user: Revant
+  password: Revantpypi
+  distributions: "sdist bdist_wheel"
+  skip_existing: true
+  skip_cleanup: true
+  on:
+      branch: master

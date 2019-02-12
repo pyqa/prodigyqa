@@ -21,8 +21,14 @@ class TestClass(ApiTester):
         """Get users from application."""
         users = self.apirequest(method="GET", url=uri)
         resp = json.loads(users.text)
-        logging.warning(resp)
-        self.assert_not_in_resp(resp=resp, member='Georg1e',
+        logging.info(resp)
+        self.assert_in_resp(resp=resp, member='orge',
+                            container='resp.data.0.first_name')
+        self.assert_equal_resp(resp=resp, member='George',
+                               container='resp.data.0.first_name')
+        self.assert_not_equal_resp(resp=resp, member='George1',
+                                   container='resp.data.0.first_name')
+        self.assert_not_in_resp(resp=resp, member='John',
                                 container='resp.data.0.first_name')
 
     def test_post_users(self):
