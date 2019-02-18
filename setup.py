@@ -52,6 +52,7 @@ setup(
         'jsondiff',
         'flake8',
         'openpyxl',
+        'pytesseract',
         'beautifulsoup4',
         'opencv-python',
         'requests>=2.19.1',
