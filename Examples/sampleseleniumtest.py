@@ -12,6 +12,8 @@ class PageObjects:
     """hold all locators for POM style implementation."""
 
     base_url = "http://the-internet.herokuapp.com/"
+    base_url_title = "The Internet"
+    bank_site_url = "https://www.icicidirect.com"
     RadioButtons_all = \
         {"bmwButton": {"locatorvalue": 'bmwradio',
                        "by": "By.ID",
@@ -181,3 +183,26 @@ class TestClass(BrowserActions):
         sleep(5)
         self.switch_to_default_content()
         self.capture_screenshot(os.getcwd() + "\\example_Screenshot1.png")
+        
+    def test_multiple_tabs(self):
+        self.open(PageObjects.base_url)
+        self.set_window_size(1200, 800)
+        width, height = self.get_current_window_size()
+        self.assertTrue(width, 1200)
+        self.assertTrue(height, 800)
+        self.open_in_new_tab(PageObjects.bank_site_url)
+        self.maximize()
+        sleep(3)
+        self.assertTrue((len(self.get_window_handles()), 2))
+        self.close_current_window()
+
+    def test_window_position(self):
+        self.open(PageObjects.base_url)
+        self.page_title_should_be(PageObjects.base_url_title)
+        self.open_in_new_tab(PageObjects.bank_site_url)
+        self.set_current_window_position(80, 40)
+        x, y = self.get_current_window_size()
+        self.assertTrue(x, 80)
+        self.assertTrue(y, 40)
+        sleep(3)
+        self.close_all_windows()
