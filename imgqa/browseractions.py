@@ -550,3 +550,101 @@ class BrowserActions(unittest.TestCase):
                         value=locator['locatorvalue']))
         else:
             AssertionError("Invalid locator type")
+            
+    def close_current_window(self):
+        """Closes currently opened window by webdriver.
+
+        """
+        try:
+            self.page_readiness_wait()
+            self.driver.close()
+        except selenium_exceptions.NoSuchWindowException:
+            logging.error("Exception : Window doesn't exist")
+
+    def close_all_windows(self):
+        """Closes all windows opened by webdriver.
+
+        """
+        try:
+            self.page_readiness_wait()
+            self.driver.quit()
+        except selenium_exceptions.NoSuchWindowException:
+            logging.error('Exception : No Window exist')
+
+    def open_in_new_tab(self, url):
+        """opens the url in new tab.
+
+        :param url: url to open
+        """
+        self.page_readiness_wait()
+        try:
+            scr = ('''window.open("{}", "_blank");'''.format(url))
+            self.driver.execute_script(scr)
+            logging.info("url '{0}' opened in new tab of "
+                         "same browser".format(url))
+        except Exception:
+            AssertionError("failed to open url {0} in"
+                           " different tab".format(url))
+
+    def get_window_handles(self):
+        """Return all current window handles as a list.
+
+        """
+        try:
+            self.page_readiness_wait()
+            return self.driver.window_handles
+        except selenium_exceptions.NoSuchWindowException:
+            logging.error('Exception : No Windows Present')
+
+    def get_current_window_size(self):
+        """Returns width and height of current window as integers.
+
+        """
+        try:
+            self.page_readiness_wait()
+            size = self.driver.get_window_size()
+            return size['width'], size['height']
+        except selenium_exceptions.NoSuchWindowException:
+            logging.error('Exception : No Window Present')
+
+    def get_current_window_position(self):
+        """Returns position of the current window.
+
+        """
+        try:
+            self.page_readiness_wait()
+            position = self.driver.get_window_position()
+            return position['x'], position['y']
+        except selenium_exceptions.NoSuchWindowException:
+            logging.error('Exception : No Window Present')
+
+    def set_current_window_position(self, x, y):
+        """Set window's position using ``x`` and ``y`` coordinates.
+
+        :param x: x coordinate of the window
+        :param y: y coordinate of the window
+        """
+        try:
+            self.driver.set_window_position(int(x), int(y))
+        except selenium_exceptions.NoSuchWindowException:
+            logging.error('Exception : No Window Present')
+
+    def page_title_should_be(self, title, message=None):
+        """Verifies that current page title equals given title.
+
+        :param title: title of the page to verify
+        :param message: This argument can be used to override the default error
+        message.
+        """
+        try:
+            self.page_readiness_wait()
+            actual = self.get_title()
+        except BaseException:
+            actual = self.driver.execute_script("return document.title")
+        if actual != title:
+            if message is None:
+                message = "Title should have been '%s' but " \
+                          "was '%s'." % (title, actual)
+            raise AssertionError(message)
+    
+
