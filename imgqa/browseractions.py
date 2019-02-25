@@ -550,7 +550,7 @@ class BrowserActions(unittest.TestCase):
                         value=locator['locatorvalue']))
         else:
             AssertionError("Invalid locator type")
-            
+
     def close_current_window(self):
         """Closes currently opened window by webdriver.
 
@@ -646,5 +646,5 @@ class BrowserActions(unittest.TestCase):
                 message = "Title should have been '%s' but " \
                           "was '%s'." % (title, actual)
             raise AssertionError(message)
-    
+
 
