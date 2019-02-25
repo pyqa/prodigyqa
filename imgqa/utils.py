@@ -37,7 +37,7 @@ class Utilities(BrowserActions):
             for word in words:
                 speller_obj.addtoSession(word)
 
-        invalidchars = set(string.punctuation.replace("_", "")).union({"\u"})
+        invalidchars = set(string.punctuation.replace("_", ""))
         for word in nltk.word_tokenize(page_content):
             if any(invalidchar in word for invalidchar in invalidchars) or \
                     len(word) < 2:
