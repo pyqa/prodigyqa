@@ -183,7 +183,7 @@ class TestClass(BrowserActions):
         sleep(5)
         self.switch_to_default_content()
         self.capture_screenshot(os.getcwd() + "\\example_Screenshot1.png")
-        
+
     def test_multiple_tabs(self):
         self.open(PageObjects.base_url)
         self.set_window_size(1200, 800)
