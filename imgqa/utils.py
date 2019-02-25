@@ -5,11 +5,12 @@ import pytesseract
 from selenium import webdriver
 import re
 import string
+from imgqa import BrowserActions
 import nltk
 nltk.download('punkt')
 
 
-class Utilities:
+class Utilities(BrowserActions):
     """Extract the text from image presented."""
 
     def captcha_to_text(self, image):
@@ -19,25 +20,27 @@ class Utilities:
     def spell_checker(self, url, words=[]):
         """Spell checker.
 
-        :param url:
+        :param url: webpage url
         :param words: expected word list
         :return: list of misspelled words
         """
-        speller_obj = aspell.Speller()
-        if not words:
+        self.open(url)
+        driver = webdriver.Chrome()
+        driver.get(url)
+
+        cleanr = re.compile('<.*?>')
+        page_content = re.sub(cleanr, '', driver.page_source)
+
+        cleantext = []
+        speller_obj = aspell.Speller("lang", "en")
+        if len(words):
             for word in words:
                 speller_obj.addtoSession(word)
 
-        driver = webdriver.Chrome()
-        driver.get(url)
-        cleanr = re.compile('<.*?>')
-        page_content = re.sub(cleanr, '', driver.page_source)
-        invalidchars = set(string.punctuation.replace("_", "")) | {"\u"}
-
-        cleantext = []
+        invalidchars = set(string.punctuation.replace("_", "")).union({"\u"})
         for word in nltk.word_tokenize(page_content):
-            if any(invalidchar in word
-                   for invalidchar in invalidchars) or len(word) < 2:
+            if any(invalidchar in word for invalidchar in invalidchars) or \
+                    len(word) < 2:
                 continue
             else:
                 cleantext.append(word)
