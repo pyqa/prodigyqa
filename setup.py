@@ -56,7 +56,7 @@ setup(
         'beautifulsoup4',
         'opencv-python',
         'requests>=2.19.1',
-        'pandas==0.23.4'
+        'pandas==0.23.4',
         'urllib3==1.24.1',
         'ipdb==0.11',
         'pytest>=4.0.2',
