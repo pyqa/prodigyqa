@@ -646,5 +646,3 @@ class BrowserActions(unittest.TestCase):
                 message = "Title should have been '%s' but " \
                           "was '%s'." % (title, actual)
             raise AssertionError(message)
-
-
