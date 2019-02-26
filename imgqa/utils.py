@@ -29,7 +29,7 @@ class Utilities(BrowserActions):
         self.driver.get(url)
 
         cleanr = re.compile('<.*?>')
-        page_content = re.sub(cleanr, '', driver.page_source)
+        page_content = re.sub(cleanr, '', self.driver.page_source)
 
         cleantext = []
         speller_obj = aspell.Speller("lang", "en")
