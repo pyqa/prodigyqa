@@ -25,8 +25,8 @@ class Utilities(BrowserActions):
         :return: list of misspelled words
         """
         self.open(url)
-        driver = webdriver.Chrome()
-        driver.get(url)
+        self.driver = webdriver.Chrome()
+        self.driver.get(url)
 
         cleanr = re.compile('<.*?>')
         page_content = re.sub(cleanr, '', driver.page_source)
