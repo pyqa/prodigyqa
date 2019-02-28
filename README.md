@@ -138,7 +138,3 @@ This Spell checker method of utils module will capture web page content and Vali
 |---|---|---|---|
 | spell_checker | Spell checker. | (a) url: web page url (b) words: list of application specific words  | spell_checker(self, url, words=[]) |
 | l
-
-spell_checker(self, url, words=[])
-
-
