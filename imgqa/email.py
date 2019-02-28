@@ -189,7 +189,7 @@ class EmailKeywords(object):
         return msg.get_payload()
 
     def mail_message_subject_should_match(self, index, reg_exp):
-        """Email message subject contains the required regular expression match.
+        """Email subject contains the required regular expression match.
 
         :param index: mail index.
         :param reg_exp: regular expression of mail subject.
@@ -204,7 +204,7 @@ class EmailKeywords(object):
                                                    reg_exp, msg['subject']))
 
     def mail_message_subject_should_not_match(self, index, reg_exp):
-        """Email message subject should not contain the  regular expression match.
+        """Email subject should not contain the regular expression match.
 
         :param index: mail index
         :param reg_exp: regular expression for mail subject.
