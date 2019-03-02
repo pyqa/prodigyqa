@@ -2,7 +2,6 @@
 from PIL import Image
 import aspell
 import pytesseract
-from selenium import webdriver
 import re
 import string
 from imgqa import BrowserActions
@@ -26,7 +25,7 @@ class Utilities(BrowserActions):
         """
         self.open(url)
         cleanr = re.compile('<.*?>')
-        page_content = re.sub(cleanr, '', self.driver.page_source)
+        page_content = re.sub(cleanr, '', self.get_page_source())
         cleantext = []
         speller_obj = aspell.Speller("lang", "en")
         if len(words):
