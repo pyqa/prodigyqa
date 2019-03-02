@@ -14,7 +14,7 @@ except IOError:
 
 setup(
     name='imgqa',
-    version='1.0.1',
+    version='1.0.2',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -43,24 +43,25 @@ setup(
     ],
     install_requires=[
         'pip',
-        'pycodestyle',
         'setuptools',
         'scikit-image',
         'selenium',
         'nose',
-        'pandas==0.24.1',
         'jsondiff',
-        'flake8',
         'openpyxl',
         'pytesseract',
         'beautifulsoup4',
         'opencv-python',
+        'flake8==3.7.7',
+        'pycodestyle<2.6.0,>=2.5.0',
+        'pandas==0.24.1',
         'requests>=2.19.1',
-        'pandas==0.23.4',
         'urllib3==1.24.1',
         'ipdb==0.11',
         'pytest>=4.0.2',
         'pytest-html<1.21.0',
         'xlrd>=0.9.0',
+        'scrapy',
+        'nltk',
     ],)
-print("\n*** Img-QA Package Installation Complete! ***\n")
+print("\n*** QA-ReImagined(imgqa) Package Installation Complete! ***\n")
