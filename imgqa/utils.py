@@ -25,12 +25,8 @@ class Utilities(BrowserActions):
         :return: list of misspelled words
         """
         self.open(url)
-        self.driver = webdriver.Chrome()
-        self.driver.get(url)
-
         cleanr = re.compile('<.*?>')
         page_content = re.sub(cleanr, '', self.driver.page_source)
-
         cleantext = []
         speller_obj = aspell.Speller("lang", "en")
         if len(words):
