@@ -54,7 +54,7 @@ setup(
         'opencv-python',
         'flake8==3.7.7',
         'pycodestyle<2.6.0,>=2.5.0',
-        'pandas==0.24.1',
+        'pandas==0.24.2',
         'requests>=2.19.1',
         'urllib3==1.24.1',
         'ipdb==0.11',
