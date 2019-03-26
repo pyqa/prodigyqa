@@ -6,6 +6,8 @@ import re
 import string
 from imgqa import BrowserActions
 import nltk
+from axe_selenium_python import Axe
+
 nltk.download('punkt')
 
 
@@ -46,3 +48,18 @@ class Utilities(BrowserActions):
                                re.match('^[a-zA-Z ]*$', word)]))
 
         return misspelled
+
+    def accesibility_check(self, url):
+        self.open(url)
+        axe = Axe(self.driver)
+        # Inject axe-core javascript into page.
+        axe.inject()
+        
+        # Run axe accessibility checks.
+        results = axe.run()
+        
+        # Write results to file
+        axe.write_results(results, 'a11y.json')
+        
+        # Assert no violations are found
+        assert len(results["violations"]) == 0, axe.report(results["violations"])   
