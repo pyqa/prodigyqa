@@ -15,7 +15,7 @@ from selenium.webdriver.support.ui import WebDriverWait as Wait
 
 from selenium.webdriver.support import expected_conditions as ec
 
-from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.action_chains imzport ActionChains
 
 from selenium.webdriver.support.select import Select
 
@@ -179,7 +179,7 @@ class BrowserActions(unittest.TestCase):
         """
         self.locator_check(locator)
         self.page_readiness_wait()
-        if not attribute_name and isinstance(locator, dict):
+        if attribute_name is not None and isinstance(locator, dict):
             return self.driver.find_element(
                 self.by_value,
                 value=locator['locatorvalue']).get_attribute(attribute_name)
