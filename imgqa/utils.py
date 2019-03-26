@@ -1,12 +1,20 @@
 """Image Comparison Module using Structural Similary and Open CV."""
-from PIL import Image
-import aspell
-import pytesseract
+
 import re
+
 import string
-from imgqa import BrowserActions
-import nltk
+
+from PIL import Image
+
+import aspell
+
 from axe_selenium_python import Axe
+
+from imgqa import BrowserActions
+
+import nltk
+
+import pytesseract
 
 nltk.download('punkt')
 
@@ -54,12 +62,10 @@ class Utilities(BrowserActions):
         axe = Axe(self.driver)
         # Inject axe-core javascript into page.
         axe.inject()
-        
         # Run axe accessibility checks.
         results = axe.run()
-        
         # Write results to file
         axe.write_results(results, 'a11y.json')
-        
         # Assert no violations are found
-        assert len(results["violations"]) == 0, axe.report(results["violations"])   
+        assert len(results["violations"]) == 0, axe.report(
+            results["violations"])

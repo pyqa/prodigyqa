@@ -1,29 +1,31 @@
 """UI utility functions of all selenium self.driver based actions."""
+import logging
+
+import os
+
+import platform
+
+import unittest
+
 from datetime import datetime
 
 from time import sleep
 
-import os
-
 from selenium import webdriver
-
-import logging
 
 from selenium.common import exceptions as selenium_exceptions
 
-from selenium.webdriver.support.ui import WebDriverWait as Wait
+from selenium.webdriver.common.action_chains import ActionChains
+
+from selenium.webdriver.common.by import By
 
 from selenium.webdriver.support import expected_conditions as ec
 
-from selenium.webdriver.common.action_chains imzport ActionChains
-
 from selenium.webdriver.support.select import Select
 
-import unittest
 
-import platform
+from selenium.webdriver.support.ui import WebDriverWait as Wait
 
-from selenium.webdriver.common.by import By
 
 if platform.system() == 'Darwin':
     from PIL import ImageGrab
@@ -520,8 +522,8 @@ class BrowserActions(unittest.TestCase):
         self.page_readiness_wait()
         if isinstance(locator, dict):
             return self.driver.find_elements(
-                    self.by_value,
-                    value=locator['value'])
+                self.by_value,
+                value=locator['value'])
         else:
             AssertionError("Invalid locator type")
 
