@@ -91,7 +91,10 @@ Below are the major areas handled in this module:
 | select_option_by_text | Select the value by using text. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). (b) text: string value to select option. | self.select_option_by_text(locator, text) |
 | scroll_to_footer | Scroll till end of the page. |  | self.scroll_to_footer() |
 | scroll_to_element | Scroll to a particular element on the page. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). | self.scroll_to_element(locator) |
-| find_elements | Return elements matched with locator. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). | self.find_elements(locator) |
+| javascript_click | Perfom a click using javscript | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). | self.java(locator) |
+| is_element_displayed | Return boolean value based on the element is displayed  with locator. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). | self.is_element_displayed(locator) |
+| is_element_enabled | Return boolean value based on the element is enabled  with locator. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). | self.is_element_enabled(locator) |
+| is_element_selected | Return boolean value based on the element is selected  with locator. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). | self.is_element_selected(locator) |
 
 
 ## API Test Module
