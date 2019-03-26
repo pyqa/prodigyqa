@@ -206,6 +206,69 @@ class BrowserActions(unittest.TestCase):
         else:
             raise AssertionError("Locator type should be dictionary.")
 
+    def javascript_click(self, locator):
+        """Javascript Click an element.
+
+        :param locator: dictionary of identifier type
+            and value ({'by':'id', 'value':'start-of-content.'}).
+        """
+        self.locator_check(locator)
+        self.page_readiness_wait()
+        if isinstance(locator, dict):
+            self.driver.execute_script(
+                "arguments[0].click();", self.driver.find_element(
+                    self.by_value, value=locator['locatorvalue']))
+        else:
+            raise AssertionError("Locator type should be dictionary.")
+
+    def is_element_displayed(self, locator):
+        """
+        Check whether an element is diplayed.
+
+        :param locator: dictionary of identifier type
+            and value ({'by':'id', 'value':'start-of-content.'}).
+        """
+        self.locator_check(locator)
+        self.page_readiness_wait()
+        if isinstance(locator, dict):
+            return self.driver.find_element(
+                self.by_value,
+                value=locator['locatorvalue']).is_displayed()
+        else:
+            raise AssertionError("Locator type should be dictionary.")
+
+    def is_element_enabled(self, locator):
+        """
+        Check whether an element is enabled.
+
+        :param locator: dictionary of identifier type
+            and value ({'by':'id', 'value':'start-of-content.'}).
+        """
+        self.locator_check(locator)
+        self.page_readiness_wait()
+        if isinstance(locator, dict):
+            return self.driver.find_element(
+                self.by_value,
+                value=locator['locatorvalue']).is_enabled()
+        else:
+            raise AssertionError("Locator type should be dictionary.")
+
+    def is_element_selected(self, locator):
+        """
+        Check whether an element is selecte.
+
+        :param locator: dictionary of identifier type
+            and value ({'by':'id', 'value':'start-of-content.'}).
+        """
+        self.locator_check(locator)
+        self.page_readiness_wait()
+        if isinstance(locator, dict):
+            return self.driver.find_element(
+                self.by_value,
+                value=locator['locatorvalue']).is_selected()
+        else:
+            raise AssertionError("Locator type should be dictionary.")
+
     def send_keys(self, locator):
         """Send text but does not clear the existing text.
 
