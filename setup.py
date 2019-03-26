@@ -14,7 +14,7 @@ except IOError:
 
 setup(
     name='imgqa',
-    version='1.0.4',
+    version='1.0.5',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
