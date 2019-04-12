@@ -10,7 +10,7 @@ import aspell
 
 from axe_selenium_python import Axe
 
-from imgqa import BrowserActions
+from prodigy import BrowserActions
 
 import nltk
 

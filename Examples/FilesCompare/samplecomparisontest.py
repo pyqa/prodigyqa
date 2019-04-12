@@ -1,5 +1,5 @@
 """Example for Comparison module."""
-from imgqa import Compare
+from prodigy import Compare
 
 # Variable Stack / Data
 image1 = "Examples/FilesCompare/highway.jpg"

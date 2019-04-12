@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/pyqa/prodigy.svg?branch=master)](https://travis-ci.org/pyqa/imgqa)
-[![PyPI version](https://badge.fury.io/py/prodigy.svg)](https://badge.fury.io/py/imgqa) 
+[![Build Status](https://travis-ci.org/pyqa/prodigy.svg?branch=master)](https://travis-ci.org/pyqa/prodigy)
+[![PyPI version](https://badge.fury.io/py/prodigy.svg)](https://badge.fury.io/py/prodigy) 
 # QA automation framework - QA Re-Imagined!
 
-QA-ReImagined a.k.a `IMGQA` is a unified test automation framework based on python. This has come up after thoroughly study made on existing methodologies used in majority of projects for UI/Rest API testing, This is expected to solve a list of problem statements readily.
+`prodigy` is a unified test automation framework based on python. This has come up after thoroughly study made on existing methodologies used in majority of projects for UI/Rest API testing, This is expected to solve a list of problem statements readily.
 The framework aims to be a constructive blend of various guidelines, coding standards, concepts, processes, practices, project hierarchies, modularity, reporting mechanism, test data injections etc., to pillar automation testing.
 
 
@@ -34,14 +34,14 @@ The framework requires
 
 Valid/Tested Version is suggested to be installed directly from PyPi as it will solve the issue of dependencies automatically.
 
-`pip install imgqa`
+`pip install prodigy`
 
 In case of any custom updates done to the current setup,we will need to clone the current repository and run `python setup.py develop` so that the local changes are reflected in the install version.
 
 
 ## Running the tests
 
-The sample test cases for all the features are listed under **imgqa --> Examples** folder. To run the sample tests, open command prompt/terminal, go to imgqa --> Examples folder and run the following command:
+The sample test cases for all the features are listed under **prodigy --> Examples** folder. To run the sample tests, open command prompt/terminal, go to prodigy --> Examples folder and run the following command:
 
 `pytest {filename}.py -s` (-s indicates the standard output, please refer [here](https://docs.pytest.org/en/latest/contents.html) for a detailed understanding around pytest framework and its features/plugins/options etc.)
 

@@ -1,5 +1,5 @@
 """REST Api Sample Test file."""
-from imgqa import ApiTester
+from prodigy import ApiTester
 import json
 import logging
 

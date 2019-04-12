@@ -1,6 +1,6 @@
 """Sample test scripts for selenium pytest sample."""
 
-from imgqa import BrowserActions
+from prodigy import BrowserActions
 import os
 from selenium.webdriver.chrome.options import Options
 from time import sleep

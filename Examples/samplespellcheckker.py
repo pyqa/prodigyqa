@@ -1,6 +1,6 @@
 """Sample test scripts for selenium pytest sample."""
 
-from imgqa.utils import Utilities
+from prodigy.utils import Utilities
 
 
 class PageObjects:
