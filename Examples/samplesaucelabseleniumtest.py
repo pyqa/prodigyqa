@@ -3,7 +3,7 @@
 import pytest
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
-from imgqa import BrowserActions
+from prodigy import BrowserActions
 
 
 class Page:

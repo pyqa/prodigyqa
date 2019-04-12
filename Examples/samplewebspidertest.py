@@ -1,6 +1,6 @@
 """REST Api Sample Test file."""
 
-from imgqa import Webspider
+from prodigy import Webspider
 from selenium.webdriver.common.keys import Keys
 
 username = {"locatorvalue": "id-search-field",

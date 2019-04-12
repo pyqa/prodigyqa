@@ -1,5 +1,5 @@
 """Sample test suite for Email module."""
-from imgqa.email import EmailKeywords
+from prodigy.email import EmailKeywords
 import socket
 from time import sleep
 

@@ -1,5 +1,5 @@
 """Module for all spider mechanisms to extract URL from given page."""
-from imgqa import BrowserActions
+from prodigy import BrowserActions
 from bs4 import BeautifulSoup
 import pandas as pd
 import os
@@ -39,8 +39,8 @@ class Webspider(BrowserActions):
             else:
                 raise AssertionError("credentials are mandatory")
         else:
-            tmp = open("..\\imgqa\\setup_scrapper.tmpl", "r")
-            setup = open("..\\imgqa\\setup_scrapper.py", "w+")
+            tmp = open("..\\prodigy\\setup_scrapper.tmpl", "r")
+            setup = open("..\\prodigy\\setup_scrapper.py", "w+")
             setup.write(tmp.read().format(self.url, self.domain))
             setup.close()
             tmp.close()

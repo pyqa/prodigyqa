@@ -1,4 +1,4 @@
-"""Setup package installs imgqa Package dependencies and plugins."""
+"""Setup package installs Prodigy Package dependencies and plugins."""
 
 from setuptools import setup, find_packages  # noqa
 from os import path
@@ -13,12 +13,12 @@ except IOError:
     long_description = 'Unified Automation Testing Framework'
 
 setup(
-    name='imgqa',
+    name='prodigy',
     version='1.0.5',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://pyqa.github.io/imgqa/',
+    url='https://pyqa.github.io/prodigy/',
     platforms=["Windows", "Linux", "Unix", "Mac OS-X"],
     author='Revant',
     author_email='revanth.mvs@hotmail.com',
@@ -64,4 +64,4 @@ setup(
         'scrapy',
         'nltk',
     ],)
-print("\n*** QA-ReImagined(imgqa) Package Installation Complete! ***\n")
+print("\n*** Prodigy Installation Complete! ***\n")
