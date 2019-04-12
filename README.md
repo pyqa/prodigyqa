@@ -1,7 +1,5 @@
-[![Waffle.io - Columns and their card count](https://badge.waffle.io/pyqa/imgqa.svg?columns=all)](https://waffle.io/pyqa/imgqa)
-[![Build Status](https://travis-ci.org/pyqa/imgqa.svg?branch=master)](https://travis-ci.org/pyqa/imgqa)
-[![PyPI version](https://badge.fury.io/py/imgqa.svg)](https://badge.fury.io/py/imgqa) [![Join the chat at https://gitter.im/pyqa/imgqa](https://badges.gitter.im/pyqa/imgqa.svg)](https://gitter.im/pyqa/imgqa?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
+[![Build Status](https://travis-ci.org/pyqa/prodigy.svg?branch=master)](https://travis-ci.org/pyqa/imgqa)
+[![PyPI version](https://badge.fury.io/py/prodigy.svg)](https://badge.fury.io/py/imgqa) 
 # QA automation framework - QA Re-Imagined!
 
 QA-ReImagined a.k.a `IMGQA` is a unified test automation framework based on python. This has come up after thoroughly study made on existing methodologies used in majority of projects for UI/Rest API testing, This is expected to solve a list of problem statements readily.
