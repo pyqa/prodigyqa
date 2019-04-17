@@ -24,4 +24,3 @@ class TestClass(Utilities):
         misspelled = self.spell_checker(PageObjects.url)
         self.assertEqual(sorted(misspelled),
                          sorted(PageObjects.custom_words))
-
