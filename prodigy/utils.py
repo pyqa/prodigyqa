@@ -10,7 +10,7 @@ import aspell
 
 from axe_selenium_python import Axe
 
-from prodigy import BrowserActions
+from prodigy import BaseFactory
 
 import nltk
 
@@ -19,7 +19,7 @@ import pytesseract
 nltk.download('punkt')
 
 
-class Utilities(BrowserActions):
+class Utilities(BaseFactory):
     """Extract the text from image presented."""
 
     def captcha_to_text(self, image):

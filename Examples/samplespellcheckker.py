@@ -20,7 +20,7 @@ class TestClass(Utilities):
 
     def test_spell_checker(self):
         """Sample test suite."""
-        # misspelled = self.spell_checker(PageObjects.url)
-        # self.assertEqual(sorted(misspelled),
-        #                  sorted(PageObjects.custom_words))
-        pass
+        misspelled = self.spell_checker(PageObjects.url)
+        self.assertEqual(sorted(misspelled),
+                         sorted(PageObjects.custom_words))
+
