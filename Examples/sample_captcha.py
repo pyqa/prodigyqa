@@ -1,6 +1,6 @@
 """CAPTCHA reading Sample Test file."""
-
 from prodigyqa.utils import crackcaptcha
+
 
 # Variable stack
 
