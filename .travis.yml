@@ -18,9 +18,9 @@ addons:
 
 before_script:
   - "sudo apt-get install python-opencv"
-  - "flake8 prodigy/*.py && flake8 prodigy/*/*.py"
+  - "flake8 prodigyqa/*.py"
   - "flake8 Examples/*.py && flake8 Examples/*/*.py"
-  - "pycodestyle prodigy/*.py && pycodestyle Examples/*/*.py"
+  - "pycodestyle prodigyqa/*.py && pycodestyle Examples/*/*.py"
   - bash chrome_driver_install.sh
 
 script:

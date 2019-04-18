@@ -1,7 +1,8 @@
 """REST Api Sample Test file."""
-from prodigy import ApiTester
+from prodigyqa import ApiTester
 import json
 import logging
+import pytest
 
 # Variable Stack
 login_uri = 'https://reqres.in/api/login'
@@ -16,7 +17,7 @@ header = {'Accept': 'application/json',
 
 class TestClass(ApiTester):
     """Sample Test Suite."""
-
+    @pytest.mark.get
     def test_get_users(self):
         """Get users from application."""
         users = self.apirequest(method="GET", url=uri)
@@ -31,6 +32,7 @@ class TestClass(ApiTester):
         self.assert_not_in_resp(resp=resp, member='John',
                                 container='resp.data.0.first_name')
 
+    @pytest.mark.post
     def test_post_users(self):
         """Create users."""
         users = self.apirequest(method="post", url=uri, data=payload)
