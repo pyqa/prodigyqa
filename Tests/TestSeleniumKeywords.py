@@ -1,10 +1,10 @@
 """Sample test scripts for selenium pytest sample."""
 import pytest
-from prodigy import BrowserActions
+from prodigyqa import BrowserActions
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from prodigy import browseractions
+from prodigyqa import browseractions
 from proboscis.asserts import assert_true
 import time
 from selenium.webdriver.chrome.options import Options

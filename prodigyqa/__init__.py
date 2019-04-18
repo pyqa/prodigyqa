@@ -1,5 +1,5 @@
 """This file could have imports once the core is developed fully."""
-from prodigy.apitester import ApiTester  # noqa
-from prodigy.browseractions import BrowserActions  # noqa
-from prodigy.comparison import Compare  # noqa
-from prodigy.spider import Webspider  # noqa
+from prodigyqa.apitester import ApiTester  # noqa
+from prodigyqa.browseractions import BrowserActions  # noqa
+from prodigyqa.comparison import Compare  # noqa
+from prodigyqa.spider import Webspider  # noqa
