@@ -14,7 +14,7 @@ except IOError:
 
 setup(
     name='prodigyqa',
-    version='1.0.8',
+    version='1.0.9',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
