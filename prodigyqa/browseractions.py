@@ -188,6 +188,50 @@ class BrowserActions(unittest.TestCase):
         else:
             raise AssertionError(
                 "Invalid locator or Attribute is'{}'".format(attribute_name))
+        def get_attribute(self, locator=None, element=None, attribute_name=None, type='locator'):
+        """Fetch attribute from provided locator/element/parent element with child locator.
+
+        :param locator: dictionary of identifier type
+            and value ({'by':'id', 'value':'start-of-content.'}).
+        :param attribute_name: attribute name to get it's vale
+        :param element: it is a webelement
+        :param type : the type value should be 'locator' or 'element' or 'mixed'
+        """
+        valid_arguments_of_type = ['locator', 'element', 'mixed']
+        type = type.lower()
+        if type not in valid_arguments_of_type:
+            raise AssertionError("Invalid Type Specified")
+        if locator is None and element is None and attribute_name is None:
+            raise AssertionError("Invalid Specification/condition")
+        if type == 'locator':
+            if locator is not None and attribute_name is not None:
+                self.locator_check(locator)
+                self.page_readiness_wait()
+                if attribute_name is not None and isinstance(locator, dict):
+                    return self.driver.find_element(
+                        self.by_value,
+                        value=locator['locatorvalue']).get_attribute(attribute_name)
+                else:
+                    raise AssertionError(
+                        "Invalid locator or Attribute is'{}'".format(attribute_name))
+
+        if type == 'element':
+            if locator is None and element is not None and attribute_name is not None:
+                self.page_readiness_wait()
+                return element.get_attribute(attribute_name)
+            else:
+                raise AssertionError("Invalid Element or Attribute passed:'{}'".format(attribute_name))
+        if type == 'mixed':
+            if element is not None and locator is not None and attribute_name is not None:
+                self.locator_check(locator)
+                self.page_readiness_wait()
+                if attribute_name is not None and isinstance(locator, dict):
+                    return element.find_element(
+                        self.by_value,
+                        value=locator['locatorvalue']).get_attribute(attribute_name)
+                else:
+                    raise AssertionError(
+                        "Invalid locator or element or attribute passed or is'{}'".format(attribute_name))
 
     def click(self, locator):
         """Click an element.
@@ -401,7 +445,20 @@ class BrowserActions(unittest.TestCase):
         except selenium_exceptions.NoSuchWindowException:
             AssertionError(
                 "Targeted window {} to be switched doesn't exist".window)
-
+            
+    def switch_to_active_window(self):
+        """Switch focus to the specified window using selenium/javascript.
+        """
+        try:
+            handles = self.driver.window_handles
+            size = len(handles)
+            for x in range(size):
+                if handles[x] != self.driver.current_window_handle:
+                    self.driver.switch_to.window(handles[x])
+        except selenium_exceptions.NoSuchWindowException:
+            AssertionError(
+                "Targeted window {} to be switched doesn't exist".window)
+            
     def switch_to_frame(self, framename):
         """Switch focus to the specified frame using selenium/javascript.
 
@@ -413,8 +470,20 @@ class BrowserActions(unittest.TestCase):
         except selenium_exceptions.NoSuchFrameException:
             AssertionError(
                 "Targeted frame {} to be switched doesn't exist".framename)
+    
+    def switch_to_frame_by_index(self, index):
+         """Switch focus to the specified frame using selenium/javascript.
 
-    def switch_to_default_content(self):
+        :param framename: index of the frame to switch.
+        """
+        self.page_readiness_wait()
+        try:
+            self.driver.switch_to.frame(index)
+        except selenium_exceptions.NoSuchFrameException:
+            AssertionError(
+                "Targeted frame {} to be switched doesn't exist at index".index)
+            
+     def switch_to_default_content(self):
         """Switch focus to the default frame."""
         self.page_readiness_wait()
         try:
