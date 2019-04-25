@@ -600,7 +600,7 @@ class BrowserActions(unittest.TestCase):
         if isinstance(locator, dict):
             return self.driver.find_elements(
                 self.by_value,
-                value=locator['value'])
+                value=locator['locatorvalue'])
         else:
             AssertionError("Invalid locator type")
 
