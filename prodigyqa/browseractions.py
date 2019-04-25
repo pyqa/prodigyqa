@@ -136,7 +136,7 @@ class BrowserActions(unittest.TestCase):
         finally:
             return url if 'http' in url else None
 
-    def get_attribute(self, locator, element=None,
+    def get_attribute(self, locator=None, element=None,
                       attribute_name=None, type='locator'):
         """Fetch attribute from provided locator/element/parent
         element with child locator.
