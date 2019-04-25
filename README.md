@@ -63,7 +63,7 @@ Below are the major areas handled in this module:
 | get_page_source | Return the entire HTML source of the current page or frame. |  | self.get_page_source() |
 | get_title | Return the title of current page.|  | self.get_title()|
 | get_location | Return the current browser URL using Selenium/Java Script.|  | self.get_location() |
-| get_attribute | Fetch attribute from provided locator.| (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). (b) attribute_name: attribute name to get it's value | self.get_attribute(locator, attribute_name=None)|
+| get_attribute | etch attribute from provided locator/element/parent element with child locator.| (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). (b) attribute_name: attribute name to get it's value . (c) element: it is a webelement . (d) type : the type value should be 'locator' or 'element' or 'mixed'| self.get_attribute(locator=None, element=None, attribute_name=None, type='locator')|
 | click | Click an element. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). | self.click(locator) |
 | send_keys | Send text but does not clear the existing text. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). (b) string to send. | self.send_keys(locator) |
 | get_text | Get text from provided Locator. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). | self.get_text(locator) |
@@ -94,6 +94,9 @@ Below are the major areas handled in this module:
 | is_element_displayed | Return boolean value based on the element is displayed  with locator. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). | self.is_element_displayed(locator) |
 | is_element_enabled | Return boolean value based on the element is enabled  with locator. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). | self.is_element_enabled(locator) |
 | is_element_selected | Return boolean value based on the element is selected  with locator. | (a) locator: dictionary of identifier type and value ({'by':'id', 'value':'start-of-content.'}). | self.is_element_selected(locator) |
+| switch_to_active_window | Switch focus to new window  | Switch focus to new window from current window | self.switch_to_active_window() |
+| switch_to_frame_by_index | Switch focus to the specified frame based on index | Index of the frame | self.switch_to_frame_by_index(index) |
+
 
 
 ## API Test Module
