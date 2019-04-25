@@ -56,7 +56,7 @@ setup(
         'pycodestyle<2.6.0,>=2.5.0',
         'pandas==0.24.2',
         'requests>=2.19.1',
-        'urllib3==1.24.2',
+        'urllib3==1.25.1',
         'ipdb==0.12',
         'pytest>=4.0.2',
         'pytest-html<1.21.0',
