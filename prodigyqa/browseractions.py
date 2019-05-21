@@ -34,6 +34,9 @@ WAIT_SLEEP_TIME = 0.1  # Seconds
 
 TIME_OUT = 10  # Seconds
 
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
 
 class BrowserActions(unittest.TestCase):
     """PageActions Class is the gateway for using Framework.
@@ -45,8 +48,11 @@ class BrowserActions(unittest.TestCase):
         """Init Method for webdriver declarations."""
         super(BrowserActions, self).__init__(*args, **kwargs)
         self.by_value = None
-        self.driver = webdriver.Chrome()
-
+        if platform.system() == 'Linux':
+            self.driver = webdriver.Chrome(chrome_options=chrome_options)
+        else:
+            self.driver = webdriver.Chrome()
+            
     def page_readiness_wait(self):
         """Web Page Expected to be in ready state."""
         start = datetime.now()
@@ -289,13 +295,18 @@ class BrowserActions(unittest.TestCase):
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
-        self.locator_check(locator)
-        self.page_readiness_wait()
-        if isinstance(locator, dict):
-            return self.driver.find_element(self.by_value,
-                                            value=locator['locatorvalue']).text
+        if type(locator) is dict:
+            self.locator_check(locator)
+            self.page_readiness_wait()
+            if isinstance(locator, dict):
+                return self.driver.find_element(self.by_value,
+                                                value=locator['locatorvalue']).text
+            else:
+                raise AssertionError("Locator type should be dictionary.")
+        elif type(locator) is WebElement:
+            return locator.text
         else:
-            raise AssertionError("Locator type should be dictionary.")
+           raise AssertionError("Locator type should be either dictionary or Webelement")
 
     def go_back(self):
         """Simulate back button on browser using selenium or js."""
