@@ -24,7 +24,7 @@ before_script:
   - bash chrome_driver_install.sh
 
 script:
-  - pytest Examples/samplerestapitest.py
+#   - pytest Examples/samplerestapitest.py
   - pytest Examples/FilesCompare/samplecomparisontest.py
 
 notifications:

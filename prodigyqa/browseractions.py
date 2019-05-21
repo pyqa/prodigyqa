@@ -1,4 +1,4 @@
-""" UI utility functions of all selenium self.driver based actions."""
+"""UI utility functions of all selenium self.driver based actions."""
 import logging
 
 import os
@@ -23,6 +23,7 @@ from selenium.webdriver.support import expected_conditions as ec
 
 from selenium.webdriver.support.select import Select
 
+from selenium.webdriver.remote.webelement import WebElement
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
@@ -33,6 +34,10 @@ if platform.system() == 'Darwin':
 WAIT_SLEEP_TIME = 0.1  # Seconds
 
 TIME_OUT = 10  # Seconds
+
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
 
 
 class BrowserActions(unittest.TestCase):
@@ -45,7 +50,10 @@ class BrowserActions(unittest.TestCase):
         """Init Method for webdriver declarations."""
         super(BrowserActions, self).__init__(*args, **kwargs)
         self.by_value = None
-        self.driver = webdriver.Chrome()
+        if platform.system() == 'Linux':
+            self.driver = webdriver.Chrome(chrome_options=chrome_options)
+        else:
+            self.driver = webdriver.Chrome()
 
     def page_readiness_wait(self):
         """Web Page Expected to be in ready state."""
@@ -138,7 +146,8 @@ class BrowserActions(unittest.TestCase):
 
     def get_attribute(self, locator=None, element=None,
                       attribute_name=None, type='locator'):
-        """Fetch attribute from provided locator/element/parent
+        """Fetch attribute from locator/element/parent.
+
         element with child locator.
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
@@ -191,6 +200,7 @@ class BrowserActions(unittest.TestCase):
 
     def click(self, locator):
         """Click an element.
+
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
@@ -289,13 +299,19 @@ class BrowserActions(unittest.TestCase):
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
-        self.locator_check(locator)
-        self.page_readiness_wait()
-        if isinstance(locator, dict):
-            return self.driver.find_element(self.by_value,
-                                            value=locator['locatorvalue']).text
+        if type(locator) is dict:
+            self.locator_check(locator)
+            self.page_readiness_wait()
+            if isinstance(locator, dict):
+                return self.driver.find_element(self.by_value,
+                                                value=locator['locatorvalue']).text     # noqa
+            else:
+                raise AssertionError("Locator type should be dictionary.")
+        elif type(locator) is WebElement:
+            return locator.text
         else:
-            raise AssertionError("Locator type should be dictionary.")
+            raise AssertionError(
+                "Locator type should be either dictionary or Webelement")
 
     def go_back(self):
         """Simulate back button on browser using selenium or js."""
@@ -415,6 +431,7 @@ class BrowserActions(unittest.TestCase):
 
     def switch_to_frame(self, framename):
         """Switch focus to the specified frame.
+
         :param framename: name of the frame to switch.
         """
         self.page_readiness_wait()
@@ -426,6 +443,7 @@ class BrowserActions(unittest.TestCase):
 
     def switch_to_frame_by_index(self, index):
         """Switch focus to the specified frame .
+
         :param framename: index/frame number to switch.
         """
         self.page_readiness_wait()
@@ -453,6 +471,7 @@ class BrowserActions(unittest.TestCase):
 
     def hover_on_element(self, locator):
         """Hover on a particular element.
+
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
@@ -473,6 +492,7 @@ class BrowserActions(unittest.TestCase):
 
     def hover_on_click(self, locator):
         """Hover & click a particular element.
+
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
@@ -488,6 +508,7 @@ class BrowserActions(unittest.TestCase):
 
     def wait_for_element(self, locator):
         """Wait for an element to exist in UI.
+
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
@@ -524,6 +545,7 @@ class BrowserActions(unittest.TestCase):
 
     def select_option_by_index(self, locator, index):
         """Select the option by index.
+
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param index: integer value for index.
@@ -544,6 +566,7 @@ class BrowserActions(unittest.TestCase):
 
     def select_option_by_value(self, locator, value):
         """Select the option by using value.
+
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param value: string value to select option.
@@ -564,6 +587,7 @@ class BrowserActions(unittest.TestCase):
 
     def select_option_by_text(self, locator, text):
         """Select the value by using text.
+
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param text: string value to select option.
@@ -592,6 +616,7 @@ class BrowserActions(unittest.TestCase):
 
     def find_elements(self, locator):
         """Return elements matched with locator.
+
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
@@ -606,6 +631,7 @@ class BrowserActions(unittest.TestCase):
 
     def scroll_to_element(self, locator):
         """Scroll to a particular element on the page.
+
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
