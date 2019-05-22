@@ -11,26 +11,24 @@ class Utilities(object):
     def captcha_to_text(self, image):
         """Method to return extracted text from passed image."""
         return pytesseract.image_to_string(Image.open(image))
-    
+
     def is_string(self, item):
+        """Evaluate if an item sent is string."""
         if isinstance(item, str):
             return True
         else:
             return False
-    
+
     def is_ok(self, item):
-        if is_string(item):
+        """Evaluate if an item sent is OK."""
+        if self.is_string(item):
             return item.upper() not in ('FALSE', 'NO', '', 'NONE', '0', 'OFF')
         return bool(item)
 
-
     def is_not_ok(self, item):
-        return not is_truthy(item)
+        """Evaluate if an item sent is NOT OK."""
+        return not self.is_ok(item)
 
     def is_none(self, item):
-        return item is None or is_string(item) and item.upper() == 'NONE'
-
-   
-
-    
-
+        """Evaluate if an item sent is None."""
+        return item is None or self.is_string(item) and item.upper() == 'NONE'

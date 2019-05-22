@@ -244,7 +244,7 @@ class BrowserActions(unittest.TestCase):
                 if index < len(web_elts):
                     locator['locatorvalue'] = locator['locatorvalue'][index]
                     self.driver.execute_script(
-                        "arguments[0].click();", self.__find_element(locator)
+                        "arguments[0].click();", self.__find_element(locator))
                 else:
                     raise AssertionError(
                         "Index is greater than the number of elements")

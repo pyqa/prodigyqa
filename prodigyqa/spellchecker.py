@@ -7,6 +7,7 @@ import string
 
 nltk.download('punkt')
 
+
 class SpellChecker(BrowserActions):
     """Spell Checker with Custom Libraries."""
 
@@ -36,7 +37,7 @@ class SpellChecker(BrowserActions):
                 cleantext.append(word)
 
         misspelled = list(set([word.encode('ascii', 'ignore')
-                                for word in cleantext
-                                if not speller_obj.check(word) and
-                                re.match('^[a-zA-Z ]*$', word)]))
+                               for word in cleantext if not
+                               speller_obj.check(
+            word) and re.match('^[a-zA-Z ]*$', word)]))
         return misspelled
