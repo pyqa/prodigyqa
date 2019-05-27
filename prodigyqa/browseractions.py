@@ -27,11 +27,6 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
-from prodigyqa.utils import Utilities
-
-import inspect
-
-
 if platform.system() == 'Darwin':
     from PIL import ImageGrab
 
@@ -242,9 +237,8 @@ class BrowserActions(unittest.TestCase):
             if index is not None:
                 web_elts = self.find_elements(locator)
                 if index < len(web_elts):
-                    locator['locatorvalue'] = locator['locatorvalue'][index]
                     self.driver.execute_script(
-                        "arguments[0].click();", self.__find_element(locator))
+                        "arguments[0].click();", web_elts[index])
                 else:
                     raise AssertionError(
                         "Index is greater than the number of elements")
@@ -313,7 +307,7 @@ class BrowserActions(unittest.TestCase):
             self.locator_check(locator)
 
             self.__find_element(locator).send_keys(
-                    locator['value'] if value is not None else value)
+                    locator['value'] if value is None else value)
         else:
             raise AssertionError("Locator type should be dictionary.")
 
@@ -327,7 +321,7 @@ class BrowserActions(unittest.TestCase):
         if isinstance(locator, dict):
             self.locator_check(locator)
             if index is not None:
-                web_elts=self.find_elements(locator)
+                web_elts = self.find_elements(locator)
                 if index < len(web_elts):
                     return web_elts[index].text
                 else:
@@ -364,8 +358,8 @@ class BrowserActions(unittest.TestCase):
         :Usage:
             driver.set_window_size(800,600).
         """
-        width_value_check=isinstance(width, (int, float))
-        height_value_check=isinstance(height, (int, float))
+        width_value_check = isinstance(width, (int, float))
+        height_value_check = isinstance(height, (int, float))
         if width_value_check and height_value_check:
             self.driver.set_window_size(width, height)
         else:
@@ -376,8 +370,8 @@ class BrowserActions(unittest.TestCase):
         # https://bugs.chromium.org/p/chromedriver/issues/detail?id=985
         # reoccurs again and again
         if platform.system() == 'Darwin':
-            img=ImageGrab.grab()
-            screen_size=img.size
+            img = ImageGrab.grab()
+            screen_size = img.size
             self.set_window_size(screen_size[0], screen_size[1])
         else:
             self.driver.maximize_window()
@@ -388,7 +382,7 @@ class BrowserActions(unittest.TestCase):
 
     def get_domain_url(self):
         """Method to extract domain url from webdriver itself."""
-        url=self.driver.current_url
+        url = self.driver.current_url
         return url.split('//')[0] + '//' + url.split('/')[2]
 
     def clear_text(self, locator):
@@ -415,7 +409,7 @@ class BrowserActions(unittest.TestCase):
             logging.info('Cannot capture ScreenShot'
                          ' because no browser is open.')
             return
-        path=filepath.replace('/', os.sep)
+        path = filepath.replace('/', os.sep)
 
         if not os.path.exists(path.split(os.sep)[0]):
             os.makedirs(path.split(os.sep)[0])
@@ -447,8 +441,8 @@ class BrowserActions(unittest.TestCase):
     def switch_to_active_window(self):
         """Switch focus to Active window."""
         try:
-            handles=self.driver.window_handles
-            size=len(handles)
+            handles = self.driver.window_handles
+            size = len(handles)
             for x in range(size):
                 if handles[x] != self.driver.current_window_handle:
                     self.driver.switch_to.window(handles[x])
@@ -573,7 +567,7 @@ class BrowserActions(unittest.TestCase):
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param index: integer value for index.
         """
-        self.by_value=locator['by']
+        self.by_value = locator['by']
         if isinstance(locator, dict) and isinstance(index, int):
             self.locator_check(locator)
             try:
@@ -657,8 +651,8 @@ class BrowserActions(unittest.TestCase):
         if isinstance(locator, dict):
             try:
                 self.locator_check(locator)
-                element=self.__find_element(locator)
-                actions=ActionChains(self.driver)
+                element = self.__find_element(locator)
+                actions = ActionChains(self.driver)
                 actions.move_to_element(element).perform()
             except selenium_exceptions.NoSuchElementException:
                 logging.error('Exception : Not Able To Scroll to Element')
@@ -677,7 +671,7 @@ class BrowserActions(unittest.TestCase):
                 self.by_value,
                 value=locator['locatorvalue'])
 
-    def __execute_script(self, script, web_elm)=None:
+    def __execute_script(self, script, web_elm=None):
         """
         Private method to Exeucte the passed script.
 
@@ -685,8 +679,10 @@ class BrowserActions(unittest.TestCase):
 
         """
         if web_elm is None:
-            self.driver.execute_script(script)
+            return self.driver.execute_script(script)
         if isinstance(web_elm, WebElement):
-            self.driver.execute_script(script, web_elm)
+            return self.driver.execute_script(script, web_elm)
         if isinstance(web_elm, dict):
-            self.driver.execute_script(script, self.__find_element(web_elm)
+            return self.driver.execute_script(
+                script,
+                self.__find_element(web_elm))
