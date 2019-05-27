@@ -32,3 +32,10 @@ class Utilities(object):
     def is_none(self, item):
         """Evaluate if an item sent is None."""
         return item is None or self.is_string(item) and item.upper() == 'NONE'
+    
+    def are_equal(self, source, target, ignore_case = True):
+        """Evaluate if an two strings shared are equal."""
+        if ignore_case:
+            return source.lower()==target.lower()
+        else:
+            return source == target
