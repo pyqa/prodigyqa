@@ -57,7 +57,7 @@ setup(
         'pandas==0.24.2',
         'urllib3==1.24.3',
         'requests>=2.21.0',
-        'ipdb==0.12',
+        'ipdb==0.12.1',
         'pytest>=4.0.2',
         'pytest-html<1.21.0',
         'xlrd>=0.9.0',
