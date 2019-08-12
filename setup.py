@@ -55,7 +55,7 @@ setup(
         'flake8==3.7.7',
         'pycodestyle<2.6.0,>=2.5.0',
         'pandas==0.24.2',
-        'urllib3==1.24.3',
+        'urllib3==1.25.3',
         'requests>=2.21.0',
         'ipdb==0.12',
         'pytest>=4.0.2',
