@@ -25,8 +25,8 @@ The framework aims to be a constructive blend of various guidelines, coding stan
 
 ## Prerequisites
 
-The framework requires 
-- [python 2.7+ / 3.6+](https://www.python.org/downloads/)
+The framework works with 
+- [python 3.5+](https://www.python.org/downloads/)
 - [pip](pip )
 - [pytest](https://docs.pytest.org/en/latest/getting-started.html) to be installed in the machine.
 
