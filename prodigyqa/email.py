@@ -38,13 +38,14 @@ class EmailKeywords(object):
 
     # POP Mail Keywords
     # ===================
-    def _connect_pop(self, retry=5):
+    def _connect_pop(self, retry: int = 5):
         """Private method to connect to the POP server.
 
         Since POP sessions are locked, we must reconnect to get any message.
         updates.  This method is used by the keywords that poll the POP server.
 
         :param retry: integer.
+        :type retry: int
         :return: True or raise exception.
         """
         # Occasionally, connections fail.
@@ -70,14 +71,16 @@ class EmailKeywords(object):
         raise AssertionError("Failed to connect to POP server"
                              " after {0} retries".format(retry))
 
-    def connect_to_pop_mail_server(self, server, user, password, use_ssl=True):
+    def connect_to_pop_mail_server(self, server, user, password, use_ssl: bool= True) -> bool:
         """Connect to the POP mail server.
 
         :param server: pop server
         :param user: user name
         :param password: password
         :param use_ssl: boolean
+        :type use_ssl: bool
         :return: True on successful connection
+        :rtype: bool
         """
         self.pop_server = server
         self.pop_user = user
@@ -96,8 +99,10 @@ class EmailKeywords(object):
             self.disconnect_from_pop_mail_server()
         self._connect_pop()
 
-    def disconnect_from_pop_mail_server(self):
-        """Disconnect from the POP mail server."""
+    def disconnect_from_pop_mail_server(self) -> bool:
+        """Disconnect from the POP mail server.
+        :rtype: bool
+        """
         if self.pop_obj is not None:
             self.pop_obj.quit()
             self.pop_connected = False
@@ -111,11 +116,12 @@ class EmailKeywords(object):
         self.disconnect_from_pop_mail_server()
         return count
 
-    def mail_message_count_should_be(self, count, timeout=60):
+    def mail_message_count_should_be(self, count, timeout: int= 60):
         """Verify that the POP message count is as expected.
 
         :param count: expected mail count
         :param timeout:
+        :type timeout: int
         """
         msg_count = self._wait_for_mail_message_count(count, timeout)
         if msg_count != count:
@@ -123,11 +129,12 @@ class EmailKeywords(object):
                                  "been {0} when it was "
                                  "{1}".format(count, msg_count))
 
-    def _wait_for_mail_message_count(self, count, timeout=60):
+    def _wait_for_mail_message_count(self, count, timeout: int= 60):
         """Wait for a new message to appear on the POP server.
 
         :param count: expected mail count
         :param timeout:
+        :type timeout: int
         :return: actual mail count
         """
         start = datetime.now()
@@ -139,11 +146,12 @@ class EmailKeywords(object):
         raise TimeoutError(
             "Failed to wait for message count in {0}s".format(timeout))
 
-    def mail_message_count_should_not_be(self, count, timeout=20):
+    def mail_message_count_should_not_be(self, count, timeout: int= 20):
         """Verify that the POP message count is not a certain value.
 
         :param count: expected mail count
         :param timeout:
+        :type timeout: int
         """
         start = datetime.now()
         # wait for the message(s) to arrive, so a loop is necessary here
@@ -262,26 +270,29 @@ class EmailKeywords(object):
         if self.smtp_obj is not None or self.smtp_connected is True:
             raise AssertionError("SMTP server should not be connected but is.")
 
-    def connect_to_smtp_server(self, server, port):
+    def connect_to_smtp_server(self, server, port) -> bool:
         """Connect to the SMTP server.
 
         :param server: smtp server
         :param port: port no
         :return: boolean
+        :rtype: bool
         """
         self.smtp_obj = smtplib.SMTP(server, port)
         self.smtp_connected = True
         return True
 
-    def disconnect_from_smtp_server(self):
-        """Disconnect from the SMTP server."""
+    def disconnect_from_smtp_server(self) -> bool:
+        """Disconnect from the SMTP server.
+        :rtype : bool
+        """
         if self.smtp_obj is not None:
             self.smtp_obj.quit()
             self.smtp_connected = False
             self.smtp_obj = None
         return True
 
-    def send_email(self, from_addr, to_addrs, subject, message):
+    def send_email(self, from_addr, to_addrs, subject, message) -> bool:
         """Send an email to a recipient.
 
         :param from_addr: from address
@@ -289,6 +300,7 @@ class EmailKeywords(object):
         :param subject: mail subject
         :param message: message to send
         :return: boolean
+        :rtype : bool
         """
         msg = email.mime.Text.MIMEText(message)
         msg['To'] = ", ".join(to_addrs).strip(

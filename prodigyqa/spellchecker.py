@@ -11,11 +11,12 @@ nltk.download('punkt')
 class SpellChecker(BrowserActions):
     """Spell Checker with Custom Libraries."""
 
-    def spell_check_on_page(self, url, words=[]):
+    def spell_check_on_page(self, url, words: list=[]):
         """Spell checker.
 
         :param url: webpage url
         :param words: expected word list
+        :type words: list
         :return: list of misspelled words
         TODO: Expand the parameter of words into txt/csv/custom string.
         """

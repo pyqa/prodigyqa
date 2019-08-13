@@ -12,8 +12,10 @@ class Utilities(object):
         """Method to return extracted text from passed image."""
         return pytesseract.image_to_string(Image.open(image))
 
-    def is_string(self, item):
-        """Evaluate if an item sent is string."""
+    def is_string(self, item) -> bool:
+        """Evaluate if an item sent is string.
+        :rtype: bool
+        """
         if isinstance(item, str):
             return True
         else:
