@@ -36,16 +36,13 @@ class ApiTester(unittest.TestCase):
             except InvalidURL:
                 logging.warn("The URL provided is invalid, please recheck")
 
-    def apirequest(self,
-                   method: str='GET',
-                   **kwargs):
+    def apirequest(self, method ='GET', **kwargs):
         """Send request to class:'request' method object.
 
         :param method: method for the new :class:'request' method object.
             this method might be either of 'GET', 'POST', 'PUT', 'PATCH'
             and 'DELETE'.
         :param **kwargs: Optional arguments that 'request' method method takes.
-        :type method:str
         """
         if method.upper() == "GET":
             return self._get_method(**kwargs)
