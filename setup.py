@@ -14,7 +14,7 @@ except IOError:
 
 setup(
     name='prodigyqa',
-    version='1.1.0',
+    version='1.2.0',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -43,7 +43,6 @@ setup(
     install_requires=[
         'pip',
         'setuptools',
-        'scikit-image',
         'selenium',
         'nose',
         'jsondiff',
@@ -62,5 +61,6 @@ setup(
         'xlrd>=0.9.0',
         'scrapy',
         'nltk',
+        'loguru',
     ],)
-print("\n*** Prodigy QA Installation Complete! ***\n")
+print("\n*** Prodigy QA Framework Installation Complete! ***\n")

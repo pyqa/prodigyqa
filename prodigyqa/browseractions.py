@@ -1,5 +1,5 @@
 """UI utility functions of all selenium self.driver based actions."""
-import logging
+from loguru import logger
 
 import os
 
