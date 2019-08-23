@@ -517,7 +517,7 @@ class BrowserActions(unittest.TestCase):
             except selenium_exceptions.NoSuchElementException:
                 AssertionError(
                     "Element{} not found".format(locator['by']) +
-                    '=' + locator['value'])
+                    '=' + locator['locatorvalue'])
         else:
             raise AssertionError("Locator type should be dictionary")
 
@@ -535,7 +535,7 @@ class BrowserActions(unittest.TestCase):
         except selenium_exceptions.NoSuchElementException:
             AssertionError(
                 "Element {} not found".format(
-                    locator['by']) + '=' + locator['value'])
+                    locator['by']) + '=' + locator['locatorvalue'])
 
     def wait_for_element(self, locator) -> bool:
         """Wait for an element to exist in UI.
@@ -551,7 +551,7 @@ class BrowserActions(unittest.TestCase):
                 return True
         except selenium_exceptions.NoSuchElementException:
             AssertionError("Failed to wait for element {}".format(
-                locator['by'] + '=' + locator['value']))
+                locator['by'] + '=' + locator['locatorvalue']))
 
     def wait_and_accept_alert(self):
         """Wait and accept alert present on the page."""
@@ -589,7 +589,7 @@ class BrowserActions(unittest.TestCase):
                 Select(self.__find_element(locator)).select_by_index(index)
             except selenium_exceptions.NoSuchElementException:
                 logger.error("Exception : Element '{}' Not Found".format(
-                    locator['by'] + '=' + locator['value']))
+                    locator['by'] + '=' + locator['locatorvalue']))
         else:
             AssertionError(
                 "Invalid locator '{}' or index '{}'".format(locator, index))
@@ -610,7 +610,7 @@ class BrowserActions(unittest.TestCase):
 
             except selenium_exceptions.NoSuchElementException:
                 logger.error("Exception : Element '{}' Not Found".format(
-                    locator['by'] + '=' + locator['value']))
+                    locator['by'] + '=' + locator['locatorvalue']))
         else:
             AssertionError(
                 "Invalid locator '{}' or value '{}'".format(locator, value))
@@ -631,7 +631,7 @@ class BrowserActions(unittest.TestCase):
                        ).select_by_visible_text(text)
             except selenium_exceptions.NoSuchElementException:
                 logger.error("Exception : Element '{}' Not Found".format(
-                    locator['by'] + '=' + locator['value']))
+                    locator['by'] + '=' + locator['locatorvalue']))
         else:
             AssertionError("Invalid locator type")
 
