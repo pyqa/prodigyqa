@@ -71,7 +71,8 @@ class BrowserActions(unittest.TestCase):
                     "Opened browser is in state of %s" % pagestate)
 
     def locator_check(self, locator_dict: dict):
-        """Local Method to classify the type of locator.
+        """Local Method to classify locator type.
+
         :type locator_dict: dict
         """
         text_retrived = locator_dict['by'].upper()
@@ -315,7 +316,7 @@ class BrowserActions(unittest.TestCase):
             self.locator_check(locator)
 
             self.__find_element(locator).send_keys(
-                    locator['value'] if value is None else value)
+                locator['value'] if value is None else value)
         else:
             raise AssertionError("Locator type should be dictionary.")
 
@@ -683,6 +684,7 @@ class BrowserActions(unittest.TestCase):
 
     def __find_element(self, locator: dict):
         """Private method simplified finding element.
+
         :type locator: dict
         """
         if isinstance(locator, dict):

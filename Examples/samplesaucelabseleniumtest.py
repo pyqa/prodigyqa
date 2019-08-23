@@ -7,6 +7,7 @@ from prodigyqa import BrowserActions
 
 
 class Page:
+    """Stored all the needed variables at one place."""
 
     base_url = "http://www.python.org"
     fb_base_url = "http://www.facebook.com"
@@ -33,8 +34,7 @@ def setup_teardown_fixture(request):
     :return: NA
     :rtype: NA
     """
-
-    class Setup_Teardown(BrowserActions):
+    class setup_teardown(BrowserActions):
         def __init__(self):
             """Configuring remote web driver.
 
@@ -48,7 +48,7 @@ def setup_teardown_fixture(request):
                                                      Page.access_key),
                 desired_capabilities=Page.desired_cap)
 
-    request.cls.st = Setup_Teardown()
+    request.cls.st = setup_teardown()
     yield
     request.cls.st.driver.quit()
 
