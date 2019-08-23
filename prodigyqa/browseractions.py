@@ -70,7 +70,7 @@ class BrowserActions(unittest.TestCase):
                 raise AssertionError(
                     "Opened browser is in state of %s" % pagestate)
 
-    def locator_check(self, locator_dict: dict):
+    def locator_check(self, locator_dict):
         """Local Method to classify locator type.
 
         :type locator_dict: dict
@@ -148,8 +148,8 @@ class BrowserActions(unittest.TestCase):
         finally:
             return url if 'http' in url else None
 
-    def get_attribute(self, locator: dict = None, element=None,
-                      attribute_name=None, type: str='locator'):
+    def get_attribute(self, locator=None, element=None,
+                      attribute_name=None, type='locator'):
         """Fetch attribute from locator/element/parent.
 
         element with child locator.
