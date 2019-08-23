@@ -11,7 +11,7 @@ nltk.download('punkt')
 class SpellChecker(BrowserActions):
     """Spell Checker with Custom Libraries."""
 
-    def spell_check_on_page(self, url, words: list=[]):
+    def spell_check_on_page(self, url, words):
         """Spell checker.
 
         :param url: webpage url

@@ -62,7 +62,7 @@ class BrowserActions(unittest.TestCase):
             pagestate = pagestate.lower()
             if pagestate == 'complete':
                 current_state = "Current page is in expected state {}"
-                logging.info(current_state.format(pagestate))
+                logger.info(current_state.format(pagestate))
                 break
             sleep(0.2)
             loop_time_now = datetime.now() - start.total_seconds()
@@ -99,10 +99,11 @@ class BrowserActions(unittest.TestCase):
         if url is not None:
             try:
                 self.driver.get(url)
-                logging.info("Browser opened with url '{0}'".format(url))
+                logger.info("Browser opened with url '{0}'".format(url))
             except Exception:
-                logging.info("Browser with session id %s failed to navigate"
-                             "to url '%s'." % (self.driver.session_id, url))
+                logger.info("Browser with session id %s failed"
+                            " to navigate to url '%s'." % (
+                                self.driver.session_id, url))
                 raise AssertionError(
                     'Opened browser with session id {}'.format(
                         self.driver.session_id))
@@ -120,9 +121,9 @@ class BrowserActions(unittest.TestCase):
             check_point2 = self.__execute_script(
                 '''return performance.navigation.type''')
             if check_point1 == 0 and check_point2 == 1:
-                logging.info("Page Refresh Complete")
+                logger.info("Page Refresh Complete")
             else:
-                logging.error("Page Refresh Error")
+                logger.error("Page Refresh Error")
 
     def get_page_source(self):
         """Return the entire HTML source of the current page or frame."""
@@ -147,7 +148,7 @@ class BrowserActions(unittest.TestCase):
         finally:
             return url if 'http' in url else None
 
-    def get_attribute(self, locator: dict=None, element=None,
+    def get_attribute(self, locator: dict = None, element=None,
                       attribute_name=None, type: str='locator'):
         """Fetch attribute from locator/element/parent.
 
@@ -416,8 +417,8 @@ class BrowserActions(unittest.TestCase):
         self.page_readiness_wait()
 
         if not self.driver.service.process:
-            logging.info('Cannot capture ScreenShot'
-                         ' because no browser is open.')
+            logger.info('Cannot capture ScreenShot'
+                        ' because no browser is open.')
             return
         path = filepath.replace('/', os.sep)
 
@@ -557,9 +558,9 @@ class BrowserActions(unittest.TestCase):
         try:
             Wait(self.driver, TIME_OUT).until(ec.alert_is_present())
             self.driver.switch_to.alert.accept()
-            logging.info("alert accepted")
+            logger.info("alert accepted")
         except selenium_exceptions.TimeoutException:
-            logging.error(
+            logger.error(
                 "Could Not Find Alert Within The Permissible Time Limit")
 
     def wait_and_reject_alert(self):
@@ -567,9 +568,9 @@ class BrowserActions(unittest.TestCase):
         try:
             Wait(self.driver, TIME_OUT).until(ec.alert_is_present())
             self.driver.switch_to.alert.dismiss()
-            logging.info("alert dismissed")
+            logger.info("alert dismissed")
         except selenium_exceptions.TimeoutException:
-            logging.error(
+            logger.error(
                 "Could Not Find Alert Within The Permissible Time Limit")
 
     def select_option_by_index(self, locator: dict, index: int):
@@ -587,7 +588,7 @@ class BrowserActions(unittest.TestCase):
             try:
                 Select(self.__find_element(locator)).select_by_index(index)
             except selenium_exceptions.NoSuchElementException:
-                logging.error("Exception : Element '{}' Not Found".format(
+                logger.error("Exception : Element '{}' Not Found".format(
                     locator['by'] + '=' + locator['value']))
         else:
             AssertionError(
@@ -608,7 +609,7 @@ class BrowserActions(unittest.TestCase):
                 Select(self.__find_element(locator)).select_by_value(value)
 
             except selenium_exceptions.NoSuchElementException:
-                logging.error("Exception : Element '{}' Not Found".format(
+                logger.error("Exception : Element '{}' Not Found".format(
                     locator['by'] + '=' + locator['value']))
         else:
             AssertionError(
@@ -629,7 +630,7 @@ class BrowserActions(unittest.TestCase):
                 Select(self.__find_element(locator)
                        ).select_by_visible_text(text)
             except selenium_exceptions.NoSuchElementException:
-                logging.error("Exception : Element '{}' Not Found".format(
+                logger.error("Exception : Element '{}' Not Found".format(
                     locator['by'] + '=' + locator['value']))
         else:
             AssertionError("Invalid locator type")
@@ -641,7 +642,7 @@ class BrowserActions(unittest.TestCase):
             self.__execute_script(
                 "window.scrollTo(0,document.body.scrollHeight)")
         except selenium_exceptions.JavascriptException:
-            logging.error('Exception : Not Able to Scroll To Footer')
+            logger.error('Exception : Not Able to Scroll To Footer')
 
     def find_elements(self, locator: dict):
         """Return elements matched with locator.
@@ -674,7 +675,7 @@ class BrowserActions(unittest.TestCase):
                 actions = ActionChains(self.driver)
                 actions.move_to_element(element).perform()
             except selenium_exceptions.NoSuchElementException:
-                logging.error('Exception : Not Able To Scroll to Element')
+                logger.error('Exception : Not Able To Scroll to Element')
             except BaseException:
                 self.__execute_script(
                     "arguments[0].scrollIntoView(true)",
