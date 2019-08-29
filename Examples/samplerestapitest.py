@@ -17,6 +17,7 @@ header = {'Accept': 'application/json',
 
 class TestClass(ApiTester):
     """Sample Test Suite."""
+
     @pytest.mark.get
     def test_get_users(self):
         """Get users from application."""

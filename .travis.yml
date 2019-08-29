@@ -4,7 +4,6 @@ language: python
 
 matrix:
   include:
-    - python: 2.7
     - python: 3.5
     - python: 3.6
     - python: 3.7
@@ -18,22 +17,14 @@ addons:
 
 before_script:
   - "sudo apt-get install python-opencv"
-  - "flake8 prodigyqa/*.py"
-  - "flake8 Examples/*.py && flake8 Examples/*/*.py"
-  - "pycodestyle prodigyqa/*.py && pycodestyle Examples/*/*.py"
-  - bash chrome_driver_install.sh
+#   - bash chrome_driver_install.sh
 
 script:
 #   - pytest Examples/samplerestapitest.py
-  - pytest Examples/FilesCompare/samplecomparisontest.py
-
-notifications:
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/27beb355febfbdc8cfa7
-    on_success: change  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: never     # options: [always|never|change] default: always
+#   - pytest Examples/FilesCompare/samplecomparisontest.py
+  - "flake8 prodigyqa/*.py"
+  - "flake8 Examples/*.py && flake8 Examples/*/*.py"
+  - "pycodestyle prodigyqa/*.py && pycodestyle Examples/*/*.py"
 
 deploy:
   provider: pypi

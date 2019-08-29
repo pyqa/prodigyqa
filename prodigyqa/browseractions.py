@@ -1,5 +1,5 @@
 """UI utility functions of all selenium self.driver based actions."""
-import logging
+from loguru import logger
 
 import os
 
@@ -26,7 +26,6 @@ from selenium.webdriver.support.select import Select
 from selenium.webdriver.remote.webelement import WebElement
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
-
 
 if platform.system() == 'Darwin':
     from PIL import ImageGrab
@@ -59,12 +58,11 @@ class BrowserActions(unittest.TestCase):
         """Web Page Expected to be in ready state."""
         start = datetime.now()
         while (datetime.now() - start).total_seconds() < TIME_OUT:
-            pagestate = self.driver.execute_script(
-                '''return document.readyState''')
+            pagestate = self.__execute_script('''return document.readyState''')
             pagestate = pagestate.lower()
             if pagestate == 'complete':
                 current_state = "Current page is in expected state {}"
-                logging.info(current_state.format(pagestate))
+                logger.info(current_state.format(pagestate))
                 break
             sleep(0.2)
             loop_time_now = datetime.now() - start.total_seconds()
@@ -73,7 +71,10 @@ class BrowserActions(unittest.TestCase):
                     "Opened browser is in state of %s" % pagestate)
 
     def locator_check(self, locator_dict):
-        """Local Method to classify the type of locator."""
+        """Local Method to classify locator type.
+
+        :type locator_dict: dict
+        """
         text_retrived = locator_dict['by'].upper()
         if 'ID' in text_retrived:
             by = By.ID
@@ -98,10 +99,11 @@ class BrowserActions(unittest.TestCase):
         if url is not None:
             try:
                 self.driver.get(url)
-                logging.info("Browser opened with url '{0}'".format(url))
+                logger.info("Browser opened with url '{0}'".format(url))
             except Exception:
-                logging.info("Browser with session id %s failed to navigate"
-                             "to url '%s'." % (self.driver.session_id, url))
+                logger.info("Browser with session id %s failed"
+                            " to navigate to url '%s'." % (
+                                self.driver.session_id, url))
                 raise AssertionError(
                     'Opened browser with session id {}'.format(
                         self.driver.session_id))
@@ -113,13 +115,15 @@ class BrowserActions(unittest.TestCase):
         try:
             self.driver.refresh()
         except BaseException:
-            check_point1 = self.driver.execute_script(
+            check_point1 = self.__execute_script(
                 '''return performance.navigation.type''')
-            self.driver.execute_script('''document.location.reload()''')
-            check_point2 = self.driver.execute_script(
+            self.__execute_script('''document.location.reload()''')
+            check_point2 = self.__execute_script(
                 '''return performance.navigation.type''')
             if check_point1 == 0 and check_point2 == 1:
-                pass
+                logger.info("Page Refresh Complete")
+            else:
+                logger.error("Page Refresh Error")
 
     def get_page_source(self):
         """Return the entire HTML source of the current page or frame."""
@@ -132,7 +136,7 @@ class BrowserActions(unittest.TestCase):
         try:
             return self.driver.title
         except BaseException:
-            return self.driver.execute_script("return document.title")
+            return self.__execute_script("return document.title")
 
     def get_location(self):
         """Return the current browser URL using Selenium/Java Script."""
@@ -140,7 +144,7 @@ class BrowserActions(unittest.TestCase):
         try:
             url = self.driver.current_url
         except BaseException:
-            url = self.driver.execute_script("return window.location['href']")
+            url = self.__execute_script("return window.location['href']")
         finally:
             return url if 'http' in url else None
 
@@ -154,6 +158,8 @@ class BrowserActions(unittest.TestCase):
         :param attribute_name: attribute name to get it's vale
         :param element: it is a webelement
         :param type : value can only be 'locator' or 'element' or 'mixed'
+        :type locator: dict
+        :type type: str
         """
         valid_arguments_of_type = ['locator', 'element', 'mixed']
         type = type.lower()
@@ -198,44 +204,67 @@ class BrowserActions(unittest.TestCase):
                             "Invalid locator/element/attribute'{}'".format(
                                 attribute_name))
 
-    def click(self, locator):
+    def click(self, locator, index=None):
         """Click an element.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
+        :param index: Defaults None, number/position of element
         """
-        # self.locator_check(locator)
-        self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            self.driver.find_element(
-                self.by_value,
-                value=locator['locatorvalue']).click()
-
+            self.locator_check(locator)
+            if index is not None:
+                web_elts = self.find_elements(locator)
+                if index < len(web_elts):
+                    web_elts[index].click()
+                else:
+                    raise AssertionError(
+                        "Index is greater than no. of elements present")
+            else:
+                self.__find_element(locator).click()
+        elif isinstance(locator, WebElement):
+            locator.click()
         else:
-            raise AssertionError("Locator type should be dictionary.")
+            raise AssertionError(
+                "Dictionary/Weblement are valid Locator types.")
 
-    def javascript_click(self, locator):
-        """Javascript Click an element.
+    def javascript_click(self, locator, index=None):
+        """Javascript Click on provided element.
 
         :param locator: dictionary of identifier type
-            and value ({'by':'id', 'value':'start-of-content.'}).
+            and value ({'by':'id', 'value':'start-of-content.'})
+            or a Webelement.
+        :param index: Number/position of element present
         """
-        self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            self.driver.execute_script(
-                "arguments[0].click();", self.driver.find_element(
-                    self.by_value, value=locator['locatorvalue']))
+            self.locator_check(locator)
+            if index is not None:
+                web_elts = self.find_elements(locator)
+                if index < len(web_elts):
+                    self.driver.execute_script(
+                        "arguments[0].click();", web_elts[index])
+                else:
+                    raise AssertionError(
+                        "Index is greater than the number of elements")
+            else:
+                self.driver.execute_script(
+                    "arguments[0].click();", self.driver.find_element(
+                        self.by_value, value=locator['locatorvalue']))
+        elif isinstance(locator, WebElement):
+            self.__execute_script("arguments[0].click();", locator)
         else:
-            raise AssertionError("Locator type should be dictionary.")
+            raise AssertionError(
+                "Locator type should be either dictionary or Weblement.")
 
-    def is_element_displayed(self, locator):
+    def is_element_displayed(self, locator: dict):
         """
         Check whether an element is diplayed.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
+        :type locator: dict
         """
         self.locator_check(locator)
         self.page_readiness_wait()
@@ -246,86 +275,90 @@ class BrowserActions(unittest.TestCase):
         else:
             raise AssertionError("Locator type should be dictionary.")
 
-    def is_element_enabled(self, locator):
+    def is_element_enabled(self, locator: dict):
         """
         Check whether an element is enabled.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
+        :type locator: dict
         """
         self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            return self.driver.find_element(
-                self.by_value,
-                value=locator['locatorvalue']).is_enabled()
+            return self.__find_element(locator).is_enabled()
         else:
             raise AssertionError("Locator type should be dictionary.")
 
-    def is_element_selected(self, locator):
+    def is_element_selected(self, locator: dict):
         """
         Check whether an element is selecte.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
+        :type locator: dict
         """
         self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            return self.driver.find_element(
-                self.by_value,
-                value=locator['locatorvalue']).is_selected()
+            return self.__find_element(locator).is_selected()
         else:
             raise AssertionError("Locator type should be dictionary.")
 
-    def send_keys(self, locator):
+    def send_keys(self, locator: dict, value=None):
         """Send text but does not clear the existing text.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
+        :type locator: dict
         """
         self.page_readiness_wait()
         if isinstance(locator, dict):
             self.locator_check(locator)
-            self.driver.find_element(
-                self.by_value,
-                locator['locatorvalue']).send_keys(locator['value'])
+
+            self.__find_element(locator).send_keys(
+                locator['value'] if value is None else value)
         else:
             raise AssertionError("Locator type should be dictionary.")
 
-    def get_text(self, locator):
+    def get_text(self, locator, index=None):
         """Get text from provided Locator.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
-        if type(locator) is dict:
+        self.page_readiness_wait()
+        if isinstance(locator, dict):
             self.locator_check(locator)
-            self.page_readiness_wait()
-            if isinstance(locator, dict):
-                return self.driver.find_element(self.by_value,
-                                                value=locator['locatorvalue']).text     # noqa
+            if index is not None:
+                web_elts = self.find_elements(locator)
+                if index < len(web_elts):
+                    return web_elts[index].text
+                else:
+                    raise AssertionError(
+                        "Index is greater than the number of elements")
             else:
-                raise AssertionError("Locator type should be dictionary.")
-        elif type(locator) is WebElement:
+                return self.__find_element(locator).text
+
+        elif isinstance(locator, WebElement):
             return locator.text
         else:
             raise AssertionError(
-                "Locator type should be either dictionary or Webelement")
+                "Locator type should be either dictionary or Weblement.")
 
     def go_back(self):
         """Simulate back button on browser using selenium or js."""
         try:
             self.driver.back()
         except BaseException:
-            self.driver.execute_script("window.history.go(-1)")
+            self.__execute_script("window.history.go(-1)")
 
     def go_forward(self):
         """Simulate forward button on browser using  selenium or js."""
         try:
             self.driver.forward()
         except BaseException:
-            self.driver.execute_script("window.history.go(+1)")
+            self.__execute_script("window.history.go(+1)")
 
     def set_window_size(self, width, height):
         """Set width and height of the current window. (window.resizeTo).
@@ -362,18 +395,17 @@ class BrowserActions(unittest.TestCase):
         url = self.driver.current_url
         return url.split('//')[0] + '//' + url.split('/')[2]
 
-    def clear_text(self, locator):
+    def clear_text(self, locator: dict):
         """Clear the text if it's a text entry element.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
+        :type locator: dict
         """
         self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            return self.driver.find_element(
-                self.by_value,
-                value=locator['locatorvalue']).clear()
+            return self.__find_element(locator).clear()
         else:
             raise AssertionError("Locator type should be dictionary")
 
@@ -385,8 +417,8 @@ class BrowserActions(unittest.TestCase):
         self.page_readiness_wait()
 
         if not self.driver.service.process:
-            logging.info('Cannot capture ScreenShot'
-                         ' because no browser is open.')
+            logger.info('Cannot capture ScreenShot'
+                        ' because no browser is open.')
             return
         path = filepath.replace('/', os.sep)
 
@@ -404,7 +436,7 @@ class BrowserActions(unittest.TestCase):
         try:
             return self.driver.switch_to.active_element
         except BaseException:
-            return self.driver.execute_script('''document.activeElement''')
+            return self.__execute_script('''document.activeElement''')
 
     def switch_to_window(self, window):
         """Switch focus to the specified window using selenium/javascript.
@@ -469,24 +501,23 @@ class BrowserActions(unittest.TestCase):
         except selenium_exceptions.NoAlertPresentException:
             AssertionError("Alert targeted to be switched doesn't exist")
 
-    def hover_on_element(self, locator):
+    def hover_on_element(self, locator: dict):
         """Hover on a particular element.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
+        :type locator: dict
         """
         self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
             try:
                 ActionChains(self.driver).move_to_element(
-                    self.driver.find_element(
-                        self.by_value,
-                        value=locator['locatorvalue'])).perform()
+                    self.__find_element(locator)).perform()
             except selenium_exceptions.NoSuchElementException:
                 AssertionError(
                     "Element{} not found".format(locator['by']) +
-                    '=' + locator['value'])
+                    '=' + locator['locatorvalue'])
         else:
             raise AssertionError("Locator type should be dictionary")
 
@@ -504,33 +535,32 @@ class BrowserActions(unittest.TestCase):
         except selenium_exceptions.NoSuchElementException:
             AssertionError(
                 "Element {} not found".format(
-                    locator['by']) + '=' + locator['value'])
+                    locator['by']) + '=' + locator['locatorvalue'])
 
-    def wait_for_element(self, locator):
+    def wait_for_element(self, locator) -> bool:
         """Wait for an element to exist in UI.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
+        :rtype: bool
         """
         self.locator_check(locator)
         self.page_readiness_wait()
         try:
-            if self.driver.find_element(
-                    self.by_value,
-                    value=locator['locatorvalue']):
+            if self.__find_element(locator):
                 return True
         except selenium_exceptions.NoSuchElementException:
             AssertionError("Failed to wait for element {}".format(
-                locator['by'] + '=' + locator['value']))
+                locator['by'] + '=' + locator['locatorvalue']))
 
     def wait_and_accept_alert(self):
         """Wait and accept alert present on the page."""
         try:
             Wait(self.driver, TIME_OUT).until(ec.alert_is_present())
             self.driver.switch_to.alert.accept()
-            logging.info("alert accepted")
+            logger.info("alert accepted")
         except selenium_exceptions.TimeoutException:
-            logging.error(
+            logger.error(
                 "Could Not Find Alert Within The Permissible Time Limit")
 
     def wait_and_reject_alert(self):
@@ -538,70 +568,70 @@ class BrowserActions(unittest.TestCase):
         try:
             Wait(self.driver, TIME_OUT).until(ec.alert_is_present())
             self.driver.switch_to.alert.dismiss()
-            logging.info("alert dismissed")
+            logger.info("alert dismissed")
         except selenium_exceptions.TimeoutException:
-            logging.error(
+            logger.error(
                 "Could Not Find Alert Within The Permissible Time Limit")
 
-    def select_option_by_index(self, locator, index):
+    def select_option_by_index(self, locator: dict, index: int):
         """Select the option by index.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param index: integer value for index.
+        :type locator: dict
+        :type index: int
         """
         self.by_value = locator['by']
         if isinstance(locator, dict) and isinstance(index, int):
             self.locator_check(locator)
             try:
-                Select(self.driver.find_element(
-                    self.by_value,
-                    value=locator['value'])).select_by_index(index)
+                Select(self.__find_element(locator)).select_by_index(index)
             except selenium_exceptions.NoSuchElementException:
-                logging.error("Exception : Element '{}' Not Found".format(
-                    locator['by'] + '=' + locator['value']))
+                logger.error("Exception : Element '{}' Not Found".format(
+                    locator['by'] + '=' + locator['locatorvalue']))
         else:
             AssertionError(
                 "Invalid locator '{}' or index '{}'".format(locator, index))
 
-    def select_option_by_value(self, locator, value):
+    def select_option_by_value(self, locator: dict, value: int):
         """Select the option by using value.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param value: string value to select option.
+        :type locator: dict
+        :type value: int
         """
         self.page_readiness_wait()
         if isinstance(locator, dict) and isinstance(value, int):
             try:
-                Select(self.driver.find_element(
-                    self.by_value,
-                    value=locator['locatorvalue'])).select_by_value(value)
+                Select(self.__find_element(locator)).select_by_value(value)
 
             except selenium_exceptions.NoSuchElementException:
-                logging.error("Exception : Element '{}' Not Found".format(
-                    locator['by'] + '=' + locator['value']))
+                logger.error("Exception : Element '{}' Not Found".format(
+                    locator['by'] + '=' + locator['locatorvalue']))
         else:
             AssertionError(
                 "Invalid locator '{}' or value '{}'".format(locator, value))
 
-    def select_option_by_text(self, locator, text):
+    def select_option_by_text(self, locator: dict, text):
         """Select the value by using text.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param text: string value to select option.
+        :type locator: dict
         """
         self.page_readiness_wait()
         if isinstance(locator, dict):
             self.locator_check(locator)
             try:
-                Select(self.driver.find_element(
-                    self.by_value,
-                    value=locator['value'])).select_by_visible_text(text)
+                Select(self.__find_element(locator)
+                       ).select_by_visible_text(text)
             except selenium_exceptions.NoSuchElementException:
-                logging.error("Exception : Element '{}' Not Found".format(
-                    locator['by'] + '=' + locator['value']))
+                logger.error("Exception : Element '{}' Not Found".format(
+                    locator['by'] + '=' + locator['locatorvalue']))
         else:
             AssertionError("Invalid locator type")
 
@@ -609,16 +639,17 @@ class BrowserActions(unittest.TestCase):
         """Scroll till end of the page."""
         self.page_readiness_wait()
         try:
-            self.driver.execute_script(
+            self.__execute_script(
                 "window.scrollTo(0,document.body.scrollHeight)")
         except selenium_exceptions.JavascriptException:
-            logging.error('Exception : Not Able to Scroll To Footer')
+            logger.error('Exception : Not Able to Scroll To Footer')
 
-    def find_elements(self, locator):
+    def find_elements(self, locator: dict):
         """Return elements matched with locator.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
+        :type locator: dict
         """
         self.locator_check(locator)
         self.page_readiness_wait()
@@ -629,28 +660,52 @@ class BrowserActions(unittest.TestCase):
         else:
             AssertionError("Invalid locator type")
 
-    def scroll_to_element(self, locator):
+    def scroll_to_element(self, locator: dict):
         """Scroll to a particular element on the page.
 
         :param locator: dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
+        :type locator: dict
         """
         self.page_readiness_wait()
         if isinstance(locator, dict):
             try:
                 self.locator_check(locator)
-                element = self.driver.find_element(
-                    self.by_value,
-                    value=locator['locatorvalue'])
+                element = self.__find_element(locator)
                 actions = ActionChains(self.driver)
                 actions.move_to_element(element).perform()
             except selenium_exceptions.NoSuchElementException:
-                logging.error('Exception : Not Able To Scroll to Element')
+                logger.error('Exception : Not Able To Scroll to Element')
             except BaseException:
-                self.driver.execute_script(
+                self.__execute_script(
                     "arguments[0].scrollIntoView(true)",
-                    self.driver.find_element(
-                        self.by_value,
-                        value=locator['locatorvalue']))
+                    self.__find_element(locator))
         else:
             AssertionError("Invalid locator type")
+
+    def __find_element(self, locator: dict):
+        """Private method simplified finding element.
+
+        :type locator: dict
+        """
+        if isinstance(locator, dict):
+            self.locator_check(locator)
+            return self.driver.find_element(
+                self.by_value,
+                value=locator['locatorvalue'])
+
+    def __execute_script(self, script, web_elm=None):
+        """
+        Private method to Exeucte the passed script.
+
+        :param script_to_execute: must contain the valid JS to be executed.
+
+        """
+        if web_elm is None:
+            return self.driver.execute_script(script)
+        if isinstance(web_elm, WebElement):
+            return self.driver.execute_script(script, web_elm)
+        if isinstance(web_elm, dict):
+            return self.driver.execute_script(
+                script,
+                self.__find_element(web_elm))

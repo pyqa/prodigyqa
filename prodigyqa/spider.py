@@ -12,9 +12,15 @@ except ImportError:
 class Webspider(BrowserActions):
     """Crawl a page and extract all urls recursively within same domain."""
 
-    def spider(self, parent_url, login=False,
-               username="", password="", login_button=''):
-        """Hold the Web Spider using selenium fo browser based login."""
+    def spider(self, parent_url, username,
+               password, login_button, login=False):
+        """Hold the Web Spider using selenium fo browser based login.
+
+        :type login: bool
+        :type username: dict
+        :type password: dict
+        :type login_button: dict
+        """
         self.url = parent_url
         self.url_list = list()
         self.crawled_urls = list()

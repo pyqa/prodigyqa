@@ -14,7 +14,7 @@ except IOError:
 
 setup(
     name='prodigyqa',
-    version='1.0.12',
+    version='1.2.0',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -36,7 +36,6 @@ setup(
         "Operating System :: Unix",
         "Operating System :: MacOS",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
@@ -44,7 +43,6 @@ setup(
     install_requires=[
         'pip',
         'setuptools',
-        'scikit-image',
         'selenium',
         'nose',
         'jsondiff',
@@ -52,16 +50,17 @@ setup(
         'pytesseract',
         'beautifulsoup4',
         'opencv-python',
-        'flake8==3.7.7',
+        'flake8==3.7.8',
         'pycodestyle<2.6.0,>=2.5.0',
         'pandas==0.24.2',
-        'urllib3==1.24.3',
+        'urllib3==1.25.3',
         'requests>=2.21.0',
-        'ipdb==0.12',
+        'ipdb==0.12.2',
         'pytest>=4.0.2',
-        'pytest-html<1.21.0',
+        'pytest-html<1.23.0',
         'xlrd>=0.9.0',
         'scrapy',
         'nltk',
+        'loguru',
     ],)
-print("\n*** Prodigy QA Installation Complete! ***\n")
+print("\n*** Prodigy QA Framework Installation Complete! ***\n")

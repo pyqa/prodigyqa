@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/pyqa/prodigyqa.svg?branch=master)](https://travis-ci.org/pyqa/prodigyqa)
 [![PyPI version](https://badge.fury.io/py/prodigyqa.svg)](https://badge.fury.io/py/prodigyqa) 
-# QA automation framework - QA Re-Imagined!
+# Unified QA automation framework!
 
 `prodigyqa` is a unified test automation framework based on python. This has come up after thoroughly study made on existing methodologies used in majority of projects for UI/Rest API testing, This is expected to solve a list of problem statements readily.
 The framework aims to be a constructive blend of various guidelines, coding standards, concepts, processes, practices, project hierarchies, modularity, reporting mechanism, test data injections etc., to pillar automation testing.
@@ -25,8 +25,8 @@ The framework aims to be a constructive blend of various guidelines, coding stan
 
 ## Prerequisites
 
-The framework requires 
-- [python 2.7+ / 3.6+](https://www.python.org/downloads/)
+The framework works with 
+- [python 3.5+](https://www.python.org/downloads/)
 - [pip](pip )
 - [pytest](https://docs.pytest.org/en/latest/getting-started.html) to be installed in the machine.
 

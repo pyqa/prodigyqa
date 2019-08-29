@@ -3,7 +3,7 @@
 import unittest
 import cv2
 from skimage.measure import compare_ssim as ssim
-import logging
+from loguru import logger
 import pandas as pd
 from jsondiff import diff
 import os
@@ -41,7 +41,7 @@ class Compare(unittest.TestCase):
         self.source_extn = source.split(".")[1]
         self.target_extn = target.split(".")[1]
         if self.source_extn and self.target_extn not in self.image_extn:
-            logging.error("Invalid image extension")
+            logger.error("Invalid image extension")
         self.target = cv2.resize(
             self.target, (int(self.source.shape[1]),
                           int(self.source.shape[0])))
@@ -80,7 +80,7 @@ class Compare(unittest.TestCase):
                 self.target_data = self.__load_into_dataframe(target)
                 return self.__compare_non_workbook_files()
         else:
-            logging.error('File Extension not supported')
+            logger.error('File Extension not supported')
 
     def __compare_workbooks(self):
         """Compare two xls or xlsx files and return difference and boolean.

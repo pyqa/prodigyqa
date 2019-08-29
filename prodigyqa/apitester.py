@@ -4,6 +4,7 @@ import unittest
 import requests
 import logging
 from requests.exceptions import InvalidURL
+from loguru import logger
 
 
 class ApiTester(unittest.TestCase):
@@ -36,9 +37,7 @@ class ApiTester(unittest.TestCase):
             except InvalidURL:
                 logging.warn("The URL provided is invalid, please recheck")
 
-    def apirequest(self,
-                   method='GET',
-                   **kwargs):
+    def apirequest(self, method='GET', **kwargs):
         """Send request to class:'request' method object.
 
         :param method: method for the new :class:'request' method object.
@@ -75,7 +74,7 @@ class ApiTester(unittest.TestCase):
             if self._validate_kwargs(**kwargs) and kwargs['url']:
                 return requests.get(**kwargs)
         except InvalidURL:
-            logging.warn("The URL provided is invalid, please recheck")
+            logger.warn("The URL provided is invalid, please recheck")
 
     def _post_method(self, **kwargs):
         """Send a POST request.
@@ -96,7 +95,7 @@ class ApiTester(unittest.TestCase):
                             ('data' in kwargs and kwargs['data'])):
                         return requests.post(**kwargs)
         except InvalidURL:
-            logging.warn("The URL provided is invalid, please recheck")
+            logger.warn("The URL provided is invalid, please recheck")
 
     def _put_method(self, **kwargs):
         """Send a PUT request.
@@ -116,7 +115,7 @@ class ApiTester(unittest.TestCase):
                         ('data' in kwargs and kwargs['data'])):
                     return requests.put(**kwargs)
         except InvalidURL:
-            logging.warn("The URL provided is invalid, please recheck")
+            logger.warn("The URL provided is invalid, please recheck")
 
     def _patch_method(self, **kwargs):
         """Send a PATCH request.
@@ -136,7 +135,7 @@ class ApiTester(unittest.TestCase):
                         ('data' in kwargs and kwargs['data'])):
                     return requests.patch(**kwargs)
         except InvalidURL:
-            logging.warn("The URL provided is invalid, please recheck")
+            logger.warn("The URL provided is invalid, please recheck")
 
     def _delete_method(self, **kwargs):
         """Send a DELETE request.
@@ -150,7 +149,7 @@ class ApiTester(unittest.TestCase):
             if self._validate_kwargs(**kwargs) and kwargs['url']:
                 return requests.delete(**kwargs)
         except InvalidURL:
-            logging.warn("The URL provided is invalid,please recheck")
+            logger.warn("The URL provided is invalid,please recheck")
 
     def _validate_kwargs(self, **kwargs):
         """
@@ -208,7 +207,7 @@ class ApiTester(unittest.TestCase):
             else:
                 raise KeyError("%s keywords are invalid" % non_stand_kw)
         except KeyError as e:
-            logging.warning(e)
+            logger.warning(e)
 
     def assert_in_resp(self, resp, member, container):
         """Check whether response data member contain input member.
