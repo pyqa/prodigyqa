@@ -54,6 +54,12 @@ class BrowserActions(unittest.TestCase):
         else:
             self.driver = webdriver.Chrome()
 
+    def __del__(self):
+        """Destructor method to kill the driver instance.
+        This helps to kill the driver instance at the end of the execution.
+        """
+        self.driver.quit()
+
     def page_readiness_wait(self):
         """Web Page Expected to be in ready state."""
         start = datetime.now()

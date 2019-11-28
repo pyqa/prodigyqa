@@ -14,7 +14,7 @@ except IOError:
 
 setup(
     name='prodigyqa',
-    version='1.2.1',
+    version='1.2.2',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -53,7 +53,7 @@ setup(
         'flake8==3.7.9',
         'pycodestyle<2.6.0,>=2.5.0',
         'pandas==0.24.2',
-        'urllib3==1.25.6',
+        'urllib3==1.25.7',
         'requests>=2.21.0',
         'ipdb==0.12.2',
         'pytest>=4.0.2',
