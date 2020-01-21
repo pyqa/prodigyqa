@@ -1,4 +1,5 @@
 """UI utility functions of all selenium self.driver based actions."""
+from PIL import Image
 from loguru import logger
 
 import os
@@ -10,8 +11,6 @@ import unittest
 from datetime import datetime
 
 from time import sleep
-
-from selenium import webdriver
 
 from selenium.common import exceptions as selenium_exceptions
 
@@ -27,6 +26,8 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
+from selenium import webdriver
+
 if platform.system() == 'Darwin':
     from PIL import ImageGrab
 
@@ -38,6 +39,10 @@ chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 
+firefox_options = webdriver.FirefoxOptions()
+firefox_options.headless = True
+
+
 
 class BrowserActions(unittest.TestCase):
     """PageActions Class is the gateway for using Framework.
@@ -47,12 +52,45 @@ class BrowserActions(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         """Init Method for webdriver declarations."""
+        if 'intercept' in kwargs:
+            self.intercept = kwargs.pop('intercept')
+
+        if 'browser' in kwargs:
+            self.browser_name = kwargs.pop('browser')
+
         super(BrowserActions, self).__init__(*args, **kwargs)
         self.by_value = None
-        if platform.system() == 'Linux':
-            self.driver = webdriver.Chrome(chrome_options=chrome_options)
-        else:
-            self.driver = webdriver.Chrome()
+
+        if not self.browser_name or self.browser_name == 'chrome':
+            if self.intercept:
+                from seleniumwire import webdriver as wire_webdriver
+
+                if platform.system() == 'Linux':
+                    self.driver = wire_webdriver.Chrome(
+                        chrome_options=chrome_options)
+                else:
+                    self.driver = wire_webdriver.Chrome()
+            else:
+                if platform.system() == 'Linux':
+                    self.driver = webdriver.Chrome(
+                        chrome_options=chrome_options)
+                else:
+                    self.driver = webdriver.Chrome()
+
+        elif self.browser_name == 'firefox':
+            if self.intercept:
+                from seleniumwire import webdriver as wire_webdriver
+                if platform.system() == 'Linux':
+                    self.driver = wire_webdriver.Firefox(
+                        firefox_options=firefox_options)
+                else:
+                    self.driver = wire_webdriver.Firefox()
+            else:
+                if platform.system() == 'Linux':
+                    self.driver = webdriver.Firefox(
+                        firefox_options=chrome_options)
+                else:
+                    self.driver = webdriver.Firefox()
 
     def __del__(self):
         """Destructor method to kill the driver instance.
@@ -415,7 +453,7 @@ class BrowserActions(unittest.TestCase):
         else:
             raise AssertionError("Locator type should be dictionary")
 
-    def capture_screenshot(self, filepath):
+    def capture_screenshot(self, filepath, full_page=False):
         """Save screenshot to the directory(existing or new one).
 
         :param filepath: file name with directory path(C:/images/image.png).
@@ -434,6 +472,8 @@ class BrowserActions(unittest.TestCase):
             os.remove(path)
         if not self.driver.get_screenshot_as_file(path):
             raise RuntimeError("Failed to save screenshot '{}'.".format(path))
+        if full_page:
+            self._full_ss_non_headless(path)
         return path
 
     def switch_to_active_element(self):
@@ -715,3 +755,108 @@ class BrowserActions(unittest.TestCase):
             return self.driver.execute_script(
                 script,
                 self.__find_element(web_elm))
+
+    def _full_ss_non_headless(self, filename):
+        """
+        :param file path of file with name to be saved:
+        :return True for when screen shot is saved:
+        https://stackoverflow.com/questions/41721734/take-screenshot-of-full
+        -page-with-selenium-python-with-chromedriver
+        if header is statically placed it will get in multiple times while
+        making screen shot
+        """
+        total_width = self.driver.execute_script(
+            "return document.body.offsetWidth")
+        total_height = self.driver.execute_script(
+            "return document.body.parentNode.scrollHeight")
+        viewport_width = self.driver.execute_script(
+            "return document.body.clientWidth")
+        viewport_height = self.driver.execute_script(
+            "return window.innerHeight")
+        logger.info(
+            "Total: ({0}, {1}), Viewport: ({2},{3})".format(
+                total_width, total_height, viewport_width, viewport_height))
+        rectangles = []
+
+        i = 0
+        while i < total_height:
+            ii = 0
+            top_height = i + viewport_height
+
+            if top_height > total_height:
+                top_height = total_height
+
+            while ii < total_width:
+                top_width = ii + viewport_width
+
+                if top_width > total_width:
+                    top_width = total_width
+
+                logger.info("Appending rectangle ({0},{1},{2},{3})".format(
+                    ii, i, top_width, top_height))
+                rectangles.append((ii, i, top_width, top_height))
+
+                ii = ii + viewport_width
+
+            i = i + viewport_height
+
+        stitched_image = Image.new('RGB', (total_width, total_height))
+        previous = None
+        part = 0
+
+        for rectangle in rectangles:
+            if previous is not None:
+                self.driver.execute_script(
+                    "window.scrollTo({0}, {1})".format(
+                        rectangle[0], rectangle[1]))
+                logger.info("Scrolled To ({0},{1})".format(
+                    rectangle[0], rectangle[1]))
+                sleep(0.2)
+
+            file_name = "part_{0}.png".format(part)
+            logger.info("Capturing {0} ...".format(file_name))
+
+            self.driver.get_screenshot_as_file(file_name)
+            screenshot = Image.open(file_name)
+
+            if rectangle[1] + viewport_height > total_height:
+                offset = (rectangle[0], total_height - viewport_height)
+            else:
+                offset = (rectangle[0], rectangle[1])
+
+            logger.info(
+                "Adding to stitched image with offset ({0}, {1})".format(
+                    offset[0], offset[1]))
+            stitched_image.paste(screenshot, offset)
+
+            del screenshot
+            os.remove(file_name)
+            part = part + 1
+            previous = rectangle
+        if not self.driver.service.process:
+            logger.info('Cannot capture ScreenShot'
+                        ' because no browser is open.')
+            return
+        stitched_image.save(filename)
+        return True
+
+    def _full_ss_headless(self, filename):
+        """
+       :param file path of file with name to be saved:
+       :return True for when
+       screen shot is saved:
+       It will take enitre web page as screen shot and header will not be
+       repeated
+       https://stackoverflow.com/questions/41721734
+       /take-screenshot-of-full-page-with-selenium-python-with-chromedriver
+        """
+        ele = self.driver.find_element("xpath", '//body')
+        total_height = ele.size["height"]
+        width = self.driver.get_window_size()['width']
+        height = self.driver.get_window_size()['height']
+        self.driver.set_window_size(width, total_height)
+        sleep(2)
+        self.driver.save_screenshot(filename)
+        sleep(2)
+        self.driver.set_window_size(width, height)
+        return True

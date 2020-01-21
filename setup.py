@@ -14,7 +14,7 @@ except IOError:
 
 setup(
     name='prodigyqa',
-    version='1.2.2',
+    version='1.2.3',
     description='Test Automation Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -44,6 +44,7 @@ setup(
         'pip',
         'setuptools',
         'selenium',
+        'selenium-wire',
         'nose',
         'jsondiff',
         'openpyxl',
