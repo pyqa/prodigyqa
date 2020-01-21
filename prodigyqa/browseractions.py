@@ -50,61 +50,34 @@ class BrowserActions(unittest.TestCase):
     """
 
     def __init__(self, *args, **kwargs):
-        """Init Method for webdriver declarations."""
+        """Init Method for webdriver declarations.
+
+                To invoke chrome/firefox browser pass corresponding values,
+                bydefault chrome will be invoked.
+                To access browser network calls 'intercept' with True value
+                needs to
+                passed in kwargs.
+                To achieve this we are using selenium wire
+                https://pypi.org/project/selenium-wire/
+        :param args pass the required data as list
+        :param kwargs: pass the required data as dict
+        """
+
         browser = kwargs.pop('browser', None)
         intercept = kwargs.pop('intercept', None)
         super(BrowserActions, self).__init__(*args, **kwargs)
         self.by_value = None
-        self.driverobj = wire_webdriver if intercept else webdriver
+        driver_obj = wire_webdriver if intercept else webdriver
         headless_exec = True if platform.system() == 'Linux' else False
-        if browser == 'firefox':
-            self.driver = self.driverobj.Firefox(
-                firefox_options=firefox_options if headless_exec else None)
-        else:
-            self.driver = self.driverobj.Chrome(
-                chrome_options=chrome_options if headless_exec else None)
 
-        # self.browser_name = None
-        # self.intercept = None
-        # if 'intercept' in kwargs:
-        #     self.intercept = kwargs.pop('intercept')
-        #
-        # if 'browser' in kwargs:
-        #     self.browser_name = kwargs.pop('browser')
-        #
-        # super(BrowserActions, self).__init__(*args, **kwargs)
-        # self.by_value = None
-        #
-        # if not self.browser_name or self.browser_name == 'chrome':
-        #     if self.intercept:
-        #         from seleniumwire import webdriver as wire_webdriver
-        #
-        #         if platform.system() == 'Linux':
-        #             self.driver = wire_webdriver.Chrome(
-        #                 chrome_options=chrome_options)
-        #         else:
-        #             self.driver = wire_webdriver.Chrome()
-        #     else:
-        #         if platform.system() == 'Linux':
-        #             self.driver = webdriver.Chrome(
-        #                 chrome_options=chrome_options)
-        #         else:
-        #             self.driver = webdriver.Chrome()
-        #
-        # elif self.browser_name == 'firefox':
-        #     if self.intercept:
-        #         from seleniumwire import webdriver as wire_webdriver
-        #         if platform.system() == 'Linux':
-        #             self.driver = wire_webdriver.Firefox(
-        #                 firefox_options=firefox_options)
-        #         else:
-        #             self.driver = wire_webdriver.Firefox()
-        #     else:
-        #         if platform.system() == 'Linux':
-        #             self.driver = webdriver.Firefox(
-        #                 firefox_options=chrome_options)
-        #         else:
-        #             self.driver = webdriver.Firefox()
+
+        if browser == 'firefox':
+            self.driver = driver_obj.Firefox(
+                firefox_options=firefox_options if headless_exec else None)
+        # running scripts with firefox browser
+        else:
+            self.driver = driver_obj.Chrome(
+                chrome_options=chrome_options if headless_exec else None)
 
     def __del__(self):
         """Destructor method to kill the driver instance.
