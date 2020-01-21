@@ -52,6 +52,8 @@ class BrowserActions(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         """Init Method for webdriver declarations."""
+        self.browser_name = None
+        self.intercept = None
         if 'intercept' in kwargs:
             self.intercept = kwargs.pop('intercept')
 
