@@ -51,15 +51,13 @@ class BrowserActions(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         """Init Method for webdriver declarations."""
-        browser_name = None
-        intercept = None
-        kwargs.pop('intercept', None)
-        kwargs.pop('browser', None)
+        browser = kwargs.pop('browser', None)
+        intercept = kwargs.pop('intercept', None)
         super(BrowserActions, self).__init__(*args, **kwargs)
         self.by_value = None
         self.driverobj = wire_webdriver if intercept else webdriver
         headless_exec = True if platform.system() == 'Linux' else False
-        if browser_name == 'firefox':
+        if browser == 'firefox':
             self.driver = self.driverobj.Firefox(
                 firefox_options=firefox_options if headless_exec else None)
         else:
