@@ -69,12 +69,9 @@ class BrowserActions(unittest.TestCase):
         self.by_value = None
         driver_obj = wire_webdriver if intercept else webdriver
         headless_exec = True if platform.system() == 'Linux' else False
-
-
         if browser == 'firefox':
             self.driver = driver_obj.Firefox(
                 firefox_options=firefox_options if headless_exec else None)
-        # running scripts with firefox browser
         else:
             self.driver = driver_obj.Chrome(
                 chrome_options=chrome_options if headless_exec else None)
