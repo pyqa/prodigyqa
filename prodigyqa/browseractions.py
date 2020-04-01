@@ -71,7 +71,7 @@ class BrowserActions(unittest.TestCase):
                 logger.info(current_state.format(pagestate))
                 break
             sleep(0.2)
-            loop_time_now = datetime.now() - start.total_seconds()
+            loop_time_now = (datetime.now() - start).seconds
             if loop_time_now > TIME_OUT and pagestate != 'complete':
                 raise AssertionError(
                     "Opened browser is in state of %s" % pagestate)
