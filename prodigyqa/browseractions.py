@@ -47,12 +47,15 @@ class BrowserActions(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         """Init Method for webdriver declarations."""
-        super(BrowserActions, self).__init__(*args, **kwargs)
+        super(BrowserActions, self).__init__()
         self.by_value = None
-        if platform.system() == 'Linux':
-            self.driver = webdriver.Chrome(chrome_options=chrome_options)
+        if "custom_driver" in kwargs:
+            self.driver = kwargs.get("custom_driver")
         else:
-            self.driver = webdriver.Chrome()
+            if platform.system() == 'Linux':
+                self.driver = webdriver.Chrome(chrome_options=chrome_options)
+            else:
+                self.driver = webdriver.Chrome()
 
     def __del__(self):
         """Destructor method to kill the driver instance.
@@ -71,7 +74,7 @@ class BrowserActions(unittest.TestCase):
                 logger.info(current_state.format(pagestate))
                 break
             sleep(0.2)
-            loop_time_now = datetime.now() - start.total_seconds()
+            loop_time_now = (datetime.now() - start).seconds
             if loop_time_now > TIME_OUT and pagestate != 'complete':
                 raise AssertionError(
                     "Opened browser is in state of %s" % pagestate)
@@ -100,6 +103,27 @@ class BrowserActions(unittest.TestCase):
             by = By.TAG_NAME
         self.by_value = by
 
+    def add_cookie(self, cookie_dict):
+        """
+        Adds a cookie to your current session.
+
+        :param cookie_dict : Dict with required keys - "name" and "value"
+        :type cookie_dict: dictionary
+        """
+        if cookie_dict and isinstance(cookie_dict, dict):
+            try:
+                self.driver.add_cookie(cookie_dict)
+                logger.info(f"Added cookie: {cookie_dict} to current session")
+            except Exception:
+                logger.error(f"Failed to add cookie:{cookie_dict} to session:"
+                             f"{self.driver.session_id} and having url:"
+                             f"{self.get_location()}")
+                raise AssertionError(
+                    f"Not able to add cookie to browser having session id "
+                    f"{self.driver.session_id}")
+        else:
+            raise AssertionError("Invalid cookie/Cookie cannot be null")
+
     def open(self, url):
         """Open the passed 'url'."""
         if url is not None:
@@ -107,9 +131,8 @@ class BrowserActions(unittest.TestCase):
                 self.driver.get(url)
                 logger.info("Browser opened with url '{0}'".format(url))
             except Exception:
-                logger.info("Browser with session id %s failed"
-                            " to navigate to url '%s'." % (
-                                self.driver.session_id, url))
+                logger.error("Browser with session id %s failed to navigate "
+                             "to url '%s'." % (self.driver.session_id, url))
                 raise AssertionError(
                     'Opened browser with session id {}'.format(
                         self.driver.session_id))
