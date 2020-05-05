@@ -714,4 +714,17 @@ class BrowserActions(unittest.TestCase):
         if isinstance(web_elm, dict):
             return self.driver.execute_script(
                 script,
-                self.__find_element(web_elm))
+                self.__find_element(web_elm)
+
+    def get_element(self, locator: dict):
+        """return web element of a locator.
+        :param locator: dictionary of identifier type
+            and value ({'by':'id', 'value':'start-of-content.'}).
+        :type locator: dict
+        """
+        self.locator_check(locator)
+        self.page_readiness_wait()
+        if isinstance(locator, dict):
+            return self.__find_element(locator)
+        else:
+            AssertionError("Invalid locator type")
