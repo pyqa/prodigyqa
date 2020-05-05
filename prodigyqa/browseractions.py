@@ -182,12 +182,12 @@ class BrowserActions(unittest.TestCase):
         """Fetch attribute from locator/element/parent.
 
         element with child locator.
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param attribute_name: attribute name to get it's vale
         :param element: it is a webelement
         :param type : value can only be 'locator' or 'element' or 'mixed'
-        :type locator: dict
+        :type locator:dict
         :type type: str
         """
         valid_arguments_of_type = ['locator', 'element', 'mixed']
@@ -236,8 +236,9 @@ class BrowserActions(unittest.TestCase):
     def click(self, locator, index=None):
         """Click an element.
 
-        :param locator: dictionary of identifier type
-            and value ({'by':'id', 'value':'start-of-content.'}).
+        :param locator:dictionary of identifier type
+            and value ({'by':'id', 'value':'start-of-content.'}) or
+            webelement.
         :param index: Defaults None, number/position of element
         """
         self.page_readiness_wait()
@@ -254,6 +255,15 @@ class BrowserActions(unittest.TestCase):
                 self.__find_element(locator).click()
         elif isinstance(locator, WebElement):
             locator.click()
+        elif isinstance(locator, list):
+            if index is not None:
+                if index < len(locator):
+                    locator[index].click()
+                else:
+                    raise AssertionError(
+                        "Index is greater than no. of elements present")
+            else:
+                locator[0].click()
         else:
             raise AssertionError(
                 "Dictionary/Weblement are valid Locator types.")
@@ -261,7 +271,7 @@ class BrowserActions(unittest.TestCase):
     def javascript_click(self, locator, index=None):
         """Javascript Click on provided element.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'})
             or a Webelement.
         :param index: Number/position of element present
@@ -283,39 +293,71 @@ class BrowserActions(unittest.TestCase):
                         self.by_value, value=locator['locatorvalue']))
         elif isinstance(locator, WebElement):
             self.__execute_script("arguments[0].click();", locator)
+        elif isinstance(locator, list):
+            if index is not None:
+                if index < len(locator):
+                    self.driver.execute_script(
+                        "arguments[0].click();", locator[index])
+                else:
+                    raise AssertionError(
+                        "Index is greater than no. of elements present")
+            else:
+                self.driver.execute_script(
+                    "arguments[0].click();", locator[0])
         else:
             raise AssertionError(
                 "Locator type should be either dictionary or Weblement.")
 
-    def is_element_displayed(self, locator: dict):
+    def is_element_displayed(self, locator, index=None):
         """
         Check whether an element is diplayed.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
-        :type locator: dict
+        :type locator:dict
         """
-        self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
-            return self.driver.find_element(
-                self.by_value,
-                value=locator['locatorvalue']).is_displayed()
+            self.locator_check(locator)
+            if index is not None:
+                web_elts = self.find_elements(locator)
+                if index < len(web_elts):
+                    return web_elts[index].is_displayed()
+                else:
+                    raise AssertionError(
+                        "Index is greater than the number of elements")
+            else:
+                return self.driver.find_element(
+                    self.by_value,
+                    value=locator['locatorvalue']).is_displayed()
+        elif isinstance(locator, WebElement):
+            locator.is_displayed()
+        elif isinstance(locator, list):
+            if index is not None:
+                if index < len(locator):
+                    return locator[index].is_displayed()
+                else:
+                    raise AssertionError(
+                        "Index is greater than no. of elements present")
+            else:
+                return locator[0].is_displayed()
         else:
             raise AssertionError("Locator type should be dictionary.")
 
-    def is_element_enabled(self, locator: dict):
+    def is_element_enabled(self, locator):
         """
         Check whether an element is enabled.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
-        :type locator: dict
+        :type locator:dict
         """
         self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
             return self.__find_element(locator).is_enabled()
+        elif isinstance(locator, WebElement):
+            locator.is_enabled()
         else:
             raise AssertionError("Locator type should be dictionary.")
 
@@ -323,23 +365,25 @@ class BrowserActions(unittest.TestCase):
         """
         Check whether an element is selecte.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
-        :type locator: dict
+        :type locator:dict
         """
         self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
             return self.__find_element(locator).is_selected()
+        elif isinstance(locator, WebElement):
+            locator.is_selected()
         else:
             raise AssertionError("Locator type should be dictionary.")
 
     def send_keys(self, locator: dict, value=None):
         """Send text but does not clear the existing text.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
-        :type locator: dict
+        :type locator:dict
         """
         self.page_readiness_wait()
         if isinstance(locator, dict):
@@ -347,13 +391,15 @@ class BrowserActions(unittest.TestCase):
 
             self.__find_element(locator).send_keys(
                 locator['value'] if value is None else value)
+        elif isinstance(locator, WebElement):
+            locator.send_keys(value)
         else:
             raise AssertionError("Locator type should be dictionary.")
 
     def get_text(self, locator, index=None):
         """Get text from provided Locator.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
         self.page_readiness_wait()
@@ -368,7 +414,6 @@ class BrowserActions(unittest.TestCase):
                         "Index is greater than the number of elements")
             else:
                 return self.__find_element(locator).text
-
         elif isinstance(locator, WebElement):
             return locator.text
         else:
@@ -424,17 +469,19 @@ class BrowserActions(unittest.TestCase):
         url = self.driver.current_url
         return url.split('//')[0] + '//' + url.split('/')[2]
 
-    def clear_text(self, locator: dict):
+    def clear_text(self, locator):
         """Clear the text if it's a text entry element.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
-        :type locator: dict
+        :type locator:dict
         """
         self.locator_check(locator)
         self.page_readiness_wait()
         if isinstance(locator, dict):
             return self.__find_element(locator).clear()
+        elif isinstance(locator, WebElement):
+            locator.clear()
         else:
             raise AssertionError("Locator type should be dictionary")
 
@@ -533,9 +580,9 @@ class BrowserActions(unittest.TestCase):
     def hover_on_element(self, locator: dict):
         """Hover on a particular element.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
-        :type locator: dict
+        :type locator:dict
         """
         self.locator_check(locator)
         self.page_readiness_wait()
@@ -553,7 +600,7 @@ class BrowserActions(unittest.TestCase):
     def hover_on_click(self, locator):
         """Hover & click a particular element.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         """
         self.locator_check(locator)
@@ -569,7 +616,7 @@ class BrowserActions(unittest.TestCase):
     def wait_for_element(self, locator) -> bool:
         """Wait for an element to exist in UI.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         :rtype: bool
         """
@@ -605,10 +652,10 @@ class BrowserActions(unittest.TestCase):
     def select_option_by_index(self, locator: dict, index: int):
         """Select the option by index.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param index: integer value for index.
-        :type locator: dict
+        :type locator:dict
         :type index: int
         """
         self.by_value = locator['by']
@@ -623,34 +670,34 @@ class BrowserActions(unittest.TestCase):
             AssertionError(
                 "Invalid locator '{}' or index '{}'".format(locator, index))
 
-    def select_option_by_value(self, locator: dict, value: int):
+    def select_option_by_value(self, locator: dict, value):
         """Select the option by using value.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param value: string value to select option.
-        :type locator: dict
+        :type locator:dict
         :type value: int
         """
         self.page_readiness_wait()
-        if isinstance(locator, dict) and isinstance(value, int):
+        if isinstance(locator, dict):
+            self.locator_check(locator)
             try:
-                Select(self.__find_element(locator)).select_by_value(value)
-
+                Select(self.__find_element(locator)
+                       ).select_by_value(value)
             except selenium_exceptions.NoSuchElementException:
                 logger.error("Exception : Element '{}' Not Found".format(
                     locator['by'] + '=' + locator['locatorvalue']))
         else:
-            AssertionError(
-                "Invalid locator '{}' or value '{}'".format(locator, value))
+            AssertionError("Invalid locator type")
 
     def select_option_by_text(self, locator: dict, text):
         """Select the value by using text.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
         :param text: string value to select option.
-        :type locator: dict
+        :type locator:dict
         """
         self.page_readiness_wait()
         if isinstance(locator, dict):
@@ -676,9 +723,9 @@ class BrowserActions(unittest.TestCase):
     def find_elements(self, locator: dict):
         """Return elements matched with locator.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
-        :type locator: dict
+        :type locator:dict
         """
         self.locator_check(locator)
         self.page_readiness_wait()
@@ -692,9 +739,9 @@ class BrowserActions(unittest.TestCase):
     def scroll_to_element(self, locator: dict):
         """Scroll to a particular element on the page.
 
-        :param locator: dictionary of identifier type
+        :param locator:dictionary of identifier type
             and value ({'by':'id', 'value':'start-of-content.'}).
-        :type locator: dict
+        :type locator:dict
         """
         self.page_readiness_wait()
         if isinstance(locator, dict):
@@ -715,7 +762,7 @@ class BrowserActions(unittest.TestCase):
     def __find_element(self, locator: dict):
         """Private method simplified finding element.
 
-        :type locator: dict
+        :type locator:dict
         """
         if isinstance(locator, dict):
             self.locator_check(locator)
@@ -738,3 +785,15 @@ class BrowserActions(unittest.TestCase):
             return self.driver.execute_script(
                 script,
                 self.__find_element(web_elm))
+
+    def get_list_size(self, locator: dict):
+        """
+        Get List Size of provided locator.
+        :param locator: must contain the valid locator.
+        """
+        self.locator_check(locator)
+        self.page_readiness_wait()
+        if isinstance(locator, dict):
+            return len(self.find_elements(locator))
+        else:
+            AssertionError("Invalid locator type")
