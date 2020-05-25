@@ -50,7 +50,7 @@ setup(
         'pytesseract',
         'beautifulsoup4',
         'opencv-python',
-        'flake8==3.7.9',
+        'flake8==3.8.2',
         'pycodestyle<2.6.0,>=2.5.0',
         'pandas==0.24.2',
         'urllib3==1.25.7',
