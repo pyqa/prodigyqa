@@ -53,7 +53,7 @@ setup(
         'flake8==3.7.9',
         'pycodestyle<2.6.0,>=2.5.0',
         'pandas==0.24.2',
-        'urllib3==1.25.7',
+        'urllib3==1.25.11',
         'requests>=2.21.0',
         'ipdb==0.12.2',
         'pytest>=4.0.2',
