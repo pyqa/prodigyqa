@@ -57,7 +57,7 @@ setup(
         'requests>=2.21.0',
         'ipdb==0.12.2',
         'pytest>=4.0.2',
-        'pytest-html<2.1.0',
+        'pytest-html<3.1.0',
         'xlrd>=0.9.0',
         'scrapy',
         'nltk',
