@@ -1,0 +1,35 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  reviewers:
+  - surevs
+  assignees:
+  - surevs
+  ignore:
+  - dependency-name: pandas
+    versions:
+    - ">= 0.25.a, < 0.26"
+  - dependency-name: flake8
+    versions:
+    - 3.8.4
+    - 3.9.0
+  - dependency-name: ipdb
+    versions:
+    - 0.13.4
+    - 0.13.5
+    - 0.13.6
+  - dependency-name: pandas
+    versions:
+    - 1.2.1
+    - 1.2.2
+    - 1.2.3
+  - dependency-name: urllib3
+    versions:
+    - 1.26.3
+  - dependency-name: pycodestyle
+    versions:
+    - 2.6.0
